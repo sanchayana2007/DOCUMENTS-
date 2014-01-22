@@ -1,0 +1,2729 @@
+
+
+1) For  Putting two classs with the same name and using it 
+
+
+namespace Records {
+const int kDefaultStartingSalary = 30000;
+class Employee
+{
+    public:
+        Employee();
+        void     promote(int inRaiseAmount = 1000);
+        void     demote(int inDemeritAmount = 1000);
+        void     hire();     // Hires or rehires the employee
+        void     fire();     // Dismisses the employee
+        void     display();
+	
+   private:
+       int         mSalary;
+       bool        fHired;
+};
+
+//Use of the nmaespace 
+using namespace Records;
+Employee emp;
+emp.setFirstName( Marni );
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CHAP2:  Designing Professional  C++ Programs
+**************************************************
+include class hierarchies, class interfaces, and object interactions. C++ is its numerous facilities for designing 
+generic and reusable code.In addition to basic classes and inheritance,
+
+Polymorphism :Polymorphism is a beautiful part of object-oriented programming because it truly takes advantage of
+what inheritance offers. In a zoo simulation, we could programmatically loop through all of the animals
+in the zoo and have each animal move once. Since all animals are members of the Animal class, they all
+know how to move. Some of the animals have overridden the move behavior, but that s the best part â€”
+our code simply tells each animal to move without knowing or caring what type of animal it is. Each one
+moves whichever way it knows how.
+
+2) has a =  base class has a obj of another type
+  Is a = monekey is a Animal (Inheritance)
+  
+  
+  
+  
+  C++ virtual inheritance is implemented in compilers?
+
+
+How the compilers implement the virtual inheritance?
+
+In the following code:
+
+class A {
+  public:
+    A(int) {}
+};
+
+class B : public virtual A {
+  public:
+    B() : A(1) {}
+};
+
+class C : public B {
+  public:
+    C() : A(3), B() {}
+}
+Compiler code generation
+
+B1()
+B2() // no A
+When B is constructed, the "full" version is called:
+
+B1():
+    A(1)
+    B() body
+When C is constructed, the base version is called instead:
+
+C():
+    A(3)
+    B2()
+       B() body
+    C() body
+In fact, two constructors will be emitted even if there is no virtual inheritance, and they will be identical.
+ 
+ ///////////////////////////////////////////////////////////////
+ implement a “private/restricted” function in C
+ Here's one way:
+
+int f_real_name(void)
+{
+    ...
+}
+
+#define f f_real_name
+int g(void)
+{
+    // call f()
+}
+#undef f
+
+// calling f() now won't work
+Another way, if you can guarantee that f() and g() are the only functions in the file, is to declare f() as static.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CHAP3: Designing with Libraries and Patterns
+**************************************************************
+Reusing Code : Templats, Libaries 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CHAP4: Designing for Reuse
+3) Develop Intuitive Interfaces								
+Fraction f1(3,4), f2(1,2), sum, diff;
+sum = f1 + f2;
+diff = f1 - f2;
+
+(Before Intitutive interface)
+Fraction f1(3,4), f2(1,2), sum, diff;
+sum = f1.add(f2);
+
+Decomposition is the practice of breaking up code into smaller pieces.Ideally, each function or method should accomplish a single task. 
+Any subtasks of signifi-cant complexity should be decomposed into separate functions or methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CHAP8 : 
+4)  Use of this to take its on variable and use 
+---------------------------------------------------------------------------------------------
+void SpreadsheetCell::setValue(double mValue)
+{
+    this->mValue = mValue;
+    mString = doubleToString(this->mValue);
+}
+
+5) 
+----------------------------------------------------------------------------- 
+class SpreadsheetCell
+{
+    public:
+        SpreadsheetCell();
+        SpreadsheetCell(double initialValue);
+        SpreadsheetCell(const string& initialValue);
+        SpreadsheetCell(const SpreadsheetCell &src);
+        SpreadsheetCell& operator=(const SpreadsheetCell& rhs);
+        void setValue(double inValue);
+        double getValue();
+        void setString(const string& inString);
+        string getString();
+    protected:
+        string doubleToString(double inValue);
+        double stringToDouble(const string& inString);
+        double mValue;
+        string mString;
+};
+SpreadsheetCell(const SpreadsheetCell &src): //copy constructor: list intilisation for reference
+{
+
+	if (this == &src)
+	 {
+  		return (*this);
+	 }
+		mValue = src.mValue;
+		mString = src.mString;
+ 	 	
+}
+
+This format is given by the compliler any deviation with the signature wil result in error.
+& = The reference prevents a copy of the Object temp object to be created and the address is received as a
+     whole no Value copying.
+This format prevents the calling of copy constructor in recurssion in case of a vale is passed .
+
+SpreadsheetCell& SpreadsheetCell::operator=(const SpreadsheetCell& rhs)   //Asignment opersator 
+{
+
+	if (this == &rhs)
+	 {
+  		return (*this);
+	 }
+		mValue = rhs.mValue;
+		mString = rhs.mString;
+ 	 	return (*this);
+}
+
+6) Calling an asignment operator and a copy constructor:
+--------------------------------------------------------------------------------------
+a copy constructor:
+***********************
+SpreadsheetCell myCell(5);
+SpreadsheetCell anotherCell(myCell);
+SpreadsheetCell aThirdCell = myCell;
+an asignment operator
+***********************
+anotherCell = myCell; 
+7) Use of Copy constructor:
+----------------------------------------------------------------------------------------
+a} 
+string SpreadsheetCell::getString()
+{
+    return (mString);
+}
+string s1;
+s1 = myCell2.getString();
+
+The compiler actually creates an unnamed temporary 
+object by calling a class copy constructor. When you assign this result to s1, the assignment operator
+is called for s1 with the temporary string as a parameter this temporary string Value is copied from Copy Constructor
+output value.When the Value is copied by the assiagnment operator then the temporary string object is
+destroyed. Thus, the single line of code invokes the copy constructor and the assignment operator (for
+two different objects).
+
+string s2 = myCell3.getString();
+           getString() still creates a temporary unnamed string object when it returns mString.
+But now s1 gets its copy constructor called, not its assignment operator.
+
+So in case 2 temporary objects are being created we can remove it by uisng MoveContructor ,
+
+
+
+
+Move constructors 
+======================
+Move constructors of classes using dynamic memory allocation are allowed to assign the values of
+pointer data members to their own pointer data members without requiring them to make a copy of
+the source’s data. Next, the temporary’s pointer value is set to zero to prevent its destructor from
+destroying data now owned by the just constructed object. The move constructor has grabbed or
+stolen the data from the temporary object. This is OK as the temporary object cannot be referred to
+again (as it is anonymous, it cannot be accessed by other code) and the temporary objects cease to
+exist shortly after the constructor’s call. Here is the implementation of Strings move constructor:
+
+String::SpreadsheetCell::String(String &&tmp)  // take the temporary object
+:
+d_memory(std::move(tmp.d_memory))  // Intialise your own memory and size and capacity
+
+{
+	tmp.d_memory = 0;  //memory of the temp obj is set as 0
+}
+
+
+a move constructor suppresses the default availability of the copy constructor.
+The default copy constructor is also suppressed if a move assignment operator is declared So to restore that 
+class Class
+{
+public:
+
+Class() = default;
+Class(Class const &other) = default;
+Class(Class &&tmp)
+{}
+
+
+~Class()
+{
+delete[] d_str;
+}
+};
+int main()
+{
+Class one;
+Class two(one);
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////
+Virtual functions 
+////////////////////////////////////////////////////////////////////
+A virtual function is a member function of a class, whose functionality can be over-ridden in its derived classes. 
+It is one that is declared as virtual in the base class using the virtual keyword. 
+
+What is Binding?
+***********************************
+Binding refers to the act of associating an object or a class with its member. 
+If we can call a method fn() on an object o of a class c, we say that the object o is binded with the method fn().
+ This happens at compile time and is known as static or compile - time binding.
+The calls to the virtual member functions are resolved during run-time.This mechanism is known as dynamic binding.
+The most prominent reason why a virtual function will be used is to have a different functionality in the derived 
+class.
+
+
+How does a Virtual Function work?
+****************************************
+Whenever a program has a virtual function declared, a v - table is constructed for the class.
+ The v-table consists of addresses to the virtual functions for classes that contain .Whenever there is a virtual function call,
+ the v-table is used to resolve to the function address. An object of the class that contains one or more virtual functions contains
+ a virtual pointer called the vptr at the very beginning of the object in the memory. 
+Hence the size of the object in this case increases by the size of the pointer. This vptr contains the base address of the virtual table in memory
+
+run time when a virtual function is called on an object, the vptr of that object provides the base address of the virtual table
+for that class in memory. 
+This table is used to resolve the function call as it contains the addresses of all the virtual functions of that class. 
+This is how dynamic binding is resolved during a virtual function call.
+
+
+                                                                                when a method is called on
+An object, the pointer is followed into the vtable and the appropriate version of the method is executed
+based on the type of the object, not the type of the variable used to access it.
+k,
+EX:
+                 Two classes, Super and Sub. Super declares two virtual methods, foo() and bar(). As
+you can see by looking at Super s vtable, each method has its own implementation defined by the
+Super class. The Sub class does not override Super s version of foo(), so the Sub vtable points to the
+same implementation of foo(). Sub does, however, override bar(), so the vtable points to the new
+version.
+
+
+ virtual  table architecture:
+****************************************************
+The virtual function table actually contains two more entries before the function pointers: 
+1>a pointer to a "type ID" structure, a separate structure that describes the class itself,
+2>memory offset whose use we'll look at later. So if we have this C++ code:
+
+class foo {
+virtual void a(int);    // Virtual functions
+virtual void b(float);
+int c;
+float d;
+};
+
+The equivalent C code would look something like this:
+/******************************v-table structure *************************/
+struct foo_vtable {
+typeid * type_id_ptr;     // Type id structure pointer shows the type_id for a class
+int offset;		  //
+void (* ptr_to_a)(int);
+void (* ptr_to_b)(float);
+};
+
+void foo_a(int) { }
+void foo_b(float) { }
+
+static type_id foo_type_id = { ... };  
+static foo_vtable sfoo_vtable = { &foo_type_id, 0, foo_a, foo_b }; //Per class has only 1 vtable and its intialised wd v fun ptrs n type id n offset
+
+struct foo {
+foo_vtable * vtable; // gets initiated to &sfoo_vtable
+int c;
+float d;
+};
+
+Class type is stored separately - first ptr in the v-table. Motivation for this will be clear later.
+Vtable has an offset 
+
+
+
+***********************************************************************************************************************************
+Virtual Table for Multiple inheritance and offsets;
+****************************************************
+
+
+class A
+{
+	int a;
+	virtual funa(){}
+
+};
+
+
+class B
+{
+	int b;
+	virtual funb(){}
+
+};
+
+
+
+class C: public A , public B
+{
+	int c;
+	funb(){}  //Overides B function
+
+};
+
+C *pc = new C;
+
+Inheritance V table Offset :
+-----------------------------------
+Offset 
++0: pointer to virtual method table of C (for A) wd the ame implentation of the function 
++4: value of int a
++8: pointer to virtual method table of C (for B) wd the function overidden C::funb
++12: value of int b
++16: value of int c
+
+Virtual function behaviour With defaults at Base class functions
+------------------------------------------------------------------
+The virtual functions default argument will be called from the Base class if the pointer used is base class,
+else with argument present and 
+n struct A {
+  virtual void f(int a = 7);
+};
+struct B : public A {
+  void f(int a);
+};
+void m()
+{
+  B* pb = new B;
+  A* pa = pb;
+  pa->f(); //OK, calls pa->B::f(7)
+  pb->f(); //error: wrong number of arguments for B::f()
+}
+
+Virtual template example
+-------------------------------------------------------------------
+Is no reason you can't include a virtual function (pure or otherwise) in the template class definition, 
+because that, in and of itself, does not generate any code, including the virtual table.
+
+When we actually instantiate the template class, e.g. Base<int>, then the compiler only needs to build 
+the virtual table for that one selected type, so it's not any different than a (pure or otherwise) virtual function
+for a non-templated class.
+
+template<typename T>
+class Base {
+public:
+    virtual void Do(T x) const = 0;
+};
+
+template<typename T>
+class Base : public Base<T> {
+public:
+
+    void Do(T x) const {
+        // ...i
+	cout<<x;
+    }
+};
+
+Base<int> *ptr = new Base<int>;
+ptr->Do(4);
+Base<float> *Nptr = new Base<float>;
+Nptr->Do(.334);
+ 
+-------------------------------------------------------------
+Virtual Constructors and Destructors
+******************************************
+A constructor cannot be virtual because at the time when the constructor is invoked the virtual table would not be
+ available in the memory.
+ Hence we cannot have a virtual constructor.
+
+
+A virtual destructor is one that is declared as virtual in the base class and is used to ensure that destructors
+are called in the proper order. It is to be remembered that destructors are called in the reverse order of 
+inheritance. 
+If a base  class pointer points to a derived class object and we some time later use the delete operator to delete the object, 
+then the derived class destructor is not called. Refer to the code that follows:
+#include <iostream.h>
+class base
+{
+   public:
+   ~base()
+  {
+
+  }
+};
+
+class derived : public base
+{
+   public:
+   ~derived()
+   {
+ 
+   }
+};
+
+void main()
+{
+
+   base *ptr = new derived();
+   // some code
+   delete ptr;
+}
+ 
+
+In this case the type of the pointer would be considered. Hence as the pointer is of type base, the base 
+class destructor would be called but the derived class destructor would not be called at all. 
+The result is memory leak. In order to avoid this, we have to make the destructor virtual in the base class. 
+This is shown in the example below:
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Inheriting from Multiple Classes
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    class Baz : public Foo, public Bar
+    {
+          // Etc.
+    };
+By listing multiple parents, the Baz object will have the following characteristics:
+         A Baz object will support the public methods and contain the data members of both Foo
+         and Bar.
+         The methods of the Baz class will have access to protected data and methods in both Foo
+         and Bar.
+         A Baz object can be upcast to either a Foo or a Bar. Creating a new Baz object will automatically call the Foo and Bar default constructors, i
+
+
+///////////////////////////////////////////////////////////
+Naming Collisions and Ambiguous Base Classes 
+///////////////////////////////////////////////////////////
+Name Ambiguity
+*******************
+1)
+class Dog
+{
+         virtual void eat() { cout <<  The dog has eaten  << endl; }
+};
+class Bird
+{
+
+        virtual void eat() { cout <<  The bird has eaten  << endl; }
+};
+class DogBird : public Dog, public Bird
+{
+};
+int main()
+{
+    DogBird myConfusedAnimal;
+    myConfusedAnimal.eat();   // BUG! Ambiguous call to method eat()
+}
+
+
+SOLUTION:
+------------
+
+The solution to the ambiguity is to either explicitly upcast the object, essentially hiding the undesired
+version of the method from the compiler, or to use a disambiguation syntax. For example, the following
+code shows two ways to invoke the Dog version of eat().
+    static_cast<Dog>(myConfusedAnimal).eat();            // Slices, calling Dog::eat()
+    myConfusedAnimal.Dog::eat();                         // Calls Dog::eat()
+
+2) inherit from the same class twice:
+++++++++++++++++++++++++++++++++++++++++++++++++++
+class Dog {};
+class Bird : public Dog {};
+class DogBird : public Bird, public Dog {}; // BUG! Dog is an ambiguous base
+class.
+
+
+3) Diamond Inheritence:
++++++++++++++++++++++++++++++++++++++++++++++++++++
+    The following code adds a sleep() method to the Animal base class and modifies the Dog and Bird
+classes to inherit from Animal as a virtual base class. Without the virtual keyword, a call to sleep()
+on a DogBird object would be ambiguous because both Dog and Bird would have inherited versions of
+sleep() from Animal. However, when Animal is inherited virtually, only one copy of each method or
+member exists in its descendents.
+
+    public:
+        virtual void eat() = 0;
+        virtual void sleep() { cout <<  zzzzz...  << endl; }
+};
+
+class Dog : public virtual Animal
+{
+   virtual void eat() { cout <<  The dog has eaten  << endl; }
+};
+
+class Bird : public virtual Animal
+{
+   virtual void eat() { cout <<  The bird has eaten  << endl; }
+};
+
+class DogBird : public Dog, public Bird
+{
+    public:
+        void eat() { Dog::eat(); }   //Implentaion of the upper virtual
+};
+
+int main(int argc, char** argv)
+{
+    DogBird myConfusedAnimal;
+    myConfusedAnimal.sleep();   // Not ambiguous because Animal is virtual
+}
+
+About the memory layout
+*************************
+As a side note, the problem with the Dreaded Diamond is that the base class is present multiple times. So with regular inheritance, you believe you have:
+
+  A
+ / \
+B   C
+ \ /
+  D
+But in the memory layout, you have:
+
+A   A
+|   |
+B   C
+ \ /
+  D
+This explain why when call A::foo(), you have an ambiguity problem. But the real problem comes when you want to use a member
+ variable of A. For example, let's say we have:
+
+class A
+{
+    public :
+       foo() ;
+       int m_iValue ;
+} ;
+When you'll try to access m_iValue from D, the compiler will protest, because in the hierarchy, it'll see two m_iValue, 
+not one. And if you modify one, say, B::m_iValue (that is the A::m_iValue parent of B), C::m_iValue won't be modified 
+(that is the A::m_iValue parent of C).
+
+This is where virtual inheritance comes handy, as with it, you'll get back to a true diamond layout, with not only 
+one foo() method only, but also one and only one m_iValue.
+
+
+////////////////////////////////////////////////////////////////////
+Changing the Method Return Type
+///////////////////////////////////////////////////////////////////
+/  In C++, an overriding method can change the return type as
+long as the original return type is a pointer or reference to a class, and the new return type is a pointer or
+reference to a descendent class. Such types are called COVARIANT returns types. 
+
+  This feature sometimes comes in handy when the superclass and subclass work with objects in a parallel hierarchy. That is,
+another group of classes that is tangential, but related, to the first class hierarchy.
+
+Ex: factory pattern
+
+In place of superclass if void* is given results in return types are not used in method disambiguation.
+
+////////////////////////////////////////////////////////////////////
+If the Superclass Method Is Static
+
+////////////////////////////////////////////////////////////////////
+First of all, a method cannot be both static and virtual. This is the first clue that attempting to override
+a static method will not do what you intend for it to do. If you have a static method in your subclass
+with the same name as a static method in your superclass, you actually have two separate methods.
+
+
+class SuperStatic
+{
+    public:
+        static void beStatic() { cout <<  SuperStatic being static, yo  << endl;
+};
+class SubStatic :public  SuperStatic
+{
+    public:
+        static void beStatic() { cout <<  SubStatic keepin  it static  << endl;
+};
+when virtual like implentation is done 
+SubStatic mySubStatic;
+SuperStatic& ref = mySubStatic;
+mySubStatic.beStatic();
+ref.beStatic(); 
+ // The SuperStatic method is called C++ doesn t care what the object actually is when calling a static method. It only
+cares about the compile-time type. 
+
+
+
+static methods are bound to the class in which they are defined, not to any object.
+A method in a class that calls a static method calls the version defined in that class,
+independent of the run-time type of the object on which the original method is called.
+
+
+________________________________________________________________________________________________
+/////////////////////////////////////////////////////////////////////
+CHAP 12: Understanding C++ Quirks and Oddities
+////////////////////////////////////////////////////////////////////
+
+1)  References :
+ A reference in C++ is an alias just another name for the original variable. All modifications to the reference change the
+value of the variable to which it refers. 
+	a) Reference variables must be initialized as soon as they are created:
+	***********************************************************************************
+	int x = 3;
+	int& xRef = x;
+
+	b) You cannot create a reference to an unnamed value such as an integer literal, unless the reference is to a const value:
+	***************************************************************************************************************************
+
+	int& unnamedRef = 5; // DOES NOT COMPILE
+	const int& unnamedRef = 5; // Works as expected
+	
+	c) Modyfying Reference :
+	**********************************************************************************
+	 int x = 3, y = 4;
+	 int& xRef = x;
+	 xRef = y; // Changes value of x to 4. Doesn t make xRef refer to y.
+
+	 also 
+		int& xRef = x;
+		int& zRef = z;
+		zRef = xRef; // Assigns values, not references
+	
+	d) Use of refrence , value change will change of :
+	****************************************************************************************
+		void swap(int& first, int& second)
+		{
+    			int temp = first;
+    			first = second;
+    			second = temp;
+		}
+
+
+	e) Pass-by-Reference versus Pass-by-Value:
+	****************************************************************************************
+	Pass-by-reference is required when you want to modify the parameter and see those changes reflected in the variable argument to the 
+	function or method
+
+         Pass-by-reference avoids copying the argument to the function, providing two additional benefits in some cases
+
+	******************************************************************************************
+	Use references instead of pointers unless you need to dynamically allocate memory
+	or otherwise change, or free, the value to which the pointer points.
+
+	
+2) CONSTANTS :
+			int z;
+			const int& zRef = z;
+			zRef = 4; // DOES NOT COMPILE
+			
+-----------------------------------------------------------------------------------			
+3) ASSERT:
+
+Compilers offer an assert() macro. The assert() macro returns TRUE if its parameter evaluates TRUE and takes some 
+kind of action if it evaluates FALSE. Many compilers will abort the program on an assert() that fails; 
+
+void analyze(char *string, int length)
+{
+   assert(string != NULL);     /* cannot be NULL */
+   assert(*string != '\0');    /* cannot be empty */
+   assert(length > 0);         /* must be positive */
+}
+
+ --------------------------------------------------------------------------------
+Constant class variables:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1) The constant class variables instialisation inside the classes  
+Class A
+{
+Const Int I ;   // This variable shuold be intilaised in the same line of declaration
+A(int x){
+{I = x;} //Will thorugh an error because assianing a constant value Cas a deep copying of the value will happen wer
+}
+A(int x):i(x)// C++ compiler will allow cas a shallow copying to the same memory is happening at intialisation
+{}
+}
+2) A constant object declaration:
+Whenevr a object is constant a
+Const A a; // Any call to the Get or set Functions
+a.i = 5 // Viollates the constaness of the object
+Any set function changing the value will result in ERROR
+3) Constant Overloading of the function :
+	A
+ 	{
+		int  Fun(int x ){x = 6}   // Normal function
+		const int  Fun const (int x){} // Overloaded const function;
+	};
+	
+	A a;   
+	a.Fun(); // Calls the non constant function
+	Const A b ; 
+	b. Fun(); // Calls the  constant function
+
+-----------------------------------------------------------------------------------------------
+Constant pointer and constant pointing to
+----------------------------------------------------------------------------------------------
+a) const int * ptr = &i;
+// Pointer is pointing towards a const variable so the value will be constant .
+	*Ptr = 56; (ERROR : not  allowed as compiler will consider it as a constant integer but the pointer is non const )
+	Ptr = &j ; // A non-const pointer can be redirected to point to other addresses
+b) int * const ptr = &i;
+a const pointer must be initialized to a value upon declaration, and its value can not be changed. The pointing value is not conatant
+	*ptr = 56(A pointer to a non-const value can change the value it is pointing to)
+	Ptr = &j ; (Error: Not allowed A const pointer always points to the same address, and this address can not be changed.)
+c) const int* const   ptr (this will not allow any of the above)
+ 
+----------------------------------------------------------------------------------------------
+The keyword ‘explicit
+
+----------------------------------------------------------------------------------------------
+• DataBase(Person const &): the DataBase initially contains a single Person object;
+• DataBase(istream &in): the data about multiple persons are read from in.
+• DataBase(size_t count, istream &in = cin): the data ofcountpersons are read from
+in, by default the standard input stream.
+The above constructors all are perfectly reasonable. But they also allow the compiler to compile the
+following code without producing any warning at all:
+DataBase db;
+DataBase db2;
+Person person;
+db2 = db; // 1
+db2 = person; // 2
+db2 = 10; // 3
+db2 = cin; // 4
+Statement 1 is perfectly reasonable: db is used to rede?ne db2. Statement 2 might be understandable since we designed DataBase to contain Person objects. Nevertheless, we might question the
+logic that’s used here as a Person is not some kind of DataBase. The logic becomes even more
+opaque when looking at statements 3 and 4. Statement 3 in effect waits for the data of 10 persons
+to appear at the standard input stream. Nothing like that is suggested by db2 = 10.
+All four statements are the result of implicit promotions. Since constructors accepting, respectively a
+Person, an istream, and a size_t and an istream have been de?ned for DataBase and since the
+assignment operator expects a DataBase right-hand side (rhs) argument the compiler ?rst converts
+the rhs arguments to anonymous DataBase objects which are then assigned to db2.
+It is good practice to prevent implicit promotions by using the explicit modi?er when declaring
+a constructor. Constructors using the explicit modi?er can only be used to construct objects
+explicitly. Statements 2-4 would not have compiled if the constructors expecting one argument would
+have been declared using explicit. E.g.,
+explicit DataBase(Person const &person);
+explicit DataBase(size_t count, std:istream &in);
+Having declared all constructors accepting one argument asexplicitthe above assignments would
+have required the explicit speci?cation of the appropriate constructors, thus clarifying the programmer’s intent:
+
+3) STATIC:
+	static means only internal linkage . A function or variable declared as static cannot be accessd by the other files at thetime of linking . 
+
+	static Variables in Functions
+   The final use of the static keyword in C++ is to create local variables that retain their values between
+   exits and entrances to their scope.
+
+Static Method:
+-------------------------------------------
+sometimes apply to the class as a whole, not to each object. You can write static methods as well as members. As an example, consider the SpreadsheetCell class .It has two helper methods: stringToDouble() and doubleToString(). These methods don t access information about specific objects, so they could be static.
+	                                                                             However, note that static
+methods are not called on a specific object, so they have no this pointer, and are not executing for a spe-
+cific object with access to its non-static members. In fact, a static method is just like a regular func-
+tion. The only difference is that it can access private and protected static data members of the class
+and private and protected non-static data members on other objects of the same type.
+        You cannot access non-static data members inside a static method.
+
+		
+
+4) EXTERNAL :
+      Source file, including functions and global
+variables, has a linkage that is either internal or external. External linkage means that the name is avail-
+able from other source files. By default global variables have external linkage.
+
+*******	keyword : extern 
+When you specify a name as extern, the compiler treats it as a declaration, not a definition.You must provide a separate definition line for the variable without the extern keyword. 
+extern int x;
+int x = 3;
+For example, consts and typedefs have internal linkage by default. You can use extern to give them external linkage.
+
+In C++ extern are declared in header files and alll the Files using those variables include this header file.
+
+test.h
+extern int k;
+
+test.C
+#include<test.h>
+int k =6
+
+
+
+
+
+5) CASTING:
+Assigning two different types or kind of variable:
+
+1) const_cast:                                                  
+You can use it to cast away const-ness of a variable. It is the only cast of the four that is allowed to cast away const-ness.     you some-
+times find yourself in a situation where a function is specified to take a const variable, which it must
+then pass to a function that takes a non-const variable.
+
+
+
+	void f(const char* str)
+	{
+	    // Function body omitted for brevity
+	    g(const_cast<char*>(str));
+	    // Function body omitted for brevity
+	}
+
+
+
+2) static cast:
+            use static_cast to perform explicitly conversions that are allowed because of user-
+defined constructors or conversion routines.
+	int i = 3;
+	double result = static_cast<double>(i) / 10;
+---------------------------------------------------------------------------------
+Base* b;
+Derived* d = new Derived();
+b = d; // Dont need a cast to go up the inheritance hierarchy
+d = static_cast<Derived*>(b); // Need a cast to go down the hierarchy
+Base base;
+Derived derived;
+Base& br = base;
+Derived& dr = static_cast<Derived&>(br);
+
+3)reinterpret_cast
+======================
+======================
+      einterpret_cast is a bit more powerful, and concomitantly less safe, than the static_cast.
+You can use it to perform some casts that are not technically allowed by C++ type rules, but which might
+make sense to the programmer in some circumstances. For example, you can cast a pointer type to any
+other pointer type, even if they are unrelated by an inheritance hierarchy. Similarly, you can cast a refer-
+ence to one type to a reference to another type, even if the types are unrelated
+
+
+class X {};
+class Y {};
+int main(int argc, char** argv)
+{
+    int i = 3;
+    X x;
+    Y y;
+    X* xp;
+    Y* yp;
+    // Need reinterpret cast to perform pointer conversion from unrelated classes
+    // static_cast doesn t work.
+    xp = reinterpret_cast<X*>(yp);
+    // Need reinterpret_cast to go from pointer to int and from int to pointer
+    i = reinterpret_cast<int>(xp);
+    xp = reinterpret_cast<X*>(i);
+    // Need reinterpret cast to perform reference conversion from unrelated classes
+    // static_cast doesn t work.
+    X& xr = x;
+    Y& yr = reinterpret_cast<Y&>(x);
+    return (0);
+}
+
+
+One practical use of reinterpret_cast is in a hash function, which maps a value to an index in such a way that two distinct values rarely end up with the same index.
+
+// expre_reinterpret_cast_Operator.cpp
+// compile with: /EHsc
+#include <iostream>
+
+// Returns a hash code based on an address
+unsigned short Hash( void *p ) {
+   unsigned int val = reinterpret_cast<unsigned int>( p );
+   return ( unsigned short )( val ^ (val >> 16));
+}
+
+using namespace std;
+int main() {
+   int a[20];
+   for ( int i = 0; i < 20; i++ )
+      cout << Hash( a + i ) << endl;
+}
+
+
+
+
+
+
+4) dynamic_cast
+                                                     the dynamic_cast provides a run-time check on casts
+within an inheritance hierarchy. You can use it to cast pointers or references. dynamic_cast checks the
+runtime type information of the underlying object at run time. If the cast doesn t make sense,
+dynamic_cast returns NULL (for the pointer version) or throws a bad_cast exception (for the reference
+version).
+
+The dynamic cast is used when their 
+
+class Base
+{
+virtual f(){}
+
+}
+
+class derived : public base
+{
+}
+B b;
+D r
+Base &br = b;
+Base &br1 = d;
+
+try {
+      Derived& dr1 = dynamic_cast<Derived&>(br);
+	
+	// it will catch a bad cast only dr1 = br1 is allowed 
+	// Even non polymorphic(No virtuals in inheritance) clases will also though errors
+	
+} catch (bad_cast&) {
+    cout <<  Bad cast!\n ;
+}
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'''
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+RTTI
+RTTI is short for Run-time Type Identification. RTTI is to provide a standard way for a program to determine the type of object during runtime.
+In other words, RTTI allows programs that use pointers or references to base classes to retrieve the actual derived types of the objects to which 
+these pointers or references refer.
+
+RTTI is provided through two operators:
+The typeid operator, which returns the actual type of the object referred to by a pointer (or a reference).
+The dynamic_cast operator, which safely converts from a pointer (or reference) to a base type to a pointer (or reference) to a derived type.
+
+
+	Employee lee;
+	Programmer park;
+
+	Employee *pEmpA = &lee;
+	Employee *pEmpB = &park;
+
+	// check if two object is the same
+	if(typeid(Programmer) == typeid(lee)) {
+		Programmer *pProg = (Programmer *)&lee; 
+		pProg->coding();
+	}
+	if(typeid(Programmer) == typeid(park)) {
+		Programmer *pProg = (Programmer *)&park; 
+		pProg->coding();
+	}
+
+	pEmpA->show_id();
+	pEmpB->show_id();
+
+
+
+//UPCAST AND DOWNCAST 
+**********************************
+Employee employee;
+	Programmer programmer;
+
+	// upcast - implicit upcast allowed
+	Employee *pEmp = &programmer;
+
+	// downcast - explicit type cast required
+	Programmer *pProg = (Programmer *)&employee;
+
+
+	// Upcasting: safe - progrommer is an Employee 
+	// and has his id to do show_id().
+	pEmp->show_id();
+	pProg->show_id();
+
+	// Downcasting: unsafe - Employee does not have
+	// the method, coding().
+       // compile error: 'coding' : is not a member of 'Employee'
+	// pEmp->coding(); 
+	pProg->coding();
+
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+5) Deleting an array :
+
+dsyu876
+
+Mutable Data Members
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Sometimes you write a method that is  logically  const but happens to change a data member of the
+ object. This modification has no effect on any user-visible data, but is technically a change, so the com-
+ piler won t let you declare the method const. For example, suppose that you want to profile your
+
+	                        The solution is to make your new counter variable mutable, which tells the com-
+piler that it s okay to change it in a const method. 
+
+
+mutable int mNumAccesses;
+double SpreadsheetCell::getValue() const
+{
+    mNumAccesses++;
+    return (mValue);
+}
+
+Friends
+++++++++++++++++++++++++++++
+Class are that other classes or nonmember functions are friends, and can access
+protected and private data members and methods. 
+ 
+
+ Class SpreadsheetCell
+{
+     public:
+         friend class Spreadsheet;
+         // Remainder of the class omitted for brevity
+	friend bool checkSpreadsheetCell(const SpreadsheetCell &cell);
+};
+
+lazy initialization;
+**********************
+lazy initialization is the tactic of delaying the creation of an object, 
+the calculation of a value, or some other expensive process
+ until the first time it is needed.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CHAPTER 13 MEMORY MANAGMENT:
+_++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Multidimensional stack Arrays
+**************************************	
+size of a multidimensional array is all of its dimensions multiplied together, then multiplied by the
+size of a single element in the array. In Figure 13-8, the three-by-three board is 3*3*1 = 9 bytes, assuming
+that a character is 1 byte. For a four-by-seven board of characters, the array would be 4*7*1 = 28 bytes.
+
+        You allocate memory with the array version of new (new[]), you must release it with the array ver-
+sion of delete (delete[]). This version will automatically destruct the objects in the array in addition to
+releasing the memory associated with them. If you do not use the array version of delete, your program
+may behave in odd ways. In some compilers, only the destructor for the 0th element of the array will be
+called because the compiler only knows that you are deleting a pointer to an object.
+
+
+
+Simple* mySimpleArray = new Simple[4];
+// Use mySimpleArray.
+delete[] mySimpleArray;
+		
+
+
+ Multidimensional Heap Arrays
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                           
+
+Reason for having dynamic memory:
+===================================================
+The dynamic memeory is allocated in the run time on the fly so that the most important implication comes when its 
+dynamic array alocation with size only know at the run time .
+
+
+						   At first, it might seem like the correct way to declare and allocate a
+dynamically allocated multidimensional array is as follows:
+     char** board = new char[i][j]; // BUG! Doesn t compile
+This code doesn t compile because heap-based arrays don t work like stack-based arrays. Their memory
+layout isn t contiguous, so allocating enough memory for a stack-based multidimensional array is incor-
+rect. Instead, you must start by allocating a single contiguous array for the first subscript dimension of a
+heap-based array.
+
+Multidimensional Heap Array
+***************************************
+	char** board = new char[i][j]; // BUG! Doesn t compile
+
+This code doesn t compile because heap-based arrays don t work like stack-based arrays. Their memory
+layout isn t contiguous, so allocating enough memory for a stack-based multidimensional array is incor-
+rect. Instead, you must start by allocating a single contiguous array for the first subscript dimension of a
+heap-based array.
+
+1)
+char** allocateCharacterBoard(int xDimension, int yDimension)
+{
+    char** myArray = new char*[xDimension]; // Allocate first dimension
+    for (int i = 0; i < xDimension; i++) {
+        myArray[i] = new char[yDimension];  // Allocate ith subarray
+    }
+    return myArray;
+}
+
+2)
+void releaseCharacterBoard(char** myArray, int xDimension)
+{
+    for (int i = 0; i < xDimension; i++) {
+        delete[] myArray[i];    // Delete ith subarray
+    }
+    delete[] myArray;           // Delete first dimension
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  c advantages of exceptions over the ad hoc approaches in C and C++.
+ Return codes from functions can be ignored. Exceptions cannot be ignored: if your program fails
+    to catch an exception, it will terminate.
+    Integer return codes do not contain any semantic information. Different numbers can mean dif-
+    ferent things to different programmers. Exceptions can contain semantic information in both
+    their type names and, if they are objects, in their data.
+    Integer return codes are devoid of surrounding information. You can use exceptions to pass as
+    much information as you want from the code that finds the error to the code that handles it.
+    Exceptions can also be used to communicate information other than errors, though many pro-
+    grammers consider that an abuse of the exception mechanism.
+    Exception handling can skip levels of the call stack. That is, a function can handle an error that
+    occurred several function calls down the stack, without error-handling code in the intermediate
+    functions. Return codes require each level of the call stack to clean up explicitly after the previ-
+    ous level.
+
+USING Error 
+#include <exception>
+try {
+    readIntegerFile(fileName, myInts);
+} catch (const exception& e) {
+    cerr <<  Unable to open file   << fileName << endl;
+    exit (1);
+}
+
+
+
+USE of throw an exception:
+-------------------------------------------------
+
+void readIntegerFile(const string& fileName, vector<int>& dest)
+{
+
+	istr.open(fileName.c_str());
+	if (istr.fail()) {
+				  throw invalid_argument("");
+			  }
+			  {
+				istr.close();
+				throw runtime_error("");
+			   }
+}
+
+try
+{
+    
+	readIntegerFile(fileName, myInts);
+}
+ catch (const invalid_argument& e)
+ {
+    cerr << Unable to open file << fileName << endl;
+    exit (1);
+  } 
+ catch (const runtime_error& e)
+ {
+    cerr <<Error reading file  << fileName << endl;
+    exit (1);
+ }
+
+Throwing Multiple Exceptions:
+----------------------------------------------------------------------
+Multiple exceptions are caught by multiple catch
+
+fun()
+{
+
+if (istr.fail()) {
+    // We failed to open the file: throw an exception.
+    throw invalid_argument();
+}
+else
+	throw runtime_error();
+}
+
+While catching:
+---------------
+  catch (const invalid_argument& e) {
+    cerr <<  Unable to open file   << fileName << endl;
+    exit (1);
+} catch (const runtime_error& e) {
+    cerr <<  Error reading file   << fileName << endl;
+    exit (1);
+
+c++ also proviodes Throw list to  to specify the exceptions a function or method intends to throw, 
+It it just a declaration after the function name
+
+fun()throw (invalid_argument, runtime_error)
+{   body of the function }
+
+Throw lists donâ€ prevent functions from throwing unlisted exception types, but
+they prevent the exception from leaving the function.
+
+________________________________________________________________________
+rethrow an exception when the catch cannot handle it:
+void f() 
+{
+  try{
+    cout << "In try block of f()" << endl;
+    cout << "Throwing exception of type E1" << endl;
+    E1 myException;
+    throw myException;
+    }
+catch (E1& e) {
+    cout << "In handler of f(), catch (E1& e)" << endl;
+    cout << "Exception: " << e.message << endl;
+    throw;  // this throw will b handled ny the main caller
+  }
+
+}
+
+
+ try {
+    cout << "In try block of main()" << endl;
+    f();
+  }
+
+catch(...){
+
+	//here the thow will be handled
+
+}
+
+.------------------------------------------------------------------------
+s, if Incomplete’s constructor would actually have allocated some memory, the program would
+suffer from a memory leak. To prevent this from happening, the following counter measures are
+available:
+• Prevent the exceptions from leaving the constructor.
+If part of the constructor’s body may generate exceptions, then this part may be surrounded
+by a try block, allowing the exception to be caught by the constructor itself. This approach is
+defensible when the constructor is able to repair the cause of the exception and to complete its
+construction as a valid object.
+• If an exception is generated by a base class constructor or by a member initializing constructor
+then a try block within the constructor’s body won’t be able to catch the thrown exception.
+This always results in the exception leaving the constructor and the object is not considered to
+have been properly constructed. A try block may include the member initializers, and the try
+block’s compound statement becomes the constructor’s body as in the following example:
+class Incomplete2
+{
+Composed d_composed;
+public:
+Incomplete2()
+try
+:
+d_composed(/* arguments */)
+{
+// body
+}
+catch (...)
+{}
+};
+---------------------------------------------------------------------------
+Stack unwinding (C++ only)
+When an exception is thrown and control passes from a try block to a handler, the C++ run time calls destructors
+ for all automatic objects constructed since the beginning of the try block. This process is called stack unwinding. 
+The automatic objects are destroyed in reverse order of their construction. (Automatic objects are local objects that
+ have been declared auto or register, or not declared static or extern.
+
+If an exception is thrown during construction of an object consisting of subobjects or array elements, destructors are 
+only called for those subobjects or array elements successfully constructed before the exception was thrown. 
+A destructor for a local static object will only be called if the object was successfully constructed.
+
+
+struct E {
+  const char* message;
+  E(const char* arg) : message(arg) { }
+};
+
+void my_terminate() {
+  cout << "Call to my_terminate" << endl;
+};
+
+struct A {
+  A() { cout << "In constructor of A" << endl; }
+  ~A() {
+    cout << "In destructor of A" << endl;
+    throw E("Exception thrown in ~A()");
+  }
+};
+
+struct B {
+  B() { cout << "In constructor of B" << endl; }
+  ~B() { cout << "In destructor of B" << endl; }
+};
+
+int main() {
+  set_terminate(my_terminate);
+
+  try {
+    cout << "In try block" << endl;
+    A a;
+    B b;
+    throw("Exception thrown in try block of main()");
+  }
+  catch (const char* e) {
+    cout << "Exception: " << e << endl;
+  }
+  catch (...) {
+    cout << "Some exception caught in main()" << endl;
+  }
+
+  cout << "Resume execution of main()" << endl;
+}
+
+
+o/p:
+In try block
+In constructor of A
+In constructor of B
+In destructor of B
+In destructor of A // a sends exception in destructor which calls my terminate
+Call to my_terminate
+
+
+
+
+
+For not thowing unexpected exception
+------------------------------------------------------------------------
+When a function throws an exception that is not listed in its throw list, C++ calls a special function
+unexpected(). The built-in implementation of unexpected() simply calls terminate(). However,
+just as you can set your own terminate_handler, you can set your own unexpected_handler.
+Unlike in the terminate_handler, you can actually do something other than just terminate the pro-
+gram in the unexpected_handler. Your version of the function must either throw a new exception or
+terminate the program â€” it can t just exit the function normally. If it throws a new exception, that excep-
+tion will be substituted for the unexpected exception as if the new one had been throw originally. If this
+substituted exception is also not listed in the throw list, the program will do one of two things. If the
+throw list for the function specifies bad_exception, then bad_exception will be thrown. Otherwise,
+the program will terminate. 
+To handle an unexpected exception write a handler function 
+
+
+-----------------------------------------------------------------------
+
+        a function throws an exception that is not listed in its throw list, C++ calls a special function
+unexpected(). The built-in implementation of unexpected() simply calls terminate(). However,
+just as you can set your own terminate_handler, you can set your own unexpected_handler.
+Unlike in the terminate_handler,
+  void f(int i) throw(Up, Fit) {
+switch(i) {
+case 1: throw Up();
+case 2: throw Fit();
+}
+g();
+}
+ 
+// void g() {} // Version 1
+void g() { throw 47; } // Version 2
+ 
+void my_unexpected() {
+cout << "unexpected exception thrown" << endl;
+exit(0);
+}
+ 
+int main() {
+set_unexpected(my_unexpected); // (Ignores return value)
+for(int i = 1; i <=3; i++)
+try {
+f(i);
+} catch(Up) {
+cout << "Up caught" << endl;
+} catch(Fit) {
+cout << "Fit caught" << endl;
+}
+} /// 
+The my_unexpected( ) function has no arguments or return value, following the proper form for a custom unexpected( ) function. 
+It simply displays a message so that you can see that it was called, and then exits the program (exit(0) is used here so that the book s
+ make process is not aborted). Your new unexpected( ) function should not have a return statement.
+-----------------------------------------------------------------------
+If the exception thrown from your unexpected handler is not allowed by the original function s specification, one of the following occurs:
+
+1.  If std::bad_exception (defined in <exception>) was in the function s exception specification, 
+the exception thrown from the unexpected handler is replaced with a std::bad_exception object, and the search resumes 
+from the function as before.
+
+2.  If the original function s specification did not include std::bad_exception, terminate( ) is called.
+
+The following program illustrates this behavior:
+
+
+void g() throw(A, bad_exception) { t(); }
+void t() { throw B(); }
+
+void my_uhandler1() { throw A(); }
+void my_uhandler2() { throw; }
+
+void my_thandler() {
+cout << "terminate called" << endl;
+exit(0);
+}
+
+
+
+
+
+
+----------------------------------------------------------------------
+Special cases of exception:
+------------------------------
+1)  A function with no exception specification allows all exceptions. A function with an exception specification that has an empty type_id_list, throw(), 
+does not allow any exceptions to be thrown.
+	void translate()throw()
+  	{}
+
+	void translate()//it can thorw any exception 
+  	{}
+
+2)  an override of that function in a derived class must not add any other exception types to the specification list because that would break any
+ programs that adhere to the base class interface. 
+
+***You can, however, specify fewer exceptions or none at all, since that doesn t require the user to do anything differently. 
+
+
+3) You can also specify anything that is-a A in place of A in the derived function s specification
+
+class Base {
+public:
+class BaseException {};
+class DerivedException : public BaseException {};
+
+virtual void f() throw(DerivedException)
+ {
+					throw DerivedException();
+ }
+
+virtual void g() throw(BaseException)
+ {
+	throw BaseException();
+ }
+};
+ 
+class Derived : public Base {
+public:
+void f() throw(BaseException)//f virtual function will ERROR as BaseException is a kind of derived 
+{
+	throw BaseException();
+}
+virtual void g() throw(DerivedException)
+ {
+throw DerivedException();  //g virtual function will allowed as DerivedException is a kind of base
+}
+
+Some EXCEPTION 
+----------------------------------------------------------------------
+
+exception	description
+
+bad_alloc	thrown by new on allocation failure
+bad_cast	thrown by dynamic_cast when fails with a referenced type
+bad_exception	thrown when an exception type doesn't match any catch
+bad_typeid	thrown by typeid
+ios_base::failure	thrown by functions in the iostream library
+
+catch (exception& e)
+{
+    cout << "Standard exception: " << e.what() << endl;
+}
+------------------------------------
+
+Overloading C++ Operators
+**********************************
+class A
+{ int i};
+
+A a,b;
+
+1) - operator  
+
+const SpreadsheetCell operator-() const
+{
+    SpreadsheetCell newCell(*this);
+    newCell.set(-mValue); // call set to update mValue and mStr
+    return (newCell);
+}
+
+Use:  - b
+
+-------------------------------------
+2()++ operator  
+
+
+
+SpreadsheetCell& SpreadsheetCell::operator++()
+{
+    set(mValue + 1);
+    return (*this);
+
+}
+
+her return is reference
+Use:  ++a
+-------------------------------------
+
+SpreadsheetCell SpreadsheetCell::operator--(int)
+{
+    SpreadsheetCell oldCell(*this); // Save the current value before incrementing
+    set(mValue - 1); // Increment
+    return (oldCell); // Return the old value.
+}
+
+a--
+ here return is obj
+-------------------------------------
+ostream& operator<<(ostream& ostr, const SpreadsheetCell& cell)
+{
+    ostr << cell.mString;
+    return (ostr);
+}
+istream& operator>>(istream& istr, SpreadsheetCell& cell)
+{
+    string temp;
+    istr >> temp;
+    cell.set(temp);
+    return (istr);
+}
+
+cin >> a
+cout << a
+
+-------------------------------------
+class Array
+{
+    public:
+        Array();
+        ~Array();
+        int& operator[](int x);
+        const int& operator[](int x); 
+};
+
+
+const int& Array::operator[](int x) const
+{
+    if (x < 0 || x >=mSize) {
+        throw out_of_range(  );
+    }
+    return (mElems[x]);
+}
+
+
+for (i = 0; i < 10; i++) {
+    arr[i] = 100; // Calls the non-const operator[] because
+                  // arr is a non-const object.
+void printArray(const Array& arr, int size)
+{
+
+for (int i = 0; i < size; i++) {
+    cout << arr[i] <<    ; // Calls the const operator[] because arr is a const
+    cout << endl;
+}
+                         // object.
+
+
+-------------------------------------
+//Implementation of overloaded function-call operator
+
+-------------------------------------
+Functors (Function Objects or Functionals) are simply put object + (). In other words, a functor is any object that can be used
+ with () in the manner of a function.
+
+struct absValue
+{
+
+
+   int a;
+
+	absValue(int i):a(i){}
+		
+	float operator()(float f)
+	 {
+		return f > 0 ? f : -f;
+	}
+};
+
+int main( ) 
+{ 
+	using namespace std;
+
+	float f = -123.45;
+	absValue aObj(56);
+	float abs_f = aObj(f);
+
+
+
+ome advantages of function object listed in "The C++ Standard Library" by Nicolai M. Josuttis.
+
+-------------------------------------
+Function object are "smart functions." 
+Objects that behave like pointers are smart pointers. This is similarly true for objects that behave like functions:
+ They can be "smart functions" because they may have abilities beyond operator (). Function objects may have other member functions and attributes. 
+This means that function objects have a state. ....
+Each function object has its own type. 
+
+Ordinary functions have different types only when their signatures differ. However, function objects can have different types when their
+ signatures are the same. In fact, each functional behavior defined by a function object has its own type. This is a significant improvement 
+for generic programming using templates because you can pass functional behavior as a template parameter. ...
+Function objects are usually faster than ordinary functions. 
+The concept of templates usually allows better optimization because more details are defined at compile time. T
+hus, passing function objects instead of ordinary functions often results in better performance.
+
+
+Predicates
+-------------------------------------
+A special auxiliary function for algorithm is a predicate. Predicates are functions that return a Boolean value (or something that can be implicitly 
+converted to bool). In other words, a predicate class is a functor class whose operator() function is a predicate, i.e., its operator() returns true or
+ false.
+
+Predicates are widely used in the STL. The comparison functions for the standard associative containers are predicates, and predicate functions are
+ commonly passed as parameters to algorithms like find_if. Depending on their purpose, predicates are unary or binary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--- OVERLOADING NEW AND DELETE OPERATORS---------------------------------
+
+we must deal with those two tasks (allocation and construction). What we can change is how the memory for an object is allocated. 
+The new operator calls a function It is operator new.
+
+	void * operator new (size_t size); 
+// return is void*. Since this function returns a pointer to raw which is uptyped and uninitialized memory 
+large enough to hold an object of the specified type. 
+The size_t specifies how much memory to allocate. It knows nothing about constructors. All operator new understands is memory allocation. That's it.
+It is the job of the new operator to take the raw memory that the operator new returns and make it into an object. When a compiler sees the following line,
+
+	string *ptrStr = new string("Where is my place in Memory?");
+the compiler generate a code something like this:
+
+1st step:	void *ptrRawMemory = operator new(sizeof(string));
+					It obtains raw memory for a string object.
+
+2nd Step:	call string::string("Where is my place in Memory?") 
+		
+
+3rd step:
+	It then initialize the object in the memory by calling a constructor.
+
+	string *ptrStr = static_cast(ptrRawMemory);
+The line of code above makes ptrString point to the new object.
+
+When we use a delete expression to delete a dynamically allocated object:
+
+delete ptr;
+two things happen. First, the appropriate destructor is run on the object to which ptr points. Then, the memory used by the object is 
+freed by calling a operator delete function.Unlike other operator functions, such as operator=, the operator new and operator delete functions 
+do not overload the new or delete.
+
+
+
+
+
+
+ two overloaded versions of operator new and operator delete functions:
+
+void *operator new(size_t);	// allocate an object
+void *perator new[](size_t);  	// allocate an array
+
+void *operator delete(void*);	// free an object
+void *perator delete[](void*); 	// free an array
+
+OPerator new [] ypes :
+***************************************************************
+The various versions of the operator new []
+void* operator new[] (std::size_t size) throw (std::bad_alloc);
+void* operator new[] (std::size_t size, const std::nothrow_t& nothrow_constant) throw();
+void* operator new[] (std::size_t size, void* ptr) throw();
+
+
+Parameters'
+***************************************************************
+size
+Size in bytes of the requested memory block.
+size_t is an integral type.
+nothrow_constant
+The constant nothrow.
+This parameter is only used to distinguish it from the first version.
+ When the nothrow constant is passed as second parameter to operator new, 
+operator new returns a null-pointer on failure instead of throwing a bad_alloc exception.
+nothrow_t is the type of constant nothrow.
+ptr
+A pointer to a memory block where the object is to be constructed
+
+
+calls:
+***************************************************************
+// uses first version:
+  int * p1 = new int[5];
+
+  // uses second version:
+  int * p2 = new (nothrow) int[4];
+
+  // uses third version:
+  pair <myclass*,ptrdiff_t> p3 = get_temporary_buffer<myclass>(3);
+  new (p3.first) myclass[3];   // calls constructors
+  return_temporary_buffer(p3.first);
+
+----------------------------------------------------------------------
+ Memory Fragmentation:
+  "large" (32 bytes) expanse of free memory:
+----------------------------------
+|                                |
+----------------------------------
+Now, allocate some of it (5 allocations):
+
+----------------------------------
+|aaaabbccccccddeeee              |
+----------------------------------
+Now, free the first four allocations but not the fifth:
+----------------------------------
+|              eeee              |
+----------------------------------
+Now, try to allocate 16 bytes. Oops, I can't, even though there's nearly double that much free.
+
+On systems with virtual memory, fragmentation is less of a problem than you might think,
+ because large allocations only need to be contiguous in virtual address space, not in physical address space.
+ So in my example, if I had virtual memory with a page size of 2 bytes then I could make my 16 byte allocation 
+ with no problem. Physical memory would look like this:
+
+----------------------------------
+|ffffffffffffffeeeeff            |
+----------------------------------
+whereas virtual memory (being much bigger) could look like this:
+
+------------------------------------------------------...
+|              eeeeffffffffffffffff                   
+------------------------------------------------------...
+The classic symptom of memory fragmentation is that you try to allocate a large block and you can't, even though you
+ appear to have enough memory free. Another possible consequence is the inability of the process to release memory back 
+ to the OS (because there's some object still in use in all the blocks it has allocated from the OS, even though those 
+ blocks are now mostly unused).
+
+Tactics to prevent memory fragmentation in C++ work by allocating objects from different areas according to their size 
+and/or their expected lifetime. So if you're going to create a lot of objects and destroy them all together later, allocate
+ them from a memory pool. Any other allocations you do in between them won't be from the pool, hence won't be located in 
+ between them in memory, so memory will not be fragmented as a result.
+
+Generally you don't need to worry about it much, unless your program is long-running and does a lot of allocation and freeing.
+ It's when you have mixtures of short-lived and long-lived objects that you're most at risk, but even then malloc will do its
+ best to help. Basically, ignore it until your program has allocation failures or unexpectedly causes the system to run low on 
+ memory (catch this in testing, for preference!).
+
+The standard libraries are no worse than anything else that allocates memory, and standard containers all have an Alloc 
+template parameter which you could use to fine-tune their allocation strategy if absolutely necessary.
+
+Q.How can I tell if memory fragmentation is a problem for my application? What kind of program is most likely to suffer?
+A: 
+memory fragmentation is a problem if your program uses much more system memory than its actual paylod data would require 
+(and you've ruled out memory leaks).
+
+Q.What are good common ways to deal with memory fragmentation?
+
+A: 
+Use a good algorithm for allocating memory. Instead of allocating memory for a lot of small objects, pre-allocate memory 
+for a contiguous array of those smaller objects. Sometimes being a little wasteful when allocating memory can go along way 
+for performance and may save you the trouble of having to deal with memory fragmentation.
+
+
+
+
+-------------------------------------
+
+template <typename T>
+class Pointer
+{
+    public:
+        Pointer(T* inPtr);
+        ~Pointer();
+        T& operator*();
+        const T& operator*() const;
+    protected:
+        T* mPtr;
+    private:
+        Pointer(const Pointer<T>& src);
+        Pointer<T>& operator=(const Pointer<T>& rhs);
+};
+template <typename T>
+T& Pointer<T>::operator*()
+{
+    return (*mPtr);
+}
+
+
+
+
+-------------------------------------
+
+
+Conversion Operators
+SpreadsheetCell::operator string() const
+{
+    return (mString);
+}
+ 
+
+
+
+
+
+-------------------------------------
+2)  here is the smart pointer template class definition, without the dereference operators filled in yet:
+    template <typename T>
+    class Pointer
+    {
+          public:
+                Pointer(T* inPtr)
+    		{
+          		mPtr = inPtr;
+    		}
+
+                ~Pointer()
+    		{
+          		delete mPtr;
+    		}
+		T* operator->()
+		{
+   		 	return (mPtr);
+		}
+		
+		T& operator*()
+		{
+   			 return (*mPtr);
+		}
+
+
+               // Dereference operators will go here.
+	
+          protected:
+               T* mPtr;
+          private:
+               // Prevent assignment and pass by reference.
+               Pointer(const Pointer<T>& src);
+               Pointer<T>& operator=(const Pointer<T>& rhs);
+    };
+This smart pointer is about as simple as you can get. All it does is store a dumb pointer and delete it
+when the object is destroyed. The implementations are equally simple: the constructor takes a real
+( dumb ) pointer, which is stored as the only data member in the class. The destructor frees the pointer.
+
+You would like to be able to use the smart pointer template like this:
+   
+    int main(int argc, char** argv)
+    {
+          Pointer<int> smartInt(new int);
+          *smartInt = 5; // Dereference the smart pointer.
+          cout << *smartInt << endl;
+  	  Pointer<SpreadsheetCell> smartCell(new SpreadsheetCell);
+  	  smartCell->set(5); // Dereference and member select the set method.
+  	  cout << smartCell->getValue() << endl;
+  	  return (0);
+	
+   }
+
+
+---------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------
+
+ 
+ Vector insertions 
+----------------------------------------------
+
+Vector put memory in baches if it reaches a batch ed then it will reallocate the whol memory in a new batch and add the new elemnt and 
+delete the older batch.Vectors are really first for add/del last element as like stacks. the other operations r not as good.
+The way the Sequential Containers(Vectors,map) ALLOCATION OF MEMORY is
+ 
+Allocators:
+****************
+Most containers use a special object for allocating the memory that is managed by them. This object
+is called an allocator, and it’s type is (usually by default) speci?ed when a container is constructed. A
+container’s allocator can be obtained using the container’s get_allocator member, which returns
+a copy of the allocator used by the container.
+ 
+1) value_type *address(value_type &object)    [returns the address of object]
+ 
+2) value_type *allocate(size_t count)  [allocates raw memory for holding count values of the container’s value_type ]
+ 
+3) void destroy(value_type *object)   [calls object’s destructor (but doesn’t deallocate object’s own memory) ]
+ 
+4) void deallocate(value_type *object, size_t count)
+ 
+[calls operator delete to delete object’s memory, previously allocated by allocate.]
+ 
+5) size_t max_size()
+[returns the maximum number of elements that allocate can allocate]
+ 
+ 
+ 
+Code :
+******************
+ 
+int main()
+{
+ 
+vector<string> vs;
+//lETS Invoke the allocator object
+ 
+allocator<string> alloc = vs.get_allocator(); // get the allocator
+// alloc. space for 3 strings
+ 
+string *sp = alloc.allocate(3); // its like vector<>(3)
+// initialize 1st string
+ 
+alloc.construct(&sp[0], "hello world"); // vector.insert()
+alloc.construct(&sp[1], sp[0]); // use the copy constructor v1 = v2
+ 
+//alloc.construct(&sp[2], 12, '='); // string of 12 = chars
+cout << sp[0] <<'\n' << sp[1] << '\n' << '\n' << "2 strings could have allocated " << alloc.max_size() << " strings\n";
+for (size_t idx = 0; idx != 2; ++idx)
+        alloc.destroy(sp + idx); // delete the string
+ 
+// contents
+alloc.deallocate(sp, 2); // and delete sp itself again.
+}
+ 
+ 
+The STL contains sequence containers and associative containers. The standard sequence containers include vector,
+ deque, and list. The standard associative containers are set, multiset, map, and multimap. There are also container adaptors
+ queue, priority_queue, and stack, that are containers with specific interface, using other containers as implementation.
+1) for(int i= 0 ; i<=6;i++)
+                d.push_back(i);
+
+
+2)  d.insert(d.end(),1,0);  // one element wd value 0 at postion end(0
+
+3) d.insert(d.begin() + d.size()/2, 1, 1);// At postion middle
+
+4) d.erase(d.begin() +3);// erase at index 3
+
+d.erase(d.begin() +3,d.begin() +5 );// erase at index 3 to 5 all 3 elemnts
+
+
+4) d.resize(5) // resizee the vector its current size = 5 
+
+5) Their is no find function in vector
+
+6)  vector<int> *p= new vector<int>(6);
+    p->resize(7);
+7)as vectors grows by size the fuctionality is shown by capacity
+
+
+d.size() ; // show the filled size with elemnts
+d.capacity() // Actual allocation it grows by a power of 2 when the previous elents are filled ... 2.4.8.16.....
+
+8) 2d vectors :
+----------------------------------
+vector <vector<char> > my_2D_vector;
+
+my_2D_vector.resize(4); //since you want 4 rows
+
+//now fill first row with data
+my_2D_vector[0].push_back('1'); //I'm not sure if you want '1' to actually be part of the data
+my_2D_vector[0].push_back('a');
+my_2D_vector[0].push_back('b');
+
+--------------
+1, a, b, c
+2, d, e, f
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+Iterators:
+
+const_iteratoer means that within the iterator the container is const and
+all of its elements are const. With a const_iterator you can neither modify
+the container(add/remove elements) nor can you modify the elements in that
+container. The advantage of the const_iterator is that the compiler
+produces faster code when you use it. So you should use the const_iterator
+whenever you iterate over the container without modifying anything.
+
+
+
+---------------------------
+Map:
+--------------
+
+
+1) inserting elemetns
+***********************************
+// 1) Assignment using array index notation
+Employees["Mike C."] = 5234;
+Employees["Charlie M."] = 3374;
+
+// 2) Assignment using member function insert() and STL pair
+Employees.insert(std::pair<string,int>("David D.",1923));
+
+// 3) Assignment using member function insert() and "value_type()"
+Employees.insert(map<string,int>::value_type("John A.",7582));
+
+// 4) Assignment using member function insert() and "make_pair()"
+Employees.insert(std::make_pair("Peter Q.",5328));
+
+
+2) char *i ;
+                                map<int,string>::const_iterator itr= m1.begin();
+                                i = m1.find(data)->second; // find returns n iterator
+3)  MapType::iterator iter = my_map.begin();
+
+    // erase the first element using the erase function
+    my_map.erase(iter);
+	
+	
+int main()
+{ 
+    
+    map<string,string> m1;
+    m1.insert(make_pair("test1","1stElement"));
+    m1.insert(pair<string,string>("test2","2ndElment"));
+    m1["test3"] = "3rdElement";
+    m1.insert(map<string,string>::value_type("test4","4thElement"));
+    m1["test3"] = "3rdElement";
+    
+    map<string,string>::const_iterator itr = m1.begin();
+     for(;itr != m1.end();itr++)
+        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
+    
+    
+  // cout<< m1.find("yacck")->second;
+   cout<< m1.upper_bound("test2")->second<<endl; // next element
+   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
+    
+    //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("test3")->second<<endl;
+    
+    int main()
+{ 
+    
+    map<string,string> m1;
+    m1.insert(make_pair("test1","1stElement"));
+    m1.insert(pair<string,string>("test2","2ndElment"));
+    m1["test3"] = "3rdElement";
+    m1.insert(map<string,string>::value_type("test4","4thElement"));
+    m1["test3"] = "3rdElement";
+    
+    map<string,string>::const_iterator itr = m1.begin();
+     for(;itr != m1.end();itr++)
+        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
+    
+    
+  // cout<< m1.find("yacck")->second;
+   cout<< m1.upper_bound("test2")->second<<endl; // next element
+   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
+    
+    //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("test3")->second<<endl;
+    int main()
+{ 
+    
+    map<string,string> m1;
+    m1.insert(make_pair("test1","1stElement"));
+    m1.insert(pair<string,string>("test2","2ndElment"));
+    m1["test3"] = "3rdElement";
+    m1.insert(map<string,string>::value_type("test4","4thElement"));
+    m1["test3"] = "3rdElement";
+    
+    map<string,string>::const_iterator itr = m1.begin();
+     for(;itr != m1.end();itr++)
+        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
+    
+    
+  // cout<< m1.find("yacck")->second;
+   cout<< m1.upper_bound("test2")->second<<endl; // next element
+   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
+    
+    //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("test3")->second<<endl;
+     //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("te");
+    
+    if(itr == m1.end())
+    cout<<"not found";
+    
+   
+   
+   return 0;
+}
+    
+   
+   
+   return 0;
+}
+   
+   
+   return 0;
+}
+	
+	
+Multimap:
+------------------
+is a generalization of a map or associative array abstract data type in which more than one value may be
+ associated with and returned for a given key.
+ Both map and multimap are particular cases of containers . 
+ 
+1) Insertion 
+ multimap< int, double, less< int > > pairs; // declare the multimap pairs
+
+   // insert two value_type objects in pairs
+   pairs.insert(  multimap< int, double,less< int > >::value_type( 15, 2.7,) );
+***********************************************************************************
+The list data structure is stored non-contiguously in memory. This allows the list data structure avoid the 
+reallocation (O(n) operation)experienced with vectors.
+The list data structure allocates and deallocates memory as needed; therefore, it does not allocate memory
+ that it is not currently using.
+Lists may hold primitive data types and user-defined classes or structs.
+Lists do not have random access ability like vectors (O(1) operation). Accessing a node in a list is an O(n)
+ operation that requires a list traversal 
+  to find the node that needs to be accessed.
+Memory is freed when an element is removed from the list.
+List are efficient when inserting new elements at the ends of the list; this is an O(1) operation. 
+No shifting is required like with vectors.
+
+1) numbers.sort( );
+2)    list<int>::iterator fiveagain =  find( numbers.begin(), numbers.end(), 5 );
+ // find the position of the number 5 in the list, O(n), but does not depend on the list being sorted
+
+3) // erase all the elements greater than 4
+        numbers.erase( remove_if(numbers.begin(), numbers.end(),
+                                                         bind2nd(greater<int>(), 4) ), numbers.end() );
+4) String insertion in a list 
+string s("There is no distinctly nativ"
+  list<char> list1(s.begin(), s.end());
+5) U cannot use list1[i++ ] only iterarors should be used to parse up each elementso to insert a data suppose on 3rd elemnt 
+list<int>::iterator  itr = l.begin();
+advance(itr , 2); //incremnt the itr to 3rd elemnt
+*itr = 45; // vaue assign
+
+
+List :
+   
+Code :(Use of Sort )
+******************
+ 
+int main()
+{
+string
+array[] =
+{
+"charley",
+"alpha",
+"bravo",
+"alpha"
+};
+list<string> target(array, array + sizeof(array)/ sizeof(string));
+cout << "Initially we have:\n";showlist(target);
+                target.sort();
+cout << "After sort() we have:\n";showlist(target);
+                target.unique();
+cout << "After unique() we have:\n";
+showlist(target);
+}
+/*
+Generated output:
+Initially we have:
+charley alpha bravo alpha
+After sort() we have:
+alpha alpha bravo charley
+After unique() we have:
+alpha bravo charley
+*/
+unordered containers support the following basic set of operators:
+***************************************************************************************************
+• The overloaded assignment operator, so we can assign two containers of the same types to each
+other. This basic operator is supported by the unordered containers;
+• Tests for equality: == and != The equality operator applied to two containers returns true if
+the two containers have the same number of elements, which are pairwise equal according to
+the equality operator of the contained data type. The inequality operator does the opposite;
+• Ordering operators: <, <=, > and >=. The < operator returns true if each element in the lefthand
+side container is less than each corresponding element in the right-hand side container.
+Additional elements in either the left-hand side container or the right-hand side container are
+ignored.
+container left;
+container right;
+left = {0, 2, 4};
+right = {1, 3}; // left < right
+right = {1, 3, 6, 1, 2}; // left < right
+Note that before a user-defined type (usually a class-type) can be stored in a container, the userdefined
+type should at least support:
+• A default value (e.g., a default constructor)
+• The equality operator (==)
+• The less-than operator (<)
+
+----------------------------------------------------------------------------------------------------------------------
+Set 
+an ordered collection, the standard library set data structure is always ordered. Its functionality in 
+the STL is provided as a template class,such that any valid C++ object can be used with it.
+
+Its usually used for a Binary sorted list but wer the search time is in logO values its much lesser den list n all
+//For the List instialisation of a set 
+list<char>::iterator i;
+ for (i = list1.begin(); i != list1.end(); ++i)
+    set1.insert(*i);
+The o/p of the set when displaye will b e a binary sorted key .
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+PRIORITY QUEUE:
+=====================
+The priority Queue is a datastructure which is used to maintain the SRT(Shortest Reamining process time: When scheduler checks
+ the process on base o the 
+priority , the process whic has less completion time gets the higher priority So the scheduler stops a running low priority process and run the 
+recent high priority and then it agin calls the low priority process to run)
+
+Priority Queue will have a Pririty associated with data type 
+Operations it supports:
+1. Insert
+2. MinLowestPriority (Lowest priority is removed )
+3. deleteMinPriority(returns and delete the lowest element)
+
+memeber:
+Comparator(when PQ needs to compare two elemnts ut calls compare, the compare gives the freedom to PQ to hold any kind of 
+elemtns)
+
+insertion in PQ:
+-------------------------
+If we keep ithe prority elements in a Binary sorted tree the insert and the search is going to take  Time = o(logn) which is fixed for any number of elemet
+
+
+--------------------------------------------------------------------------------
+Valarray class
+A valarray object is designed to hold an array of elements, and easily perform mathematical operations on them. 
+It also allows special mechanisms to create subsets of the arrays, using its operator[] .
+
+
+
+
+#include <valarray>
+
+
+int main ()
+{
+  valarray<int> foo (12);  //Declare an array of 12 elemnts
+  for (int i=0; i<12; ++i) foo[i]=i; // initialise 
+  slice sm ; //obj of slice
+  
+  
+  valarray<int> bar = foo[slice(2,3,4)]; // from 2 elemt with stride 4 collect 3 members use [] as Slice in valarray
+   // members are 2 6 10
+  sm = slice(2,3,4); // sli obj intilisaion wd a slicce
+  foo[sm ] *= valarray<int>(10,3); // multiply the slice members 
+    
+  
+  for (size_t n=0; n<bar.size(); n++)
+	  cout << bar[n] << ' ';
+  cout << endl;
+
+  return 0;
+
+
+--------------------------------------------------------------------------------
+Regular expression
+A regular expression is an object defining a particular pattern to be matched against a sequence of characters
+ using the tools of the standard regex library.
+
+ :regex_match
+ 
+ *********************
+ Returns whether the target sequence matches the regular expression rgx. The target sequence is either s or the character sequence between first and last,
+ depending on the version used.
+ 
+  std::string s ("subject");
+  std::regex e ("(sub)(.*)");  // match any thing after sub 
+  
+  std::smatch sm;    // same as std::match_results<string::const_iterator> sm;
+  std::regex_match (s,sm,e);
+  std::cout << "string object with " << sm.size() << " matches\n";
+
+  for (unsigned i=0; i<sm.size(); ++i) {   //3 mathes subject sub ject
+    std::cout << "[" << sm[i] << "] ";
+
+	regex_search:
+ *********************
+Search sequence:
+Returns whether some sub-sequence in the target sequence (the subject) matches the regular expression rgx (the pattern). The target sequence is either s or the character sequence
+between first and last, depending on the version used.
+
+ 
+  std::regex e ("\\b(sub)([^ ]*)");  // only letters begining wd sub
+  std::regex_search (s,m,e)
+  
+  
+  }
+ 
+ 
+
+-----------------------------------------------------------------------------
+ class deque;
+the deque is the queue LIFO can be done from both sides
+The following functionalities are available:
+
+Iterators:
+*****************
+begin	 Return iterator to beginning (public member function)
+end	 Return iterator to end (public member function)
+rbegin Return reverse iterator to reverse beginning (public member function)
+rend
+
+push_back()
+push_front()
+pop_back()
+pop_front 
+
+It can be considered as a dobly link llist
+
+
+
+
+--------------------------------------------------------------------------------------------
+
+
+The answer is that C++ utilizes a hidden pointer named “this”!
+class Simple
+ 
+{
+            void SetID(int nID) { m_nID = nID; }
+     
+}
+	Simple a ;
+	a.SetID(2);
+Although it looks like this function only has one parameter, it actually has two! When you call cSimple.SetID(2);, C++ internally converts this to 
+			SetID(&cSimple, 2);. 
+Note that this is just a normal function call where C++ has added a parameter, and automatically passed in the address of the class object!
+			
+			void SetID(Simple* const this, int nID) 
+			{ this->m_nID = = nID; }
+
+this is a const pointer — you can change the value of the object it points to, but you can not make it point to something else!
+Uses:
+1)
+	class Something
+
+	{
+ 
+
+	private:
+
+   		int nData;
+ 
+
+    		Something(int nData)
+
+    		{
+ 
+
+       			 this->nData = nData;
+
+    		}
+	}
+2) Returning *this will return a reference to the object that was implicitly passed to the function by C++.
+
+One use for this feature is that it allows a series of functions to be “chained” together, so that the output of one function becomes 
+the input of another function!
+
+
+4)-------------------------------------------------------------------------------------------------------------------------------------
+
+Freind class :
+*******************
+Friend  is a declaration to the compiler saying that it allowed to modify the private variables of a class by the freind function or class.
+
+
+Declaring as freind class one class to see the private variables of another class, even though these variables should probably not be made
+ part of the public  interface that the class supports
+
+class Node 
+{
+    private: 
+    	int data;
+    	int key;
+    // ...
+
+    friend class BinaryTree; // class BinaryTree can now access data directly
+};
+
+
+class BinaryTree
+
+{
+
+f(Node n)
+{
+
+Node *ptr = n;
+ptr->data;
+
+}
+
+
+}
+
+
+Points about freinds:
+*I****************
+
+1> Freinds can be declared at any access level(protected , public n all) but they can access private varirable
+
+2> Freinds are not inherited by a derived class
+
+32992221
+
+
+Freind function:
+*********************
+Member functions and friend functions are equally privileged (100% vested). The major
+difference is that a friend function is called like f(x), while a member function is called like x.f().
+Thus the ability to choose between member functions (x.f()) and friend functions (f(x)) allows a
+designer to select the syntax that is deemed most readable, which lowers maintenance costs.
+The major disadvantage of friend functions is that they require an extra line of code when you
+want dynamic binding. To get the effect of a virtual friend, the friend function should call a
+hidden (usually protected) virtual member function. This is called the Virtual Friend Function
+Idiom. For example:
+class Base {
+public:
+friend void f(Base& b);
+...
+protected:
+virtual void do_f();
+...
+};
+inline void f(Base& b)
+{
+b.do_f();
+}
+class Derived : public Base {
+public:
+...
+protected:
+virtual void do_f(); // "Override" the behavior of f(Base& b)
+...
+};
+void userCode(Base& b)
+{
+f(b);
+}
+The statement f(b) in userCode(Base&) will invoke b.do_f(), which is virtual. This means that
+Derived::do_f() will get control if b is actually a object of class Derived. Note that Derived
+overrides the behavior of the protected virtual member function do_f(); it does not have its own
+variation of the friend function, f(Base&).
+
+-=------------------------------------------------------------------------------------------------------------------------------------------------------
+The Tekplate :
+
+1) The compiler will generate Constructor / Destructors for the Data type whenever an explicit or Implicit declaration of the object
+ is been done or a function call is been made 
+********************************************************************
+
+template <class T>
+Class A
+{
+
+ T f()
+ {
+     return T;
+ }
+
+ T g()
+ {
+     return T;
+ }
+
+
+};
+
+ main()
+{
+
+A <int> a1;   // The int version of constructor and destructor is defination is generated (IMPLICIT DECLARATION)
+
+template <class T> 
+A <int> b1;  // EXPLICIT DECLARATION)
+
+a1.f();   // The int version of the function defination is generated  will be called  and g() 
+is never been called    
+
+}
+3)Non type template parameters
+******************************************************
+
+A non-type template parameter must be an integral value that is known at compile time.
+ You can make a fixed-size Stack, for instance, by specifying a non-type parameter to be used as the dimension for the 
+ underlying array, as follows.
+
+template<class T, size_t N> class Stack {
+T data[N]; // Fixed capacity is N
+size_t count;
+public:
+void push(const T& t);
+// Etc.
+};
+ 
+You must provide a compile-time constant value for the parameter N when you request an instance of this template, such as
+
+Stack<int, 100> myFixedStack;
+
+2) The pointer towards a object of  int 
+********************************************************************
+A< int>* p_ai  =  new int ; // None of the version is generated 
+
+
+
+3)  A templated Class Object is passed to  a template functon   
+*************************************************************************
+Declaration :   template<class T> void Fun(class A<T> p); 
+Defination:  
+	void Fun(class A<T> p)
+	{
+		
+
+	}
+
+4)  Functional Pointers as a templete type 
+********************************************************************
+The functional pointers is passing to as a lis 
+
+list< void (*)() > a;
+
+/* Or alternatively */
+typedef void (*SimpleFunc)();
+list< SimpleFunc > b;
+
+
+5) Pointers to the  Template of type Class Pointer  and using New 
+*****************************************************************************
+LinkList<User*>* ptr = new LinkList<User*>();
+
+
+6) Templates Can be declared as Static is allowed 
+*****************************************************************************
+static std::map<int, int> data;
+
+7) 
+*****************************************************************************
+Template class:
+A generic definition or a parameterized class not instantiated until the client provides the needed information. It’s jargon for plain templates.
+
+Class template:
+A class template specifies how individual classes can be constructed much like the way a class specifies how individual objects can be constructed. It’s jargon for plain classes. 
+template<typename T> foo { } // class template
+
+foo<int> t; // template class
+
+
+Template Specialization
+*******************************************************************************
+
+In many cases when working with templates, you'll write one generic version for all possible data types and leave 
+it at that--every vector may be implemented in exactly the same way. The idea of template specialization is to override 
+the default template implementation to handle a particular type in a different way. 
+template <typename T>
+class vector
+{
+    // accessor functions and so forth
+    private:
+    T* vec_data;   // we'll store the data as block of dynamically allocated 
+                   // memory
+    int length;    // number of elements used 
+    int vec_size;  // actual size of vec_data
+};
+But when it comes to bools, you might not really want to do this because most systems are going to use 16 or 32 bits 
+for each boolean type even though all that's required is a single bit. So we might make our boolean vector look a little 
+bit different by representing the data as an array of integers whose bits we manually manipulate. (For more on manipulating
+bits directly, see bitwise operators and bit manipulations in C and C++.) 
+
+To do this, we still need to specify that we're working with something akin to a template, but this time the list of template
+ parameters will be empty:
+ 
+template <>
+and the class name is followed by the specialized type: class className<type>. In this case, the template would look like this:
+
+
+template <>
+class vector <bool>
+{
+    // interface
+
+    private:
+    unsigned int *vector_data;
+    int length;
+    int size;
+};
+Another time when you might want to specialize certain templates could be if you have a template type that relies on some
+ behavior that was not implemented in a collection of classes you'd like to store in that template.
+
+
+Template Partial Specialization
+*****************************************************
+Partial template specialization stems from similar motives as full specialization as described above. This time, however,
+instead of implementing a class for one specific type, you end up implementing a template that still allows some
+parameterization. That is, you write a template that specializes on one feature but still lets the class user choose other 
+features as part of the template 
+
+template <typename T>
+class sortedVector<T *>
+{
+    public:
+    // same functions as before.  Now the insert function looks like this:
+    insert( T *val )
+    {
+        
+    }
+
+    private:
+    T** vec_data;
+    int length;
+    int size;
+};
+
+when you allocate memory for an array of objects, the default constructor must be called to construct each object. 
+If no default constructor exists (for instance, if every object needs some data to be created), you're stuck needing a
+list of pointers to objects, but you probably want them to be sorted the same way the actual objects themselves would be! 
+
+There are a couple of syntax points to notice here. First, our template parameter list still names T as the parameter, 
+but the declaration now has a T * after the name of the class; this tells the compiler to match a pointer of any type
+with this template instead of the more general template. The second thing to note is that T is now the type pointed to;
+it is not itself a pointer. For instance, when you declare a sortedVector<int *>, T will refer to the int type
+ 
+Note, by the way, that you can also partially specialize on template arguments--for instance, if you had a fixedVector 
+type that allowed the user of the class to specify both a type to store and the length of the vector (possibly to avoid 
+the cost of dynamic memory allocations), it might look something like this:
+
+template <typename T, unsigned length>
+class fixedVector { ... };
+------------------------------------------------------------------------------------------------------------------------------------------------------
+STREAMS:
+The stream of bytes of data , which is used for I/O .
+filestream: Has functions to close and open the files 
+stringstrteam: Has functions to support Inmemory i/O , for copying and other stuffs .\
+
+All of this classes are templted parameterized on char type
+typedef basic_ifstream<char> ifstream
+
+typedef basic_ifstream<wchar_t> wifstream
+
+Global streams
+------------------
+1> stdinn, stdout, stderr
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+FILE HANDLING :
+
+void write_file( char *filenames,char * filenamed)
+{	
+	long lsize;	
+	char buff[100];
+        FILE *fpd,*fps;
+        fpd = fopen(filename,"a+");
+        fps = fopen(filename,"rb");
+	if(fps == NULL)
+                perror("Eror opening the file");
+	else{
+                // obtain file size:
+                fseek (fps,0 ,SEEK_END);//Starting from 0 to final end position
+        y        lsize = ftell (fps);
+                rewind (fps);
+                result = fread (buff,1,lsize,fps);
+	    }
+        
+	if(fpd == NULL)
+                perror("Eror opening the file");
+
+        else{
+                fwrite(buff,lsize,1,fpd);
+                fclose(fpd);
+            }
+}
+-=------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

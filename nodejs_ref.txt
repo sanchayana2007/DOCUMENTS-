@@ -1,0 +1,244 @@
+﻿Installation in Windows:
+++++++++++++++++++++++++++++++
+1) visit 
+https://nodejs.org/
+ and dowload the latest msi files for windows 
+ 
+2) Install the msi 
+It will have Node Package Manager which will helpful in intalling modules 
+ // If the package has a dependency on other modules then it will load the latest version for a specific version 
+// we have to take k r of the version
+npm install colors
+npm http GET https://registry.npmjs.org/colors
+npm http 200 https://registry.npmjs.org/colors
+colors@0.6.2 node_modules\colors
+
+the colors will be installed at the same path where the npm is run in a folder named npm_module
+
+
+ Binding a Package Installed using Json to your Node.js Module
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+A Json script will be used to maintian the Initiation , dependecies and Licencing 
+
+
+
+The requisite of the json script will be checked on giving the installation by NPM
+npm install
+
+{
+	"name":  "my-colors-project", 
+	"version": "0.6.2",
+	"main": "./index" ,
+	"description": "This will install the color package",
+	"readme": "Install the color package ", 
+	"dependencies": { "colors" : "0.6.2"}
+}
+ 
+
+
+
+
+Variables:
+++++++++++++++++++++++++++++++++
+The type of the variables are will be declared as 'var'
+var pathname = url.parse(request.url).pathname 
+
+
+CREATING A BUFFER
+++++++++++++++++++++++++++++++++++
+var buf = new Buffer('hello world', 'base64');
+
+for(var i = 0; i < buf.length; i++) {
+buf[i] = i;
+}	
+
+//Splicing Buffer:
+
+var smallbuf = buf.slice(6,5) // smallbuf = World
+
+
+
+
+Functions:
++++++++++++++++++++++++++++++++++
+Function definition start function keyword and the arguments are taken from the type passed on while calling 
+function start(route) {
+//In this case route is a function name from another module.
+//This route function argument can be passed in the code or at the calling point only 
+route(pathname)
+
+
+}
+
+//calling 
+start(router.route)
+
+
+
+Functions declaration Inside functions:
++++++++++++++++++++++++++++++++++++++++++
+
+function test(Request,response)
+{
+// New function call
+	function test1(permissions)
+	{
+		permission("print my line") 
+	}
+}
+
+
+
+Exporting functions
++++++++++++++++++++++++++++++++++++
+The functions are pretty much exported so that other files(modules)can use its  functionalities which will import the
+module containing the function 
+
+exports.start = start;
+
+Importing :
++++++++++++++++++++++++++++++++++++++++
+from the same directory withh file name server.js
+var server = require("./server");
+// The server start will have a start function which we can use now 
+server.start(route);
+
+Now if we want not to load the module but just find the module and give us back the file name back so using the resolve 
+will neverload a Module and a function defined in that module will get 
+
+require.resolve()
+
+Error: require.paths is removed. Use node_modules folders, or the NODE_PATH envi
+ronment variable instead.
+
+
+For putting a search path when a loading up an module (TBC)
+require.paths.unshift('/usr/local/node');
+
+Error: require.paths is removed. Use node_modules folders, or the NODE_PATH envi
+ronment variable instead.
+
+Loading a Folder Module
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+You can use the path for a folder to load a module like this:
+var myModule = require('./myModuleDir');
+If you do so, Node will search inside that folder. Node will presume this folder is a package and will
+try to look for a package defi nition. That package defi nition should be a fi le named
+package.json.
+If that folder does not contain a package defi nition fi le named package.json, the package entry
+point will assume the default value of index.js, and Node will look, in this case, for a fi le under
+the path ./myModuleDir/index.js.
+
+
+
+Event based asynchronous Call back functions
+++++++++++++++++++++++++++++++++++++++++++++++
+'SELECT * FROM posts WHERE id = 1'
+This query requires that the current thread or process wait until the database layer fi nishes processing
+it.
+In event-driven systems, this query would be performed in this way:
+query_finished = function(result) {
+do_something_with(result);
+}
+query('SELECT * FROM posts WHERE id = 1', query_finished);
+Here you are fi rst defi ning what will happen when the query is fi nished and storing that in a
+function named query_finished. Then you are passing that function as an argument to the query.
+When it’s fi nished, the query will invoke the query_finished function, instead of simply returning
+the result.
+This style of programming means the
+current process will not block when it is doing I/O. Therefore, several I/O operations can occur in
+parallel, and each respective callback function will be invoked when the operation fi nishes.
+The event-driven programming style is accompanied by an event loop. An event loop is a
+construct that mainly performs two functions in a continuous loop — event detection and event
+handler triggering
+
+Closures:
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Closures are functions that inherit variables from their enclosing environment. When you pass a
+function callback as an argument to another function that will do I/O, this callback function will
+be invoked later, and this function will — almost magically — remember the context in which it
+was declared, along with all the variables available in that context and any parent contexts. This
+powerful feature is at the heart of Node’s success
+
+var clickCount = 0;
+document.getElementById('myButton').onclick = function() {
+clickCount += 1;
+alert("clicked " + clickCount + " times.");
+};
+
+functions are first-class objects, which means you can pass functions as arguments to
+other functions and it remembers from enclosing enviroment clickCount 
+
+
+
+Using EventEmitters
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+a TCP server can emit a “connect” event
+every time a new client connects, or a fi le stream can emit a “data” event every time a new
+chunk of data is read. These objects are, in Node nomenclature, event emitters. Event emitters
+allow programmers to subscribe to events they are interested in. The programmer attaches a
+callback function that will be invoked every time a relevant event in that event emitter
+occurs. This publisher/subscriber pattern is very similar to the typical GUI pattern, whereby
+a program gets notifi ed that a certain button was clicked. By using this pattern, a server-side
+program can react when, for instance, a client connects to the server, data is available on a
+socket, or a fi le gets closed.
+
+var fs = require('fs');
+fs.readFile('/etc/passwd', function(err, fileContent) {
+if (err) {
+throw err;
+}
+console.log('file content', fileContent.toString());
+});
+Here, you are passing an anonymous inline function as the second argument of the fs.readFile
+function, and you’re making use of the CPS, because you are continuing the execution of the
+program inside that function.
+
+
+
+
+Node.js implements the observer pattern using a class called EventEmitter. Whenever there is an object that represents the source of several kinds of events, node.js usually makes the underlaying class inherit from EventEmitter.
+
+Using EventEmitter's is pretty straight-forward. You can listen to a specific event by calling the 'on()' function on your object, providing the name of the event, as well as a callback closure as the parameters. For example:
+
+var data = '';
+req
+  .on('data', function(chunk) {
+    data += chunk;
+  })
+  .on('end', function() {
+    console.log('POST data: %s', data);
+  })
+As you can see, the on() function also returns a reference to the object it belongs to, allowing you to chain several of such event listeners.
+
+If you're only interested in the first occurrence of an event, you can use the once() function instead.
+
+Finally, you can remove event listeners by using the removeListener function. Please note that the argument to this function is a reference to the callback you are trying to remove, not the name of the event:
+
+var onData = function(chunk) {
+  console.log(chunk);
+  req.removeListener(onData);
+}
+
+req.on('data', onData);
+The example above is essentially identical to the once() function.
+
+
+Reference to Function and Values:
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+var one = function() { mike.showName(); };
+var two = mike.showName;
+var three = mike.showName();
+var four = (function() { mike.showName(); })();
+The first two assign a reference to a function to their respective variables. The last two, however, call functions (that's what the parens are for) and assign their return values to the vars on the left-hand side.
+
+http://nodejs.org/docs/v0.4.4/api/globals.html
+
+Timers
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+setTimeout(callback, delay, [arg], [...])
+
+
+
