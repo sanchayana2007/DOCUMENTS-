@@ -500,6 +500,60 @@ from the beginning until it hits yield, then it'll return the first value of the
 The generator is considered empty once the function runs but does not hit yield anymore. It can be because the loop 
 had come to an end, or because you do not satisfy a "if/else" anymore.
 
+
+
+Reg Expresions:
+======================================
+import re
+
+
+
+The \w = [a-zA-Z0-9_] // All alpha neumeric stuffs and Underline
+
+
+a = 'My name is ShankarDD  12'
+
+1) Search any 2 any chars after Shankar.
+
+re.search('Shankar\w\w',a).group()  or re.search('Shankar[a-zA-Z0-9_][a-zA-Z0-9_]',a).group()
+
+>> ShankarDD
+
+For any digits use the \d symbol 
+
+
+
+2) Match a symbol at the end ^/start $ of a word
+
+
+
+re.search('Shankar[^a-zA-Z0-9_][^a-zA-Z0-9_]',a).group()
+
+
+>> ShankarDD
+
+
+
+
+3) Separating White Spaces from a Line:
+
+line = 'test is all done '
+
+
+pattern_space = re.split("(?:(?:[^a-zA-Z]+')|(?:'[^a-zA-Z]+))|(?:[^a-zA-Z']+)", line)
+pattern_space = re.compile("([\w][\w]*'?\w?)").findall(line)
+
+
+
+
+
+
+
+
+
+
+
+
 Decorators:
 =================================
 ython's functions are objects
