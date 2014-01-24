@@ -533,15 +533,74 @@ re.search('Shankar[^a-zA-Z0-9_][^a-zA-Z0-9_]',a).group()
 >> ShankarDD
 
 
+3) // is used to match a /
 
 
-3) Separating White Spaces from a Line:
+
+
+
+
+
+
+4) Finding a email ID :
+
+str = abc@google.com
+
+
+	match = re.search('([\w.-]+)@([\w.-]+)', str)
+
+
+\w is match for [^a-zA-Z0-9_]
+. - is also added to the email usernme search
+
+So the () @ () will devide the search in 2 groups divided b
+
+
+So the ([\w.-]+) wil separate the user name with domain 
+
+match.group(1)= abc
+match.group(2)= google.com
+
+--------------------------------------------------------------------------------------------|
+Method/Attribute|     Purpose								    |
+group()		|	Return the string matched by the RE				    |
+start()		|	Return the starting position of the match			    |
+end()		|	Return the ending position of the match				    |
+span()		|	Return a tuple containing the (start, end) positions of the match   |
+--------------------------------------------------------------------------------------------|
+
+
+5)  Group match :
+
+
+ating White Spaces from a Line Groupp search by Split or by find all:
 
 line = 'test is all done '
 
-
 pattern_space = re.split("(?:(?:[^a-zA-Z]+')|(?:'[^a-zA-Z]+))|(?:[^a-zA-Z']+)", line)
 pattern_space = re.compile("([\w][\w]*'?\w?)").findall(line)
+
+
+find all will return you a tuples of all  the matching componenst
+
+
+Ex:
+>>> p = re.compile('\d+')
+>>> p.findall('12 drummers drumming, 11 pipers piping, 10 lords a-leaping')
+['12', '11', '10']
+
+Split :
+----------
+Split string by the occurrences of pattern. If capturing parentheses are used in pattern, then the text 
+f all groups in the pattern are also returned as part of the resulting list. If maxsplit is nonzero, at
+most maxsplit splits occur, and the remainder of the string is returned as the final element of the list.
+
+
+
+
+
+Greedy vs. Non-Greedy 
+
 
 
 
