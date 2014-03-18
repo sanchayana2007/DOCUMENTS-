@@ -87,14 +87,100 @@ function test(Request,response)
 	}
 }
 
+Single Line calls 
+++++++++++++++++++++++++++++++++++++++++++++
+var express     = require("express");
+var app         = express();
+
+The above two lines can be combined into 
+var app = require("express")();
+
+
 
 
 Exporting functions
 +++++++++++++++++++++++++++++++++++
-The functions are pretty much exported so that other files(modules)can use its  functionalities which will import the
-module containing the function 
+The functions are pretty much exported so that other files(modules)can use its  functionalities which will
+import the  module containing the function 
 
 exports.start = start;
+
+Class
+++++++++++++++++++++++++++++++++++++
+Class pattern is basically a function which is used to declare all its variables which are private to the class
+using the this keyword 
+
+//Declaration of the variables of the class
+var bar = 'None';
+var total = 0;
+
+
+// Constructor
+function Foo(bar) {
+  // always initialize all instance properties
+  this.bar = bar;
+  this.baz = 'baz'; // default value
+}
+
+// class methods are basically set up with the keyword prototype and the Method name  associated with class
+// returning or setting  any variable by a method will make it public
+
+Foo.prototype.fooBar = function() 
+{
+ 	return Total;
+};
+
+
+// export the class
+
+module.exports = Foo;
+
+//Instantiating a class is simple:
+// constructor call
+
+var object = new Foo('Hello');
+
+Note that I recommend using function Foo() { ... } for constructors instead of var Foo = function() { ... }.
+The main benefit is that you get better stack traces from Node when you use a named function.
+Generating a stack trace from an object with an unnamed constructor function.
+
+Prototype is only used for intialisng the methods as this is static to a class 
+if any varible is intialise all the objects of the class will show up the changed variable.
+
+Inherting from Class and Overidding its functions:
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Class Animal Constructor is declared with a name 
+
+function Animal(name) 
+{
+  this.name = name;
+};
+
+// class Animal has a method name as move 
+Animal.prototype.move = function(meters) 
+{
+  console.log(this.name+" moved "+meters+"m.");
+};
+
+// Class Snake is a Subclass of the Animal class 
+function Snake() 
+{
+  Animal.apply(this, Array.prototype.slice.call(arguments));
+};
+Snake.prototype = new Animal();
+
+Snake.prototype.move = function() 
+{
+  console.log("Slithering...");
+  Animal.prototype.move.call(this, 5);
+};
+
+var sam = new Snake("Sammy Python");
+sam.move();
+
+
+o/p :Sammy the Python moved 5m."
+
 
 Importing :
 +++++++++++++++++++++++++++++++++++++++
