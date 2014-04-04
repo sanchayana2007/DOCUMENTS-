@@ -46,15 +46,56 @@ var pathname = url.parse(request.url).pathname
 
 CREATING A BUFFER
 ++++++++++++++++++++++++++++++++++
-var buf = new Buffer('hello world', 'base64');
 
+Because Node is based on JavaScript, Node can handle text protocols like HTTP, but you can
+also use it to talk to databases, manipulate images, and handle fi le uploads. As you can
+imagine, doing this using only strings is very difficult.
+Node includes a binary buffer
+implementation, which is exposed as a JavaScript API under the Buffer pseudo-class. A buffer
+length is specifi ed in bytes, and you can randomly set and get bytes from a buffer.
+
+Ex:
+var buf = new Buffer('hello world', 'base64');
+// Gettig and Setting of the buffer
 for(var i = 0; i < buf.length; i++) {
-buf[i] = i;
+buf[i] = i;	
+console.log()buf[i];
 }	
+
+
+
+Accepted encodings and their identifi ers are:
+==============================================
+➤ ascii— ASCII.
+➤ utf8—UTF-8. This is a variable width encoding that can represent every character in the
+Unicode character set. This is the default encoding if you don’t specify one.
+➤ base64—Base64. This encoding is used to represent binary data in an ASCII string format
+by translating it into a radix-64 representation. Base64 is commonly used to embed binary
+data into textual documents in a way that ensures that the data remains intact during
+transport.
 
 //Splicing Buffer:
 
 var smallbuf = buf.slice(6,5) // smallbuf = World
+
+COPYING A BUFFER
+=================
+You can also copy part of a buffer into another buffer by using the copy method like this:
+
+	var buffer1 = new Buffer("this is the content of my buffer");
+	var buffer2 = new Buffer(11);
+	var targetStart = 0;
+	var sourceStart = 8;
+	var sourceEnd = 19;
+	buffer1.copy(buffer2, targetStart, sourceStart, sourceEnd);
+	console.log(buffer2.toString()); // -> "the content"
+Here, you are copying position 8 to 19 of the source buffer into position 0 of the target buffer
+
+Decoding a Buffer:
+===================
+	var utf8String = 'my string';
+	var buf = new Buffer(utf8String);
+	var base64String = buf.toString('base64')
 
 
 
@@ -182,12 +223,44 @@ sam.move();
 o/p :Sammy the Python moved 5m."
 
 
-Importing :
-+++++++++++++++++++++++++++++++++++++++
-from the same directory withh file name server.js
-var server = require("./server");
-// The server start will have a start function which we can use now 
-server.start(route);
+Loading or Importing Modules 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The loading of the module is generally done by the use of a functiom 
+"require(module name)" // for a core module 
+
+The require function returns
+an object that represents the JavaScript API exposed by the module. Depending on the module, that
+object can be any JavaScript value — 
+a function,
+an object with some properties that can be functions, 
+an array, 
+or any other type of JavaScript object.
+
+Core Module 
+==============
+var http = require('module name');
+
+Defined Module
+===============
+
+File Module :
+	var myModule = require('./FileName'); 
+		or 
+	var myModule = require('C:/FileName'); 
+Folder module :
+	For Folder Module the file should be present in package.json inside the folder , ifnot present 
+	node will look for the index.js inside the folder 
+	var myModule = require('./FolderName'); 
+	
+Ex:
+
+For
+instance, if your ./myModuleDir/package.json fi le looks something like the following, Node will
+try to load the fi le with the path./myModuleDir/lib/myModule.js:
+{
+"name" : "myModule",
+"main" : "./lib/myModule.js"
+}
 
 Now if we want not to load the module but just find the module and give us back the file name back so using the resolve 
 will neverload a Module and a function defined in that module will get 
@@ -204,21 +277,50 @@ require.paths.unshift('/usr/local/node');
 Error: require.paths is removed. Use node_modules folders, or the NODE_PATH envi
 ronment variable instead.
 
-Loading a Folder Module
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-You can use the path for a folder to load a module like this:
-var myModule = require('./myModuleDir');
-If you do so, Node will search inside that folder. Node will presume this folder is a package and will
-try to look for a package defi nition. That package defi nition should be a fi le named
-package.json.
-If that folder does not contain a package defi nition fi le named package.json, the package entry
-point will assume the default value of index.js, and Node will look, in this case, for a fi le under
-the path ./myModuleDir/index.js.
+Exporting a Module :
++++++++++++++++++++++
+this is done by the module.exports keyword used at the end of the file having the Module 
+
+Ex:
+	function Sum(x,y){
+	
+		function Plus(){ 
+			return x + r;
+		}
+		
+		return{
+		Plus= Plus();
+		}
+	}
+		module.exports= Sum;
+	// for Multiple classes ofr functions multiple callls should be used 	
+So over here the Sum module will Plus two Numbers and it is Imported like this 
+
+var sum = require('./Sum');
+var result = sum.Sum(2,3);
 
 
 
-Event based asynchronous Call back functions
+
+Event based or  asynchronous or Call back functions
 ++++++++++++++++++++++++++++++++++++++++++++++
+
+The Event based Approach is an alternative for a Multihreaded approach, This style of programming means the
+current process will not block when it is doing I/O. Therefore, several I/O operations can occur in
+parallel, and each respective callback function will be invoked when the operation fi nishes.
+This is achieved by the use of Event Loop , which determines which events has just occured and then they 
+can engage the callback associated with that Event .
+
+event loop is just one thread running inside one process, which means that, when an event happens,
+the event handler can run without interruption. This means the following:
+➤ There is at most one event handler running at any given time.
+➤ Any event handler will run to completion without being interrupted.
+This allows the programmer to relax the synchronization requirements and not have to worry about
+concurrent threads of execution changing the shared memory state.
+> Less Context Switching 
+
+Ex:
+
 'SELECT * FROM posts WHERE id = 1'
 This query requires that the current thread or process wait until the database layer fi nishes processing
 it.
@@ -246,6 +348,7 @@ be invoked later, and this function will — almost magically — remember the c
 was declared, along with all the variables available in that context and any parent contexts. This
 powerful feature is at the heart of Node’s success
 
+Ex: 
 var clickCount = 0;
 document.getElementById('myButton').onclick = function() {
 clickCount += 1;
@@ -253,7 +356,16 @@ alert("clicked " + clickCount + " times.");
 };
 
 functions are first-class objects, which means you can pass functions as arguments to
-other functions and it remembers from enclosing enviroment clickCount 
+other functions and it remembers from enclosing enviroment clickCount .
+So here the Function will act as a callback when their is an click event and then this function will
+call up the objects.
+Now the click count will be inherited by the function , Now Suppose you in some other scope 
+you want 
+
+document.getElementById('myButton').onclick; 
+
+This should automatically call the Event Handler callback function and use the clickcount variable.
+
 
 
 
