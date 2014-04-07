@@ -455,6 +455,70 @@ readStream.on(“data”, receiveData); // receivedata could have been declared 
 
 Multiple Event and Listning to them 
 
+readStream.on("data", function(data) {
+	console.log('I have some data here.');
+	});
+readStream.on("data", function(data) {
+	console.log('I have some data here too.');
+	});
+
+I have some data here.
+I have some data here too.
+
+2) Removing an Event from the Event listner :
+---------------------------------------------
+From the Above added Event following will remove the Listener stuff
+
+readStream.removeListener("data", receiveData);
+
+
+
+3)First occurence of Event from the Event listner :
+--------------------------------------------- 
+method adds the event listener and removes it right after the fi rst event occurs.
+function receiveData(data) {
+console.log("got data from file read stream: %j", data);
+}
+readStream.once("data", receiveData);
+
+4) Remove all Events from the Event listner :
+---------------------------------------------
+removealllistners()
+
+
+Creating Our Own Events:
+++++++++++++++++++++++++++++++++++++++++++++++++++
+The Creation of the Event By creating a class that inherits from EventEmitter, instances of
+MyClass can emit events.
+
+Ex: A class Ticker which with every sec emits a Tick Event 
+
+
+var util = require('util'),
+EventEmitter = require('events').EventEmitter;
+
+var Ticker = function() {
+	var self = this;
+	setInterval(function() {
+		self.emit('tick');
+	}, 1000);
+};
+util.inherits(Ticker, EventEmitter);
+
+Clients of this class could instantiate this Ticker class and listen for the “tick” events like so:
+
+var ticker = new Ticker();
+ticker.on("tick", function() {
+console.log("tick");
+});
+
+
+
+
+
+
+
+
 
 
 Reference to Function and Values:
