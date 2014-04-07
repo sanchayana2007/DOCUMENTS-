@@ -371,55 +371,90 @@ This should automatically call the Event Handler callback function and use the c
 
 Using EventEmitters
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-a TCP server can emit a “connect” event
-every time a new client connects, or a fi le stream can emit a “data” event every time a new
-chunk of data is read. These objects are, in Node nomenclature, event emitters. Event emitters
-allow programmers to subscribe to events they are interested in. The programmer attaches a
-callback function that will be invoked every time a relevant event in that event emitter
-occurs. This publisher/subscriber pattern is very similar to the typical GUI pattern, whereby
-a program gets notifi ed that a certain button was clicked. By using this pattern, a server-side
-program can react when, for instance, a client connects to the server, data is available on a
-socket, or a fi le gets closed.
 
+The Event Emitters can have trigger out an  Event 
+
+
+Like a  TCP server can emit a 
+>“connect” event every time a new client connects, 
+or a file stream can emit a 
+>“data” event every time a newchunk of data is read. 
+
+These objects are, in Node nomenclature, event emitters. Asynchronous programming does not use function
+return values to denote that a function is finished. Instead it uses the continuation-passing style (CPS):
+Continuation-passing style (CPS) is a style of programming in which control is passed explicitly in the 
+form of a continuation. (…)A function written in continuation-passing style takes as an extra argument
+an explicit “continuation,” that is, a function of one argument.
+Event emitterrs allow programmers to subscribe to events they are interested in. The programmer attaches a
+callback function that will be invoked every time a relevant event in that event emitter occurs. This 
+publisher/subscriber pattern is very similar to the typical GUI pattern, whereby a program gets notified
+that a certain button was clicked. By using this pattern, a server-side program can react when, for 
+instance, a client connects to the server, data is available on a socket, or a file gets closed.
+
+Use of Standard callBack pattern : (To handle One event emission )
+------------------------------------------------------------------
 var fs = require('fs');
+
 fs.readFile('/etc/passwd', function(err, fileContent) {
 if (err) {
 throw err;
 }
 console.log('file content', fileContent.toString());
 });
-Here, you are passing an anonymous inline function as the second argument of the fs.readFile
-function, and you’re making use of the CPS, because you are continuing the execution of the
-program inside that function.
 
 
+Here, you are passing an anonymous inline function as the second argument of the fs.readFile function, 
+and you’re making use of the CPS, because you are continuing the execution of the program inside that 
+function.
+As you can see here, the fi rst argument to the callback function is an error object, which will have an
+instance of the Error class if an error occurs. This is a common pattern in Node when using CPS.
 
+Use of Event Emitter pattern : (To handle Multiple event emissions or Multiple Times)
+--------------------------------------------------------------------------------------
 
-Node.js implements the observer pattern using a class called EventEmitter. Whenever there is an object that represents the source of several kinds of events, node.js usually makes the underlaying class inherit from EventEmitter.
+Node.js implements the observer pattern using a class called EventEmitter. Whenever there is an object
+that represents the source of several kinds of events, node.js usually makes the underlaying class inherit 
+from EventEmitter.
 
-Using EventEmitter's is pretty straight-forward. You can listen to a specific event by calling the 'on()' function on your object, providing the name of the event, as well as a callback closure as the parameters. For example:
+Using EventEmitter's is pretty straight-forward. You can listen to a specific event by calling the 'on()' function 
+on your object, providing the name of the event, as well as a callback closure as the parameters. For example:
+
 
 var data = '';
-req
-  .on('data', function(chunk) {
-    data += chunk;
-  })
-  .on('end', function() {
-    console.log('POST data: %s', data);
-  })
-As you can see, the on() function also returns a reference to the object it belongs to, allowing you to chain several of such event listeners.
+	req.on('data', function(chunk) {
+    		data += chunk;
+  	})
+  	req.on('end', function() {
+		 console.log('POST data: %s', data);
+  	})
+  	
+As you can see, the on() function also returns a reference to the object it belongs to, allowing you to chain several
+of such event listeners.
+Here the on the first Line a Callback is registered for a request is received against any of the (data,end)Events
+and then Event Listeners are registered for  handling the that  events UP. 
 
-If you're only interested in the first occurrence of an event, you can use the once() function instead.
 
-Finally, you can remove event listeners by using the removeListener function. Please note that the argument to this function is a reference to the callback you are trying to remove, not the name of the event:
+Default Event Emitted will be Error Event If Your Callback 1st argument is an Event Emitter
 
-var onData = function(chunk) {
-  console.log(chunk);
-  req.removeListener(onData);
+API From Event Emitter Module in Node:
+---------------------------------------
+
+1) .addListner or .on 
+--------------------
+To add an event listener to an event type 
+
+function receiveData(data) 
+{
+	console.log("got data from file read stream: %j", data);
 }
 
-req.on('data', onData);
-The example above is essentially identical to the once() function.
+readStream.addListener(“data”, receiveData); // receivedata could have been declared here also 
+
+		OR 
+readStream.on(“data”, receiveData); // receivedata could have been declared here also
+
+Multiple Event and Listning to them 
+
 
 
 Reference to Function and Values:
