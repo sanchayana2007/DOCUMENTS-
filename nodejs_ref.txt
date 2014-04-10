@@ -514,6 +514,82 @@ console.log("tick");
 
 
 
+Control Flow :
+++++++++++++++++++++++++++++++++++++++++++++
+
+The Flow in Node goes as the callback levels goes in so the 
+
+async1(function(input, result1) {
+	  async2(function(result2) {
+    		async3(function(result3) {
+      			async4(function(result4) {
+        			async5(function(output) {
+            				// do something with output
+        			});
+      			});
+    		});
+  	  });
+})
+
+Then whenevr the input is provided it ll callback the series of nest ted function till it gets 
+the output and return back to async1 which results in big wastage of resources , Now this(async2-5)) can be 
+changed to a new modules as needed  and reduce the complexity 
+As you already know, there are two types of API functions in Node.js:
+
+1) asynchronous, non-blocking functions - 
+	for example: fs.readFile(filename, [encoding], [callback])
+	While asynchronous functions receive the result via a callback (after passing control to the event loop):
+
+			fs.readFileSync('/etc/passwd', function(err, data) { … } );
+	
+	
+Patterns during synchronisation:
+
+1. Series of Asynchronoss function callbacks (This is doen when the Callbacks depends on the result of the 
+previous set of actions )
+
+// Async task (same in all examples in this chapter)
+function async(arg, callback)
+{
+ console.log('Inside async');
+ console.log('do something with \''+arg+'\', return 1 sec later');
+  setTimeout(function() { callback(arg * 2); }, 1000);
+}
+// Final task (same in all the examples)
+function final() { console.log('Done', results); }
+
+// A simple async series:
+var items = [ 1, 2, 3, 4, 5, 6 ];
+var results = [];
+function series(item) 
+{
+	 console.log('In The Function Series');
+  if(item) {
+			console.log('Calling async function with argument');
+			async( item, function(result) {
+				console.log('Inside Callback function');
+				results.push(result);
+				return series(items.shift());
+		});
+  } else {
+    return final();
+  }
+}
+
+series(items.shift());
+http://book.mixu.net/node/ch7.html
+
+
+
+	
+2) synchronous, blocking functions - 
+	for example: fs.readFileSync(filename, [encoding])
+Synchronous functions return a result:
+
+var data = fs.readFileSync('/etc/passwd');
+
+
+
 
 
 
@@ -537,5 +613,10 @@ Timers
 
 setTimeout(callback, delay, [arg], [...])
 
+
+Logging and Debugging :
++++++++++++++++++++++++++++++++++++++++++++++++
+
+	console.log('got %d characters of string data', chunk.length);
 
 
