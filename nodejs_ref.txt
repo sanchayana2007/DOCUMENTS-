@@ -577,9 +577,67 @@ function series(item)
 }
 
 series(items.shift());
+
+o/p:
+
+In The Function Series
+Calling async function with argument
+Inside async
+do something with '1', return 1 sec later
+Inside Callback function 2
+In The Function Series
+Calling async function with argument
+Inside async
+do something with '2', return 1 sec later
+Inside Callback function 4
+In The Function Series
+.......
+Explanation:
+-------------
+The above Code does a Last line starts the series function function 
+for items array being non empty it will call an asynchronos function function with a callback 
+that callback is takinf an argumnt x2 n then forming another array results and recursing 
+series function . This recursive call inside call back is only responible to take to the next elemet in items
+So it is in series and one occurs only if the previous is done
+
+2. Parellel asynchronos function Call:
+The Above async and final functions are same 
+
+items.forEach(function(item) {
+				console.log('In For Each');
+				async(item, function(result){
+					console.log('Inside callback');
+					results.push(result);
+					if(results.length == items.length) {
+						final();
+					}
+				})
+});
+
+o/p:
+In For Each
+Inside async
+do something with '1', return 1 sec later
+In For Each
+Inside async
+do something with '2', return 1 sec later
+...
+...
+Inside callback
+Inside callback
+Inside callback
+Inside callback
+Inside callback
+Inside callback
+Done [ 2, 4, 6, 8, 10, 12 ]
+
+
+here the foreach is launching all the items in a parallel shots and they process and done before 
+1st 1 sec so when the 1st callback from the async will be called by that time all the async activities 
+wil get over .
+
+3. limited parallel:
 http://book.mixu.net/node/ch7.html
-
-
 
 	
 2) synchronous, blocking functions - 
