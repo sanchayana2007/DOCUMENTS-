@@ -1,12 +1,36 @@
 Installation :
 _________________________
+The Django installation statrs by Downloading and untar the latest package 
+
+Install first time usingthe command
+
+python.exe setup.py install
 
 
+After that Django will be installed in the machine and then 
 
 
 Commands for Project Creation:
 -------------------------------
+To craete a project named blog in the Start Project menu !!!!
 
+  build\scripts-3.3\django-admin.py startproject blog 
+
+Now  blog/
+    manage.py
+    blog/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+
+Now run the server by using the following commands
+
+  manage.py runserver
+  
+  Run server by specifying the default address and Port 
+  
+  manage.py runserver 0.0.0.0:8000
 
 Folder Architecture
 --------------------------------:
