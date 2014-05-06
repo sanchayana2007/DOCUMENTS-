@@ -12,9 +12,12 @@ After that Django will be installed in the machine and then
 
 Commands for Project Creation:
 -------------------------------
+
 To craete a project named blog in the Start Project menu !!!!
 
-  build\scripts-3.3\django-admin.py startproject blog 
+1st :  Cretion of All project admin/settings files 
+
+build\scripts-3.3\django-admin.py startproject blog 
 
 Now  blog/
     manage.py
@@ -28,12 +31,93 @@ Now run the server by using the following commands
 
   manage.py runserver
   
+  Once the runserver commands takes place the py cache module is been created 
+  
   Run server by specifying the default address and Port 
   
-  manage.py runserver 0.0.0.0:8000
+  manage.py runserver 0.0.0.0:8000 to check that the server is Running 
+  
+  
+ 2nd : Creation of MVC 
+ 
+from the blog folder Run the command with differnt name
+
+ manage.py startapp blogapp
+
+*****************************************************************************
+*            CAUTION : startapp should be with different name if used with  *
+*   same name will show that this is an existing module and it will not     *
+*   create the MVC files ,(Error: the Module name collides with an existing *
+*   Python Module please change the name )                                  *
+*****************************************************************************
+
+ Now this will create all MVC files in a blogapp folder shownn below 
+ 
+ 
 
 Folder Architecture
 --------------------------------:
+
+creating Views/Models/test : there will be an Auto creted file in blog\blog\blogapp\views    or Models or tests.py
+
+settings.py will know about the bunch of applications which these project will suppose to use at the end of the tupple
+add the your project name 
+
+
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # Uncomment the next line to enable the admin:
+    # 'django.contrib.admin',
+    # Uncomment the next line to enable admin documentation:
+    # 'django.contrib.admindocs',
+    'blog',
+)
+
+Creating the view
+----------------------------------:
+
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Blog says hello world!")
+
+
+The Views are resposible for rendering the html pages rendered to the browser when requested 
+and it will return an http object .
+
+Creating the URL required for the view :
+-------------------------------------------
+Create  a new logapp/urls.py file which will take views from (from blogapp import views )
+
+and then map the view with a particular URL 
+urlpatterns = patterns('',
+        url(r'^$', views.index, name='index')) // This means any URL with this format  ^$ = Anycharacter 
+        
+This URL pattern is a continuation of blog/urls.py and add the following part 
+url(r'^blogapp/', include('blog.urls')) // This basically Guilds any string ending with blogapp tp blog.url
+
+
+So Now 127.0.0.1:8000/blogapp 
+
+should serve you the page required 
+
+****************************************************************************************
+*            CAUTION :  If you have Run startapp with Colliding name and then changed  * 
+* (Error:Traceback (most recent call last):                                            *
+* File "C:\Python33\lib\site-packages\django\utils\module_loading.py", line 16, in     *
+* import_by_path  module_path, class_name = dotted_path.rsplit('.', 1)                 *
+* ValueError: need more than 1 value to unpack )                                       *
+* Solution : Delete all and Recrete the Project and App once again                     *
+***************************************************************************************
+
+
+
+
 
 Templates and Static Media
 --------------------------------:
