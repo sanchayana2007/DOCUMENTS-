@@ -118,11 +118,81 @@ should serve you the page required
 
 Templates and Static Media
 --------------------------------:
+The templates are kept to provide the head/footer/sidebars for all those web pages who import that template 
+
+To put a template just create this folder in blog project
+
+1) In settings.py add 
+
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'template/')
+TEMPLATE_DIRS = (
+ 
+    TEMPLATE_PATH,
+)    
 
 
+2)  Add the template file 
+
+/template/blogapp/index.html // If u provide any other name in place of blogapp the templte is not loaded
+
+dajnago will serach for the folder mentioned in settings with the Appname/index.html file
+
+3) Linking files with template
+
+The template will have index.html  which will have fields like
+{{key}} = this is a dictionary key which will take values from the page who is using this template 
+
+this key with the value has to be filled with context_dict and passed to the template 
+
+Static Soruce :
+==========================================
+
+Place an Image in the static/img.jpg
+
+1. again on the settings add the 
+STATIC_PATH = os.path.join(PROJECT_PATH,'static')
+
+STATIC_URL = '/static/' # You may find this is already defined as such.
+
+STATICFILES_DIRS = (
+    STATIC_PATH,
+)
+
+2. On the index.html in the templates 
+
+add 
+<img src="{% static "img.jpg" %}" alt="Picture of Rango" /> <!-- New line -->
+
+Viewing the Media files 
+==========================================
+
+So Bunch of files in Server to be read by the applications request and will open in Browser and the user can read it
 
 
+1. set in Settings the Path
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
+
+2. Update the Url (localhost:8000/media/filename will be redirected after this )
+
+In the main project url file add the following url with the old list 
+
+from django.conf import settings
+
+if settings.DEBUG:
+    urlpatterns += patterns(
+        'django.views.static',
+        (r'media/(?P<path>.*)',
+        'serve',
+        {'document_root': settings.MEDIA_ROOT}), )
+        
+        
+
+ for any file requested with a URL starting with media/, the request will be passed to the django.views.static view.
+ This view handles the dispatching of uploaded media files for you
+ 
+ 
 --------------------------------:
 
 --------------------------------:
