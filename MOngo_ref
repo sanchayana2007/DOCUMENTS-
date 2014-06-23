@@ -1,0 +1,107 @@
+## Installing And Running Mongodb
+
+
+
+
+## Writing the Code to Add structures
+
+
+
+
+## Logging In and Checkin From Console
+=============================================
+
+
+From the command prompyt start Momgo by the comamnd 
+
+mongo
+
+else manually go to the Mongodb Folder and start the mongo binary 
+
+by click on  mongo
+
+
+Both above tghe above will strat theh DB console and by default it will log on to the test database
+
+Check all the databases by the with the sizes its occupying 
+------------------------------------------------------------
+connecting to: test
+> show dbs
+Twiki   0.203125GB
+local   0.078125GB
+
+
+checking the database required 
+-------------------------------------------------------------
+> use Twiki
+switched to db Twiki
+
+
+
+Check the current selected data base
+-------------------------------------------------------------
+> use Twiki
+switched to db Twiki
+
+
+Check the tables present inside the DB system.indexes will be a default table (collections)
+-----------------------------------------------------------------------------------------
+> show collections
+system.indexes
+twikis
+
+
+check the contents of a Table (Select ALL)
+---------------------------------------------------------------
+> db.twikis.find()
+{ "content" : "eee", "updated_at" : ISODate("2014-06-23T10:53:57.571Z"), "_id" :
+ ObjectId("53a807459e0a7ba00e8b1f19"), "__v" : 0 }
+ 
+{ "content" : "Balls to U all ", "updated_at" : ISODate("2014-06-23T11:13:11.112
+Z"), "_id" : ObjectId("53a80bc79e0a7ba00e8b1f1a"), "__v" : 0 }
+
+
+Use of array and Json Inside the mongos shell to print all the recoreds in a collection 
+----------------------------------------------------------------------------------------------
+> var c = db.twikis.find()
+> while ( c.hasNext() ) printjson( c.next() )
+{
+        "content" : "eee",
+        "updated_at" : ISODate("2014-06-23T10:53:57.571Z"),
+        "_id" : ObjectId("53a807459e0a7ba00e8b1f19"),
+        "__v" : 0
+}
+{
+        "content" : "Balls to U all ",
+        "updated_at" : ISODate("2014-06-23T11:13:11.112Z"),
+        "_id" : ObjectId("53a80bc79e0a7ba00e8b1f1a"),
+        "__v" : 0
+}
+
+
+find By a specific field in the records (Select ALL WHERE )
+-------------------------------------------------------------------------------------------------
+
+> db.twikis.find( { content : "eee" } )
+{ "content" : "eee", "updated_at" : ISODate("2014-06-23T10:53:57.571Z"), "_id" :
+ ObjectId("53a807459e0a7ba00e8b1f19"), "__v" : 0 }
+
+
+
+find By a specific field in the records (Select ALL WHERE COND1 OR COND2)
+-------------------------------------------------------------------------------------------------
+
+> db.twikis.find( { content: { $in: ["eee", "U r crap "]} } )
+
+{ "content" : "eee", "updated_at" : ISODate("2014-06-23T10:53:57.571Z"), "_id" :
+ ObjectId("53a807459e0a7ba00e8b1f19"), "__v" : 0 }
+{ "content" : "U r crap ", "updated_at" : ISODate("2014-06-23T11:24:27.890Z"), "
+_id" : ObjectId("53a80e6b062cf0c029221c0e"), "__v" : 0 }
+}
+
+find By a specific field in the records (Select ALL WHERE COND1 AND COND2)
+--------------------------------------------------------------------------------------------------
+
+> db.twikis.find( { content: "eee", __v :0 } )
+
+
