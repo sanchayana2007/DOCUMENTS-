@@ -51,7 +51,7 @@ system.indexes
 twikis
 
 
-check the contents of a Table (Select ALL)
+check the contents (Documents) of a Table (Select ALL)
 ---------------------------------------------------------------
 > db.twikis.find()
 { "content" : "eee", "updated_at" : ISODate("2014-06-23T10:53:57.571Z"), "_id" :
@@ -61,7 +61,7 @@ check the contents of a Table (Select ALL)
 Z"), "_id" : ObjectId("53a80bc79e0a7ba00e8b1f1a"), "__v" : 0 }
 
 
-Use of array and Json Inside the mongos shell to print all the recoreds in a collection 
+Use of array and Json Inside the mongos shell to print all the records in a collection 
 ----------------------------------------------------------------------------------------------
 > var c = db.twikis.find()
 > while ( c.hasNext() ) printjson( c.next() )
@@ -103,5 +103,15 @@ find By a specific field in the records (Select ALL WHERE COND1 AND COND2)
 --------------------------------------------------------------------------------------------------
 
 > db.twikis.find( { content: "eee", __v :0 } )
+
+
+Matching an Embeded documents using (.) Notation 
+---------------------------------------------------------------------------------------------------
+The Embeded doucument is a Column which is basically which is a collection 
+
+db.twikis.find( { 'Twiki1.company': 'ABC123' },{ 'Twiki1.address': 'ABC 123' } )
+
+
+
 
 
