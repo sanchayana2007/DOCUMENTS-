@@ -45,6 +45,8 @@ switched to db Twiki
 
 
 Check the tables present inside the DB system.indexes will be a default table (collections)
+This collectios are List of Records row which will be shown as (twikis) which is multiple twiki (Document)
+collection
 -----------------------------------------------------------------------------------------
 > show collections
 system.indexes
