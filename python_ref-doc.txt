@@ -126,9 +126,14 @@ Unique Python use of list:
 [x for x in range(1,1000) if x % 3 == 0 or x % 5 == 0]
 
 2. Reverse a list 
-g = "test"
+g = "abcd"
 g[::-1]
->> tset
+>> dcba
+
+It starts from the end and prints every element 
+g[::-2]
+>> db
+It starts from the end and prints every next element  element
 
 
  
