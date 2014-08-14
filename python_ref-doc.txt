@@ -41,6 +41,16 @@ def Change(self, var):
 self.variable is a reference to the string object 'Original'. When you call Change you create a second reference
  var to the object. Inside the function you reassign the reference var to a different string object 'Changed',
  but the reference self.variable is separate and does not change.
+ 
+ What is Happening here in terms of C++ terminology is
+ ****************************************
+ int& xRef = x;
+		int& zRef = z;
+		zRef = xRef; // Assigns values, not references
+ ***************************************
+ So over here var and 'changed' are two seperate references and now var value is equal to the 'changed' reference
+ value.
+ 
 
 The only way around this is to pass a mutable object. Because both references refer to the same object, any 
 changes to the object are reflected in both places.
@@ -50,6 +60,9 @@ changes to the object are reflected in both places.
 
 def Change(self, var):
     var[0] = 'Changed'
+
+Now in this condition as var is a reference we are assigning the addresesss refered by var[0] to 'Changed' value 
+So this willl refelect on self.variable also
 
 
 Python Associations:
