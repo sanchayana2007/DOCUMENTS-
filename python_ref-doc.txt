@@ -10,12 +10,128 @@ C:\Python33
 
 Edit the path and add the python in the path to launch it fromany place 
 
-
+Python is an Interpretted language
 ++++++++++++++++++++++++++++++++++
+Python and LUA are handled quite differently—interpreted rather than compiled. When you run a Python program (a file with an extension of .PY), it is not compiled, it is run. You could insert syntax errors into a function in Python and unless that function is called, Python will never complain about the errors!
+
+
+# Funny syntax error example
+
+# Bad function!
+def ErrorProne():
+
+    printgobblegobble("Hello there!")
+
+print("See, nothing bad happened. You worry too much!")
+
+There is no function called printgobblegobble() in Python or in this program, so that should have generated an error! Here is the output:
+
+
+See, nothing bad happened. You worry too much!
+
+
+OOPS in python :
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Here is an example:
+
+
+class Bug(object):
+    legs = 0
+    distance = 0
+
+    def __init__(self, name, legs):
+        self.name = name
+        self.legs = legs
+
+    def Walk(self):
+        self.distance += 1
+
+    def ToString(self):
+        return self.name + " has " + str(self.legs) + " legs" + \
+            " and taken " + str(self.distance) + " steps."
+
+-----------------------------------------------------------------
+Polymorphism:
+The term polymorph means “many forms” or “many shapes”, so polymorphism is the ability to take many forms or shapes. In the context of a class, this means we can use methods with many shapes—that is, many different sets of parameters. In Python, we can use optional parameters to make a method more versatile. The constructor of our new Bug class can be transformed with the use of optional parameters like so:
+
+
+    def __init__(self, name="Bug", legs=6):
+        self.name = name
+        self.legs = legs
+
+
+--------------------------------------------------------------------------------------
+Data Hiding (Encapsulation):
+
+
+access or change the distance variable (which we would assume is private, even though it isn’t):
+
+
+    def GetDistance(self):
+       return p_distance
+
+    def SetDistance(self, value):
+        p_distance = value
+
+From a data hiding point of view, you could rename distance to p_distance (making it appear to be a private variable), and then access it using these two methods. That is, if data hiding is important in your program.
+
+
+--------------------------------------------------------------------------------------
+Inheritance:
+
+Python supports inheritance of base classes. When a class is defined, the base class is included in parentheses:
+
+
+class Car(Vehicle):
+
+In addition, Python supports multiple inheritance; that is, more than one parent or base class can be inherited from
+in a child class. For example:
+
+
+class Car(Body,Engine,Suspension,Interior):
+
+As long as the variables and methods in each parent class do not conflict with each other, the new child class can 
+access them all without incident. But, if there are any conflicts, the conflicted variable or method is used from the 
+parent that comes first in the inheritance ordering.
+
+
+Use of super() to resolve any confuiosns in polymorphism
+class Point():
+    x = 0.0
+    y = 0.0
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        print("Point constructor")
 
 
 
+class Circle(Point):
+    radius = 0.0
 
+    def __init__(self, x, y, radius):
+        super().__init__(x,y)
+        self.radius = radius
+ 
+ c = Circle(100,100,50)
+ 
+ Output :
+ 
+ Point constructor
+Circle constructor
+
+
+--------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+
+
+variables and values are REFERENCES
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Everything is  reference of an Object except the variables user declares
 f you're used to most traditional languages, you have a mental model of what happens in the following sequence:
 
