@@ -4,6 +4,8 @@ code practice:
 http://www.cse.msu.edu/~cse231/PracticeOfComputingUsingPython/
 
 http://showmedo.com/learningpaths/12/view#id5  (BEST1)
+http://www.saltycrane.com/blog/tag/python/
+
 Installation:
 +++++++++++++++++
 C:\Python33
@@ -302,6 +304,28 @@ Key properties :
 a) More than one entry per key not allowed. Which means no duplicate key is allowed. When duplicate keys 
 encountered during assignment, the last assignment wins. Following is a simple example:
 
+
+
+4) Sets :
+The sets module provides classes for constructing and manipulating unordered collections of unique elements.
+Common uses include membership testing, removing duplicates from a sequence, and computing standard math
+operations on sets such as intersection, union, difference, and symmetric difference
+
+>>> from sets import Set
+>>> engineers = Set(['John', 'Jane', 'Jack', 'Janice'])
+>>> programmers = Set(['Jack', 'Sam', 'Susan', 'Janice'])
+>>> managers = Set(['Jane', 'Jack', 'Susan', 'Zack'])
+>>> employees = engineers | programmers | managers           # union
+>>> engineering_management = engineers & managers            # intersection
+>>> fulltime_management = managers - engineers - programmers # difference
+>>> engineers.add('Marvin')                                  # add element
+
+Spatialnet use of set 
+# scan for referenced poles (strip off the 'ST' from start of ID as not present in test db)
+		referenced_pole_ids = set([staging_ent.attributes["POLE_ID"][2:]
+								for staging_ent in layer_entities_map.get("Drops",[]) 
+								if staging_ent.attributes.get("POLE_ID")])
+here a set of unique pole ids referenced from a Drops can be drawn up 
 
 
 Functions:
@@ -860,6 +884,26 @@ def doSomethingBefore(func):
 #Yes!
 Well, you just have everything needed to understand decorators. You see, decorators are wrappers which means that they let you execute code before and after the function they decorate without the need to modify the function itself.
 
+
+Passing Multiple Arguments to a Function at a shot :
+==============================================================================================
+def test_var_args_call(arg1, arg2, arg3):
+    print "arg1:", arg1
+    print "arg2:", arg2
+    print "arg3:", arg3
+
+
+Passing as a Tuple: Just create a tuple with the arguments and Pass it in the definations 
+
+args = ("two", 3)
+test_var_args_call(1, *args)
+
+passing as a Dictionary:  will Similarly just keep the names same of the keys with the args in the function 
+
+kwargs = {"arg3": 3, "arg2": "two"}
+test_var_args_call(1, **kwargs)
+
+
 Handcrafted decorators
 ==================================================================================================
 How you would do it manually:
@@ -869,24 +913,18 @@ def my_shiny_new_decorator(a_function_to_decorate):
 
     # Inside, the decorator defines a function on the fly: the wrapper.
     # This function is going to be wrapped around the original function
-    # so it can execute code before and after it.
+    
     def the_wrapper_around_the_original_function():
 
-        # Put here the code you want to be executed BEFORE the original 
-        # function is called
         print "Before the function runs"
 
-        # Call the function here (using parentheses)
+        # Call the function here (using parentheses) Actual function call
         a_function_to_decorate()
 
-        # Put here the code you want to be executed AFTER the original 
-        # function is called
         print "After the function runs"
 
     # At this point, "a_function_to_decorate" HAS NEVER BEEN EXECUTED.
     # We return the wrapper function we have just created.
-    # The wrapper contains the function and the code to execute before
-    # and after. It's ready to use!
     return the_wrapper_around_the_original_function
 
 # Now imagine you create a function you don't want to ever touch again.
@@ -896,28 +934,24 @@ def a_stand_alone_function():
 a_stand_alone_function() 
 #outputs: I am a stand alone function, don't you dare modify me
 
-# Well, you can decorate it to extend its behavior.
-# Just pass it to the decorator, it will wrap it dynamically in 
-# any code you want and return you a new function ready to be used:
+Well, you can decorate it to extend its behavior. Just pass it to the decorator, it will wrap it dynamically in 
+ any code you want and return you a new function ready to be used:
 
 a_stand_alone_function_decorated = my_shiny_new_decorator(a_stand_alone_function)
 a_stand_alone_function_decorated()
-#outputs:
-#Before the function runs
-#I am a stand alone function, don't you dare modify me
-#After the function runs
-Now, you probably want that every time you call a_stand_alone_function, a_stand_alone_function_decorated is called instead. That's easy, just overwrite a_stand_alone_function with the function returned by my_shiny_new_decorator:
 
-a_stand_alone_function = my_shiny_new_decorator(a_stand_alone_function)
-a_stand_alone_function()
-#outputs:
-#Before the function runs
-#I am a stand alone function, don't you dare modify me
-#After the function runs
 
-# And guess what? That's EXACTLY what decorators do!
+#outputs:
+ Before the function runs
+ I am a stand alone function, don't you dare modify me
+ After the function runs
+Now, you probably want that every time you call a_stand_alone_function,
+a_stand_alone_function_decorated is called instead. That's easy, just overwrite a_stand_alone_function with 
+the function returned by my_shiny_new_decorator:
+
+
 Decorators demystified
-The previous example, using the decorator syntax:
+The previous example, using the decorator syntax Now to reuse the above decorator created above and 
 
 @my_shiny_new_decorator
 def another_stand_alone_function():
@@ -925,14 +959,15 @@ def another_stand_alone_function():
 
 another_stand_alone_function()  
 #outputs:  
-#Before the function runs
-#Leave me alone
-#After the function runs
+ Before the function runs
+ Leave me alone
+ After the function runs
+ 
 Yes, that's all, it's that simple. @decorator is just a shortcut to:
 
 another_stand_alone_function = my_shiny_new_decorator(another_stand_alone_function)
-Decorators are just a pythonic variant of the decorator design pattern. There are several classic design patterns embedded in Python to ease development, like iterators.
-
+Decorators are just a pythonic variant of the decorator design pattern. 
+There are several classic design patterns embedded in Python to ease development, like iterators.
 Of course, you can cumulate decorators:
 
 def bread(func):
@@ -1049,7 +1084,9 @@ print_full_name("Peter", "Venkman")
 #I got args! Look: Peter Venkman
 #My name is Peter Venkman
 Decorating methods
-What's great with Python is that methods and functions are really the same, except methods expect their first parameter to be a reference to the current object (self). It means you can build a decorator for methods the same way, just remember to take self in consideration:
+What's great with Python is that methods and functions are really the same,
+except methods expect their first parameter to be a reference to the current object (self).
+It means you can build a decorator for methods the same way, just remember to take self in consideration:
 
 def method_friendly_decorator(method_to_decorate):
     def wrapper(self, lie):
@@ -1070,7 +1107,8 @@ class Lucy(object):
 l = Lucy()
 l.sayYourAge(-3)
 #outputs: I am 26, what did you think?
-Of course, if you make a very general decorator and want to apply it to any function or method, no matter its arguments, then just use *args, **kwargs:
+Of course, if you make a very general decorator and want to apply it to any function or method, no matter
+its arguments, then just use *args, **kwargs:
 
 def a_decorator_passing_arbitrary_arguments(function_to_decorate):
     # The wrapper accepts any arguments
@@ -1135,7 +1173,9 @@ m.sayYourAge()
 #{}
 #I am 28, what did you think?
 Passing arguments to the decorator
-Great, now what would you say about passing arguments to the decorator itself? Well this is a bit twisted because a decorator must accept a function as an argument and therefore, you cannot pass the decorated function arguments directly to the decorator.
+Great, now what would you say about passing arguments to the decorator itself? Well this is a bit twisted because
+a decorator must accept a function as an argument and therefore, you cannot pass the decorated function arguments 
+directly to the decorator.
 
 Before rushing to the solution, let's write a little reminder:
 
