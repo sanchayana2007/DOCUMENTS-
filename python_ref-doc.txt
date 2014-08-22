@@ -387,8 +387,29 @@ Variable-length arguments:
 	
 Magic functions:
 ===================================================================================================
+These are teh set of functions always surounded by the Underscores
 __class__ =  
 __name__ = 
+
+ __init__ is not the first thing to get called. Actually, it's a method called __new__, which
+ actually creates the instance, then passes any arguments at creation on to the initializer. At the other end of the object's 
+ lifespan, there's __del__. Let's take a closer look at these 3 magic methods:
+
+__new__(cls, [...)
+__new__ is the first method to get called in an object's instantiation. It takes the class, then any other arguments that it 
+will pass along to __init__. __new__ is used fairly rarely, but it does have its purposes, particularly when subclassing an 
+immutable type like a tuple or a string.
+I don't want to go in to too much detail on __new__ because it's not too useful, but it is covered in great detail in the 
+Python docs.
+__init__(self, [...)
+The initializer for the class. It gets passed whatever the primary constructor was called with (so, for example, if we called
+
+x = SomeClass(10, 'foo'),
+__init__ would get passed 10 and 'foo' as arguments. __init__ is almost universally used in Python class definitions.
+__del__(self)
+If __new__ and __init__ formed the constructor of the object, __del__ is the destructor. It doesn't implement behavior for the
+statement del x (so that code would not translate to x.__del__()). Rather, it defines behavior for when an object is garbage 
+collected. It can be quite useful for objects that might require extra cleanup upon deletion, like sockets or file objects. 
 
 
 Lambda Functions
