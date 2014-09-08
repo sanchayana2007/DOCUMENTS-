@@ -16,15 +16,20 @@ colors@0.6.2 node_modules\colors
 the colors will be installed at the same path where the npm is run in a folder named npm_module
 
 
+NPM (Node package Manager):
+
  Binding a Package Installed using Json to your Node.js Module
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 A Json script will be used to maintian the Initiation , dependecies and Licencing 
 
 
 
-The requisite of the json script will be checked on giving the installation by NPM
-npm install
+The requisite of the json script will be checked on giving the installation automatically all those modules will 
+by using the Node command 
 
+>> npm install
+
+package.json
 {
 	"name":  "my-colors-project", 
 	"version": "0.6.2",
@@ -34,10 +39,13 @@ npm install
 	"dependencies": { "colors" : "0.6.2"}
 }
  
+To Save any new package in the node in the package.json 
+>> npm install package --save
 
+to get all information about 
+>> express -g
 
-
-
+>>  npm outdated
 Variables:
 ++++++++++++++++++++++++++++++++
 The type of the variables are will be declared as 'var'
