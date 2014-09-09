@@ -31,7 +31,7 @@ A Json script will be used to maintian the Initiation , dependecies and Licencin
 The requisite of the json script will be checked on giving the installation automatically all those modules will 
 by using the Node command 
 
->> npm install
+>> npm install -l
 
 package.json
 {
@@ -43,13 +43,43 @@ package.json
 	"dependencies": { "colors" : "0.6.2"}
 }
  
-To Save any new package in the node in the package.json 
+To the Changes install a package on the Globally so that all can use it 
+
+>> npm install express -g 
+ 
+
+To Save any new package manually install installed  in the node in the package.json 
 >> npm install package --save
+
+To install a specific version 
+>> npm install package@0.2.2
+
+
+
+To Uninstall any package 
+>> npm uninstall packagename
 
 to get all information about 
 >> express -g
 
 >>  npm outdated
+
+To get the information about all the global package Hierchy 
+>> npm ls -g express
+C:\Users\sbha0001\AppData\Roaming\npm
+└─┬ phonegap@3.2.0-0.17.0
+  └─┬ cordova@3.2.0-0.2.0
+    ├── express@3.0.0
+    └─┬ ripple-emulator@0.9.18
+      └── express@3.1.0
+      
+To get the Local intslled packages 
+
+>> npm -ls
+
+To Update the Local packages
+>>  npm update 
+
 Variables:
 ++++++++++++++++++++++++++++++++
 The type of the variables are will be declared as 'var'
