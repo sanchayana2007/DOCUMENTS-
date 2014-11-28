@@ -1,0 +1,19 @@
+USE `dwh`;
+
+DROP procedure IF EXISTS `create_all`;
+DELIMITER $$
+USE `dwh`$$
+CREATE PROCEDURE `dwh`.`create_all` ()
+
+BEGIN
+
+create table employee(id int, ename varchar(23),designation varchar(20), doj date);
+
+END$$
+
+
+
+DELIMITER ;
+
+
+
