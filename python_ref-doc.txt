@@ -292,6 +292,11 @@ Unique Python use of list:
 1. Filter a number range
 [x for x in range(1,1000) if x % 3 == 0 or x % 5 == 0]
 
+
+2. square up a list 
+a = [1,2,3]
+b= [ i **2 for  i in a]
+
 2. Reverse a list 
 g = "abcd"
 g[::-1]
