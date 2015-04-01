@@ -14,7 +14,9 @@ Edit the path and add the python in the path to launch it fromany place
 
 Python is an Interpretted language
 ++++++++++++++++++++++++++++++++++
-Python and LUA are handled quite differently—interpreted rather than compiled. When you run a Python program (a file with an extension of .PY), it is not compiled, it is run. You could insert syntax errors into a function in Python and unless that function is called, Python will never complain about the errors!
+Python and LUA are handled quite differently—interpreted rather than compiled. When you run a Python program 
+(a file with an extension of .PY), it is not compiled, it is run. You could insert syntax errors into a function
+in Python and unless that function is called, Python will never complain about the errors!
 
 
 # Funny syntax error example
@@ -26,7 +28,8 @@ def ErrorProne():
 
 print("See, nothing bad happened. You worry too much!")
 
-There is no function called printgobblegobble() in Python or in this program, so that should have generated an error! Here is the output:
+There is no function called printgobblegobble() in Python or in this program, so that should have generated an error! 
+Here is the output:
 
 
 See, nothing bad happened. You worry too much!
@@ -55,7 +58,10 @@ class Bug(object):
 
 -----------------------------------------------------------------
 Polymorphism:
-The term polymorph means “many forms” or “many shapes”, so polymorphism is the ability to take many forms or shapes. In the context of a class, this means we can use methods with many shapes—that is, many different sets of parameters. In Python, we can use optional parameters to make a method more versatile. The constructor of our new Bug class can be transformed with the use of optional parameters like so:
+The term polymorph means “many forms” or “many shapes”, so polymorphism is the ability to take many forms or shapes.
+In the context of a class, this means we can use methods with many shapes—that is, many different sets of parameters.
+In Python, we can use optional parameters to make a method more versatile. The constructor of our new Bug class can 
+be transformed with the use of optional parameters like so:
 
 
     def __init__(self, name="Bug", legs=6):
@@ -162,6 +168,13 @@ Circle constructor
 
 
 --------------------------------------------------------------------------------------
+Object declaration :
+
+A = Classname(22,22)
+
+Calling the function is same as C++ 
+
+A.fumc("dewded",12)
 
 --------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------
@@ -199,13 +212,12 @@ self.variable is a reference to the string object 'Original'. When you call Chan
  What is Happening here in terms of C++ terminology is
  ****************************************
  int& xRef = x;
-		int& zRef = z;
-		zRef = xRef; // Assigns values, not references
+	int& zRef = z;
+	zRef = xRef; // Assigns values, not references
  ***************************************
  So over here var and 'changed' are two seperate references and now var value is equal to the 'changed' reference
  value.
  
-
 The only way around this is to pass a mutable object. Because both references refer to the same object, any 
 changes to the object are reflected in both places.
 
