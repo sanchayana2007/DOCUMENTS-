@@ -15,5 +15,37 @@ END$$
 
 DELIMITER ;
 
+Loading the 3rd higest in a Table of class students 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+1. select * from class order by Total-marks desc where row_id =3
+2. Solution to finding the 2nd highest salary in SQL
+
+Now, here is what the SQL will look like:
+
+SELECT MAX(Salary) FROM Employee
+WHERE Salary NOT IN (SELECT MAX(Salary) FROM Employee 
+
+3.
+select * FROM (
+select EmployeeID, Salary
+,rank() over (order by Salary DESC) ranking
+from Employee
+)
+WHERE ranking = N;
 
 
+http://www.programmerinterview.com/index.php/database-sql/find-nth-highest-salary-sql/
+
+
+
+SQL query to delete duplicate rows:
+
+select distinct * into #tmp From EmpDup
+    delete from EmpDup
+    insert into EmpDup                
+    select * from #tmp drop table #tmp
+    
+    
+    
+    http://www.besttechtools.com/articles/article/sql-different-methods-to-insert-data-into-tables
