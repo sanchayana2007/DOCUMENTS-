@@ -24,7 +24,107 @@ class Employee
 using namespace Records;
 Employee emp;
 emp.setFirstName( Marni );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+Name Hiding 
+///////////////////////////////////////////////////////////
+So, what should be done here?
+
+Functions in derived classes with the same name as the functions in the parent classes, but that do not override the parent
+classes’ function are considered to be bad practice because it can result in errors just like the one above. So, having a
+function like someFunction above is considered to be bad practice. This is technically not method overloading either,
+because overloading functions is done within the same class – not in an inheritance hierarchy.
+
+The reason it’s bad practice is because it leads to ambiguity, and it’s much easier to just give the functions different
+names instead.
+
+Understanding the error message you would get with name hiding
+
+So, why does the code above result in that error message? Actually, the name lookup that is run by C++ will stop looking
+for other names as soon as it finds a single name in one of your base classes. This is because the someFunction declaration
+in ChildClass actually hides the someFunction declaration in ParentClass – so when a call to someFunction is made from
+GrandChildClass, the name lookup does not “see” the someFunction declaration that is in the ParentClass. But, there is
+another interesting “solution” to name hiding. It’s more of a way to override the name hiding behavior if you need to,
+because we can’t really say that name hiding is a “problem” since it’s intention is really to prevent other problems in C++.
+So, our “solution” is to unhide the someFunction declaration in ChildClass – read below for more details on how to do this.
+
+Name hiding and using
+
+We can actually provide a solution to the name hiding problem in the example above. All we have to do is implement the
+using keyword. Here is how to do it:
+
+class ParentClass
+{
+    public:
+    void someFunction(string s){ };
+};
+
+class ChildClass : public ParentClass
+{
+    public:
+    int someFunction(int i){};
+
+    /*This makes the someFunction
+       declaration in ParentClass visible
+       here as well:
+    */
+    using ParentClass::someFunction;
+};
+
+class GrandChildClass : public ChildClass
+{
+    public:
+    void differentFunction()
+    {
+        String s;
+        /*This call will result in an error:  */
+        someFunction(s); 
+
+    }
+};
+
+When we redeclare someFunction in the scope of ChildClass (with the “using” keyword), it makes both versions of that
+function (from both ChildClass and GrandChildClass) visible in just the ChildClass.
+
+Why does C++ have the concept of name hiding?
+
+There is actually a good reason why C++ has name hiding. Consider the example below:
+
+class ParentClass
+{
+    public:
+    void someFunction(string s){ };
+};
+
+class ChildClass : public ParentClass
+{
+    public:
+    int someOtherFunction(int i){};
+
+    /*This will use the same version of someFunction
+       that is in the ParentClass, since it does not have
+       it's own definition of someFunction
+    */
+};
+
+class GrandChildClass : public ChildClass
+{
+   /* This overrides someFunction, creating
+       a new version */
+    public:
+    float someFunction(float i){};
+ 
+};
+What if there was no concept of name hiding in C++?
+
+Let’s suppose that there was no name hiding. Then this means that in the GrandChildClass, both versions of someFunction are now visible including the one in the parent class ParentClass – so float someFunction(float i), and void someFunction(string s) are both visible in the GrandChildClass class. If a call to “someFunction(29)” is made in either the ChildClass or the ParentClass, then it would obviously use the “void someFunction(string s){ };” version of the function since that is the only version of the function that those classes can “see”.
+
+However, in the GrandChildClass if a call to “someFunction(29)” is made then there are 2 different functions that are visible – both someFunction(float i) and someFunction(string s) . It will obviously use someFunction(float i) since that is a better match for the parameter of 29. But, the issue here is that in the entire hierarchy of classes, the version of someFunction that is used is typically someFunction(string s), but once we get to the GrandChildClass, a different version of the someFunction function is used. This type of behavior was then considered to be undesirable by the C++ standard writers, so they implemented name hiding, which effectively gives each class a “clean slate” or a new, clean class that does not carry over the scope of inherited functions with the same name.
+
+
+
+
+
+
 CHAP2:  Designing Professional  C++ Programs
 **************************************************
 include class hierarchies, class interfaces, and object interactions. C++ is its numerous facilities for designing 
@@ -33,7 +133,7 @@ generic and reusable code.In addition to basic classes and inheritance,
 Polymorphism :Polymorphism is a beautiful part of object-oriented programming because it truly takes advantage of
 what inheritance offers. In a zoo simulation, we could programmatically loop through all of the animals
 in the zoo and have each animal move once. Since all animals are members of the Animal class, they all
-know how to move. Some of the animals have overridden the move behavior, but that s the best part —
+know how to move. Some of the animals have overridden the move behavior, but that s the best part â€”
 our code simply tells each animal to move without knowing or caring what type of animal it is. Each one
 moves whichever way it knows how.
 
@@ -83,7 +183,7 @@ C():
 In fact, two constructors will be emitted even if there is no virtual inheritance, and they will be identical.
  
  ///////////////////////////////////////////////////////////////
- implement a �private/restricted� function in C
+ implement a “private/restricted” function in C
  Here's one way:
 
 int f_real_name(void)
@@ -117,7 +217,67 @@ sum = f1.add(f2);
 
 Decomposition is the practice of breaking up code into smaller pieces.Ideally, each function or method should accomplish a single task. 
 Any subtasks of signifi-cant complexity should be decomposed into separate functions or methods
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class Variable and Instance Variable:
+Class variables – also known as static member variables
+
+Class variables, however, only have one copy of the variable(s) shared with all instances of the class.
+It’s important to remember that class variables are also known as static member variables in C++, Java
+, and C#. Each object of the class does not have its own copy of a class variable. Instead, every object shares
+the one and only copy of that class variable – and any changes made to that copy are seen by all of the objects 
+of that class. Here is what a class variable – or a static member variable – would look like in C++:
+
+Example of a class variable:
+
+class Taxes
+{
+  static int count;
+  /*...*/
+}
+///////////////////////////////////////
+
+How do you call C functions from C++?
+++++====++++++++++++++++++++++++++++++++++
+In order to call a C function from C++ code, you would use the “extern “C”” keyword when declaring the function in C.
+Then, you would call the function just like you would call any other function. An example will help clarify this:
+
+/*this is what the C++ code would look like
+   for the declaration of the foo function, which 
+   is defined somewhere else in C code: */
+
+extern "C" void foo( );	
+
+And then to call the function in the C++ code, it would look like this:
+
+//the declaration:
+extern "C" void foo();
+
+void main()
+{
+  // the function call:
+  foo( );
+}
+What if we want to declare multiple C functions at once in our C++ code?
+
+If you have more than one C functions that you would like to call from your C++ code, then it would be best to group 
+them and declare them like this:
+
+
+/* this is inside the C++ code,
+     if we want to access multiple C functions
+     from C++ then we can declare them like this:
+*/
+extern "C" {	
+  
+		int foo( );
+
+		double foobar();
+	};	
+
+And then those functions could be called just like we showed above.
+
+
 CHAP8 : 
 4)  Use of this to take its on variable and use 
 ---------------------------------------------------------------------------------------------
@@ -216,11 +376,11 @@ Move constructors
 ======================
 Move constructors of classes using dynamic memory allocation are allowed to assign the values of
 pointer data members to their own pointer data members without requiring them to make a copy of
-the source�s data. Next, the temporary�s pointer value is set to zero to prevent its destructor from
+the source’s data. Next, the temporary’s pointer value is set to zero to prevent its destructor from
 destroying data now owned by the just constructed object. The move constructor has grabbed or
 stolen the data from the temporary object. This is OK as the temporary object cannot be referred to
 again (as it is anonymous, it cannot be accessed by other code) and the temporary objects cease to
-exist shortly after the constructor�s call. Here is the implementation of Strings move constructor:
+exist shortly after the constructor’s call. Here is the implementation of Strings move constructor:
 
 String::SpreadsheetCell::String(String &&tmp)  // take the temporary object
 :
@@ -255,7 +415,84 @@ Class two(one);
 }
 
 
+In C++, what’s the difference between an inline function and a macro?
+-------------------------------------------------------------------------
 
+The major difference between inline functions and macros is the way they are handled. Inline functions are parsed by 
+the compiler, whereas macros are expanded by the C++ preprocessor. This difference creates other differences, as best
+illustrated by examples.
+
+
+
+The C++ preprocessor implements macros by using simple text replacement. Suppose we have the following macro:
+
+#define SUM(a,b) (a+b)
+When the preprocessor comes across any occurrences of SUM(first, last) in the code, then that text will be replaced by
+(first + last). When would one want to use a macro? Usually when what you’re substituting for is very simple, and does
+not justify the overhead of a function call. Remember that function calls do incur overhead.
+
+Inline functions, as mentioned earlier, are parsed by the compiler directly instead of the preprocessor. Inline functions
+look very similar to regular functions. Here is what an inline function implementation of the SUM macro would look like:
+
+// note the use of the 'inline' keyword
+
+inline int sum(int a, int b)
+{
+	return (a+b);
+}
+The difference between an inline function and a regular function is that wherever the compiler finds a call to an inline 
+function, it writes a copy of the compiled function definition. However, with a regular function, a normal function call
+is generated.
+The reason C++ has inline functions and macros is to eliminate the overhead incurred by function calls. However, 
+the tradeoff of this is the fact that the program size increases with both macros and inline functions. Remember
+that inline functions look like regular functions, but macros are implemented with text replacement.
+
+The fact that macros use text replacement creates the potential for bugs. Suppose we have the following code:
+
+#define DOUBLE(X) X*X
+
+ int y = 3;
+ int j = DOUBLE(++y);
+If you’re expecting that j will be assigned a value of 4 squared (16), then you would be wrong. Because of the text
+replacement, what actually happens is that the DOUBLE(++y) expands to ++y * ++y, which equals 4*5, giving us 20.
+This problem would not occur if DOUBLE were implemented as an inline function. Inline functions only evaluate their 
+arguments once, so any side effects of evaluation happen only once.
+
+Another problem with macros occurs with binding. Suppose we have a macro with two statements, and then we
+try to use that macro with an if statement. If we decide not to use the curly brackets with our if statement, then we
+will have something that looks like this:
+
+#define ADD_TWO(x,y) x += 2; y +=2
+
+bool flag = true;
+int j = 5, k = 7;
+
+
+if(flag)
+	ADD_TWO(j,k);
+Then you’re probably thinking that the macro will expand to this:
+
+if(flag)
+{
+	j +=2;
+	k +=2;	
+} 
+But what actually happens is that the if statement binds to the first expression in the macro. So this is what it really 
+expands to:
+
+if(flag)
+{
+	j +=2;
+} 	
+	
+k +=2;
+If we had used an inline function instead of a macro, the problem shown above would not have occurred. 
+This is because an inline function is treated as a single statement, so the entire function would be bound to the if statement.
+
+
+Debugging macros is also difficult. This is because the preprocessor does the textual replacement for macros, but that textual
+replacement is not visible in the source code itself. Because of all this, it’s generally considered a good idea to use inline
+functions over macros.
 
 ////////////////////////////////////////////////////////////////////
 Virtual functions 
@@ -395,6 +632,84 @@ void m()
   pa->f(); //OK, calls pa->B::f(7)
   pb->f(); //error: wrong number of arguments for B::f()
 }
+
+Can a pure virtual function have an implementation?
+-------------------------------------------------------------------------------------------
+
+The quick answer to that question is yes! A pure virtual function can have an implementation in C++ – which is
+something that even many veteran C++ developers do not know. So, using the SomeClass class from our example above,
+we can have the following code:
+
+class SomeClass {
+public:
+   virtual void pure_virtual() = 0;  // a pure virtual function
+   // note that there is no function body	 
+};
+
+/*This is an implementation of the pure_virtual function
+    which is declared as a pure virtual function.
+    This is perfectly legal:
+*/
+void SomeClass::pure_virtual() {
+    cout<<"This is a test"<<endl;
+}
+Why would you want a pure virtual function to have an implementation?
+
+It is actually pretty rare to see a pure virtual function with an implementation in real-world code, but having
+that implementation may be desirable when you think that classes which derive from the base class may need some 
+sort of default behavior for the pure virtual function. So, for example, if we have a class that derives from our
+SomeClass class above, we can write some code like this – where the derived class actually makes a call to the
+pure virtual function implementation that is inherited:
+
+//this class derives from SomeClass
+class DerivedClass: public SomeClass {
+
+virtual void pure_virtual() {
+
+/*
+Makes a call to the pure virtual function 
+implementation that is inside the SomeClass
+class. This can happen because DerivedClass
+may not have anything appropriate to define
+for this function, so it just calls the SomeClass's
+implementation
+*/
+
+SomeClass::pure_virtual();  
+
+}
+
+};
+Something else that is definitely worth noting in the code above is the fact that the call to the 
+“SomeClass::pure_virtual();” function is valid because of the fact that the pure_virtual function declaration 
+is public in the SomeClass class. That call would also be valid if the pure_virtual function declaration is protected,
+because the DerivedClass does derive from the SomeClass class. However, if the pure_virtual function declaration was
+private in the SomeClass class, then a compiler error would result when the “SomeClass::pure_virtual();” call is made
+in the DerivedClass class, because it would obviously not have access to that function implementation.
+
+Pure virtual functions can not have a definition inside the function declaration
+
+If you do mistakenly try to give a declaration of a pure virtual function a definition as well, then the compiler will
+return an error when it comes across that code. Note that there is however an exception to this in Microsoft’s Visual C++
+implementation, which specifically allows this. This is also known as an inline definition, which is completely different 
+from the use of the inline keyword – which you can read about here Inline vs macro. 
+So, suppose we have the following code:
+
+class SomeClass {
+public:
+  /*note that we added braces that are normally
+     associated with a function body and definition:
+  */
+   virtual void pure_virtual() = 0 { }; //ERROR (except in MS VC++)
+};
+The code above is considered ill formed by the C++ 03 standard in Clause 10.4, paragraph 2, which says that “a function
+declaration cannot provide both a pure-specifier and a definition”.
+
+Running the code above will actually result in a compiler error, because a pure virtual function can not have a definition
+within the declaration of the pure virtual function.
+
+
+
 
 Virtual template example
 -------------------------------------------------------------------
@@ -760,12 +1075,12 @@ a const pointer must be initialized to a value upon declaration, and its value c
 c) const int* const   ptr (this will not allow any of the above)
  
 ----------------------------------------------------------------------------------------------
-The keyword �explicit
+The keyword ‘explicit
 
 ----------------------------------------------------------------------------------------------
-� DataBase(Person const &): the DataBase initially contains a single Person object;
-� DataBase(istream &in): the data about multiple persons are read from in.
-� DataBase(size_t count, istream &in = cin): the data ofcountpersons are read from
+• DataBase(Person const &): the DataBase initially contains a single Person object;
+• DataBase(istream &in): the data about multiple persons are read from in.
+• DataBase(size_t count, istream &in = cin): the data ofcountpersons are read from
 in, by default the standard input stream.
 The above constructors all are perfectly reasonable. But they also allow the compiler to compile the
 following code without producing any warning at all:
@@ -777,7 +1092,7 @@ db2 = person; // 2
 db2 = 10; // 3
 db2 = cin; // 4
 Statement 1 is perfectly reasonable: db is used to rede?ne db2. Statement 2 might be understandable since we designed DataBase to contain Person objects. Nevertheless, we might question the
-logic that�s used here as a Person is not some kind of DataBase. The logic becomes even more
+logic that’s used here as a Person is not some kind of DataBase. The logic becomes even more
 opaque when looking at statements 3 and 4. Statement 3 in effect waits for the data of 10 persons
 to appear at the standard input stream. Nothing like that is suggested by db2 = 10.
 All four statements are the result of implicit promotions. Since constructors accepting, respectively a
@@ -791,7 +1106,7 @@ have been declared using explicit. E.g.,
 explicit DataBase(Person const &person);
 explicit DataBase(size_t count, std:istream &in);
 Having declared all constructors accepting one argument asexplicitthe above assignments would
-have required the explicit speci?cation of the appropriate constructors, thus clarifying the programmer�s intent:
+have required the explicit speci?cation of the appropriate constructors, thus clarifying the programmer’s intent:
 
 3) STATIC:
 	static means only internal linkage . A function or variable declared as static cannot be accessd by the other files at thetime of linking . 
@@ -1225,7 +1540,7 @@ It it just a declaration after the function name
 fun()throw (invalid_argument, runtime_error)
 {   body of the function }
 
-Throw lists don� prevent functions from throwing unlisted exception types, but
+Throw lists donâ€ prevent functions from throwing unlisted exception types, but
 they prevent the exception from leaving the function.
 
 ________________________________________________________________________
@@ -1259,19 +1574,19 @@ catch(...){
 }
 
 .------------------------------------------------------------------------
-s, if Incomplete�s constructor would actually have allocated some memory, the program would
+s, if Incomplete’s constructor would actually have allocated some memory, the program would
 suffer from a memory leak. To prevent this from happening, the following counter measures are
 available:
-� Prevent the exceptions from leaving the constructor.
-If part of the constructor�s body may generate exceptions, then this part may be surrounded
+• Prevent the exceptions from leaving the constructor.
+If part of the constructor’s body may generate exceptions, then this part may be surrounded
 by a try block, allowing the exception to be caught by the constructor itself. This approach is
 defensible when the constructor is able to repair the cause of the exception and to complete its
 construction as a valid object.
-� If an exception is generated by a base class constructor or by a member initializing constructor
-then a try block within the constructor�s body won�t be able to catch the thrown exception.
+• If an exception is generated by a base class constructor or by a member initializing constructor
+then a try block within the constructor’s body won’t be able to catch the thrown exception.
 This always results in the exception leaving the constructor and the object is not considered to
 have been properly constructed. A try block may include the member initializers, and the try
-block�s compound statement becomes the constructor�s body as in the following example:
+block’s compound statement becomes the constructor’s body as in the following example:
 class Incomplete2
 {
 Composed d_composed;
@@ -1359,7 +1674,7 @@ unexpected(). The built-in implementation of unexpected() simply calls terminate
 just as you can set your own terminate_handler, you can set your own unexpected_handler.
 Unlike in the terminate_handler, you can actually do something other than just terminate the pro-
 gram in the unexpected_handler. Your version of the function must either throw a new exception or
-terminate the program — it can t just exit the function normally. If it throws a new exception, that excep-
+terminate the program â€” it can t just exit the function normally. If it throws a new exception, that excep-
 tion will be substituted for the unexpected exception as if the new one had been throw originally. If this
 substituted exception is also not listed in the throw list, the program will do one of two things. If the
 throw list for the function specifies bad_exception, then bad_exception will be thrown. Otherwise,
@@ -1588,6 +1903,21 @@ for (int i = 0; i < size; i++) {
 
 
 -------------------------------------
+A Variable Argument List is not Function Overloading
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+Actually, this is not a case of function overloading – the printf function is just using a feature of C
+known as variable argument lists. This should not be confused with function overloading. So, to answer
+the question, Standard C does not support function overloading.
+
+As an interesting side note, C++ doesn’t really have function overloading. What it does have is a means of
+faking it: the C++ compiler actually ‘mangles’ (or changes) function names according to the function’s parameters.
+So, functions that share the same name but have different numbers or types of parameters can be differentiated
+when invoked. Also, since the ‘mangling’ of function names is not standardized, it’s usually difficult to link 
+object files compiled by different C++ compilers.
+
+
+
 //Implementation of overloaded function-call operator
 
 -------------------------------------
@@ -1912,19 +2242,19 @@ The way the Sequential Containers(Vectors,map) ALLOCATION OF MEMORY is
 Allocators:
 ****************
 Most containers use a special object for allocating the memory that is managed by them. This object
-is called an allocator, and it�s type is (usually by default) speci?ed when a container is constructed. A
-container�s allocator can be obtained using the container�s get_allocator member, which returns
+is called an allocator, and it’s type is (usually by default) speci?ed when a container is constructed. A
+container’s allocator can be obtained using the container’s get_allocator member, which returns
 a copy of the allocator used by the container.
  
 1) value_type *address(value_type &object)    [returns the address of object]
  
-2) value_type *allocate(size_t count)  [allocates raw memory for holding count values of the container�s value_type ]
+2) value_type *allocate(size_t count)  [allocates raw memory for holding count values of the container’s value_type ]
  
-3) void destroy(value_type *object)   [calls object�s destructor (but doesn�t deallocate object�s own memory) ]
+3) void destroy(value_type *object)   [calls object’s destructor (but doesn’t deallocate object’s own memory) ]
  
 4) void deallocate(value_type *object, size_t count)
  
-[calls operator delete to delete object�s memory, previously allocated by allocate.]
+[calls operator delete to delete object’s memory, previously allocated by allocate.]
  
 5) size_t max_size()
 [returns the maximum number of elements that allocate can allocate]
@@ -2211,12 +2541,12 @@ alpha bravo charley
 */
 unordered containers support the following basic set of operators:
 ***************************************************************************************************
-� The overloaded assignment operator, so we can assign two containers of the same types to each
+• The overloaded assignment operator, so we can assign two containers of the same types to each
 other. This basic operator is supported by the unordered containers;
-� Tests for equality: == and != The equality operator applied to two containers returns true if
+• Tests for equality: == and != The equality operator applied to two containers returns true if
 the two containers have the same number of elements, which are pairwise equal according to
 the equality operator of the contained data type. The inequality operator does the opposite;
-� Ordering operators: <, <=, > and >=. The < operator returns true if each element in the lefthand
+• Ordering operators: <, <=, > and >=. The < operator returns true if each element in the lefthand
 side container is less than each corresponding element in the right-hand side container.
 Additional elements in either the left-hand side container or the right-hand side container are
 ignored.
@@ -2227,9 +2557,9 @@ right = {1, 3}; // left < right
 right = {1, 3, 6, 1, 2}; // left < right
 Note that before a user-defined type (usually a class-type) can be stored in a container, the userdefined
 type should at least support:
-� A default value (e.g., a default constructor)
-� The equality operator (==)
-� The less-than operator (<)
+• A default value (e.g., a default constructor)
+• The equality operator (==)
+• The less-than operator (<)
 
 ----------------------------------------------------------------------------------------------------------------------
 Set 
@@ -2362,7 +2692,7 @@ It can be considered as a dobly link llist
 --------------------------------------------------------------------------------------------
 
 
-The answer is that C++ utilizes a hidden pointer named �this�!
+The answer is that C++ utilizes a hidden pointer named “this”!
 class Simple
  
 {
@@ -2378,7 +2708,7 @@ Note that this is just a normal function call where C++ has added a parameter, a
 			void SetID(Simple* const this, int nID) 
 			{ this->m_nID = = nID; }
 
-this is a const pointer � you can change the value of the object it points to, but you can not make it point to something else!
+this is a const pointer — you can change the value of the object it points to, but you can not make it point to something else!
 Uses:
 1)
 	class Something
@@ -2402,7 +2732,7 @@ Uses:
 	}
 2) Returning *this will return a reference to the object that was implicitly passed to the function by C++.
 
-One use for this feature is that it allows a series of functions to be �chained� together, so that the output of one function becomes 
+One use for this feature is that it allows a series of functions to be “chained” together, so that the output of one function becomes 
 the input of another function!
 
 
@@ -2585,10 +2915,41 @@ static std::map<int, int> data;
 7) 
 *****************************************************************************
 Template class:
-A generic definition or a parameterized class not instantiated until the client provides the needed information. It�s jargon for plain templates.
+A generic definition or a parameterized class not instantiated until the client provides the needed information.
+It’s jargon for plain templates.
+
+
+
+8) Multiple template clases
+*****************************************************************************
+If you don’t know what a function template is, then it would help if you read our quick refresher on function templates.
+
+You may find yourself needing to use more than one type parameter in a function template. If that ever occurs, then 
+declaring multiple type parameters is actually quite simple. All you need to do is add the extra type to the template
+prefix, so it looks like this:
+
+
+// 2 type parameters:
+template<class T1, class T2>
+void someFunc(T1 var1, T2 var2 )
+{
+// some code in here...
+}
+Can you have unused type parameters?
+
+No, you may not. If you declare a template parameter then you absolutely must use it inside of your function definition 
+otherwise the compiler will complain. So, in the example above, you would have to use both T1 and T2, or you will get
+a compiler error.
+
+Do template parameters have to be declared with a “T”?
+
+No, the type parameter can actually be declared with any other identifier that you choose – as long as it not a keyword
+in C++. Using “T” as the name for the type parameter is traditional, but remember that other names can be used.
+
+
 
 Class template:
-A class template specifies how individual classes can be constructed much like the way a class specifies how individual objects can be constructed. It�s jargon for plain classes. 
+A class template specifies how individual classes can be constructed much like the way a class specifies how individual objects can be constructed. It’s jargon for plain classes. 
 template<typename T> foo { } // class template
 
 foo<int> t; // template class
