@@ -408,7 +408,142 @@ def manyArgs(*arg):
 I was called with 1 arguments: (1,)
 >>> manyArgs(1, 2,3)
 I was called with 3 arguments: (1, 2, 3)	
-	
+
+j_txt = _("jobs: ") 
+
+_ has 3 main conventional uses in Python:
+
+1,To hold the result of the last executed statement in an interactive interpreter session. This precedent was set by the standard CPython interpreter, and other interpreters have followed suit
+2.For translation lookup in i18n (imported from the corresponding C conventions, I believe)
+3; As a general purpose "throwaway" variable name to indicate that part of a function result is being deliberately ignored
+
+That is usage 2 - by convention, _ is the name used for the function that does internationalisation and localisation string translation lookups. I'm pretty sure it is the C gettext library that established that convention.
+
+Difference between _, __ and __xx__ in Python
+==================================================
+When learning Python many people don't really understand why so much underlines in the beginning of the methods, sometimes even in the end like __this__! I've already had to explain it so many times, it's time to document it.
+
+One underline in the beginning
+Python doesn't have real private methods, so one underline in the beginning of a method or attribute means you shouldn't access this method, because it's not part of the API. It's very common when using properties:
+
+class BaseForm(StrAndUnicode):
+    ...
+    
+    def _get_errors(self):
+        "Returns an ErrorDict for the data provided for the form"
+        if self._errors is None:
+            self.full_clean()
+        return self._errors
+    
+    errors = property(_get_errors)
+This snippet was taken from django source code (django/forms/forms.py). This means errors is a property, and it's part of the API, but the method this property calls, _get_errors, is "private", so you shouldn't access it.
+
+Two underlines in the beginning
+This one causes a lot of confusion. It should not be used to mark a method as private, the goal here is to avoid your method to be overridden by a subclass. Let's see an example:
+
+class A(object):
+    def __method(self):
+        print "I'm a method in A"
+    
+    def method(self):
+        self.__method()
+     
+a = A()
+a.method()
+The output here is
+
+$ python example.py 
+I'm a method in A
+Fine, as we expected. Now let's subclass A and customize __method
+
+class B(A):
+    def __method(self):
+        print "I'm a method in B"
+
+b = B()
+b.method()
+and now the output is...
+
+$ python example.py
+I'm a method in A
+as you can see, A.method() didn't call B.__method() as we could expect. Actually this is the correct behavior for __. So when you create a method starting with __ you're saying that you don't want anybody to override it, it will be accessible just from inside the own class.
+
+How python does it? Simple, it just renames the method. Take a look:
+
+a = A()
+a._A__method()  # never use this!! please!
+$ python example.py
+I'm a method in A
+If you try to access a.__method() it won't work either, as I said, __method is just accessible inside the class itself.
+
+Two underlines in the beginning and in the end
+When you see a method like __this__, the rule is simple: don't call it. Why? Because it means it's a method python calls,
+ not you. Take a look:
+
+>>> name = "igor"
+>>> name.__len__()
+4
+>>> len(name)
+4
+
+>>> number = 10
+>>> number.__add__(20)
+30
+>>> number + 20
+30
+There is always an operator or native function that calls these magic methods. The idea here is to give you the ability 
+to override operators in your own classes. Sometimes it's just a hook python calls in specific situations. __init__(), 
+for example, is called when the object is created so you can initialize it. __new__() is called to build the instance, and so on...
+
+Here's an example:
+
+class CrazyNumber(object):
+    
+    def __init__(self, n):
+        self.n = n
+    
+    def __add__(self, other):
+        return self.n - other
+    
+    def __sub__(self, other):
+        return self.n + other
+    
+    def __str__(self):
+        return str(self.n)
+
+
+num = CrazyNumber(10)
+print num           # 10
+print num + 5       # 5
+print num - 20      # 30
+Another example:
+
+class Room(object):
+
+    def __init__(self):
+        self.people = []
+
+    def add(self, person):
+        self.people.append(person)
+
+    def __len__(self):
+        return len(self.people)
+
+room = Room()
+room.add("Igor")
+print len(room)     # 1
+The documentation covers all these special methods.
+
+Conclusion
+Use _one_underline to mark you methods as not part of the API. Use __two_underlines__ when you're creating 
+objects to look like native python objects or you wan't to customize behavior in specific situations. And 
+don't use __just_to_underlines, unless you really know what you're doing!
+
+
+
+
+
+
 	
 Magic functions:
 ===================================================================================================
@@ -446,6 +581,51 @@ Lamda functions are not bound to a name they just use a construct called lambda.
 lambda x,y: x + y
 
 this is a sum function 
+
+lambda Functions:
+==================================================
+Python supports the creation of anonymous functions (i.e. functions that are not bound to a name) at runtime, 
+diffrence between two functions
+>>> def f (x): return x**2
+... 
+>>> print f(8)
+64
+>>> 
+>>> g = lambda x: x**2
+>>> 
+>>> print g(8)
+64
+
+
+>>> def make_incrementor (n): return lambda x: x + n
+>>> 
+>>> f = make_incrementor(2)
+>>> g = make_incrementor(6)
+>>> 
+>>> print f(42), g(42)
+44 48
+>>> 
+>>> print make_incrementor(22)(33)
+55
+The above code defines a function "make_inrementor" that creates an anonymous function on the fly and returns it. The returned function increments its argument by the value that was specified when it was created.
+
+
+
+No Multiline Lambda in Python: Why not?
+===================================================
+Look at the following:
+
+map(multilambda x:
+      y=x+1
+      return y
+   , [1,2,3])
+Is this a lambda returning (y, [1,2,3]) (thus map only gets one parameter, resulting in an error)?
+ Or does it return y? Or is it a syntax error, because the comma on the new line is misplaced? 
+ How would Python know what you want?
+
+Within the parens, indentation doesn't matter to python, so you can't unambiguously work with multilines.
+
+This is just a simple one, there's probably more examples.
 
 
 
