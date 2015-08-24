@@ -411,14 +411,37 @@ I was called with 3 arguments: (1, 2, 3)
 
 j_txt = _("jobs: ") 
 
-_ has 3 main conventional uses in Python:
+Single Lone Underscore (_)
+==================================================
+This is typically used in 3 cases:
 
-1,To hold the result of the last executed statement in an interactive interpreter session. This precedent was set by the standard CPython interpreter, and other interpreters have followed suit
-2.For translation lookup in i18n (imported from the corresponding C conventions, I believe)
-3; As a general purpose "throwaway" variable name to indicate that part of a function result is being deliberately ignored
+In the interpreter: The _ name points to the result of the last executed statement in an interactive interpreter session. This was first done by the standard CPython interpreter, and others have followed too.
 
-That is usage 2 - by convention, _ is the name used for the function that does internationalisation and localisation string translation lookups. I'm pretty sure it is the C gettext library that established that convention.
+>>> _
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name '_' is not defined
+>>> 42
+>>> _
+42
+>>> 'alright!' if _ else ':('
+'alright!'
+>>> _
+'alright!'
+As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the next person reading your code to know that, by convention, a certain name is assigned but not intended to be used. For instance, you may not be interested in the actual value of a loop counter:
 
+n = 42
+for _ in range(n):
+    do_something()
+i18n: One may also see _ being used as a function. In that case, it is often the name used for the function that does internationalisation and localisation string translation lookups. This seems to have originated from and follow the corresponding C convention. For instance, as seen in the Django documentation for translation, you may have:
+
+from django.utils.translation import ugettext as _
+from django.http import HttpResponse
+
+def my_view(request):
+    output = _("Welcome to my site.")
+    return HttpResponse(output)
+The second and third purposes can conflict, so one should avoid using _ as a throw-away name in any code block that also uses it for i18n lookup and translation.
 Difference between _, __ and __xx__ in Python
 ==================================================
 When learning Python many people don't really understand why so much underlines in the beginning of the methods, sometimes even in the end like __this__! I've already had to explain it so many times, it's time to document it.
