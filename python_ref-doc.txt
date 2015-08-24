@@ -1997,4 +1997,111 @@ file handling:
 regex:
 =================================
 
-=================================
+things to practice:
++++++++++++++++++++++++++++++++++
+
+1. Tuple of list 
+==================
+first_lst = [('-2.50', 0.49, 0.52), ('-2.00', 0.52, 0.50)]
+this is not the correct way and willl throw a generator error
+>> print first_lst 
+>> <generator object <genexpr> at 0x02261288>
+
+convert the tuple into all floats 
+first_lst=[ tuple(float(y) for y in x) for x in first_lst ]
+
+Now the other way (x for x in y) where y is a tuple is all allowed over here 
+
+Change@Me1
+
+2. lamdas list and fetching Values 
+====================================
+from functools import partial
+lambdas = [(lambda : i for i in range(3)]
+>>> lambdas[0]()
+2
+>>> lambdas[1]()
+2
+
+Sol: 
+
+The important thing to be understood here is, the functions are created during the evaluation of the list 
+comprehension, but the value of i will be evaluated only during the execution of the functions.
+
+So, in your case, you have created three functions and all of them refer i. When those functions are
+ invoked at runtime, i will have the value 2, because that was the last value bound to i in the last
+ iteration of the for loop.
+ 
+  lambdas = [lambda i=i: i for i in range(3)]
+  Use a parameter with default value to bind the current value of i to a local variable. When the lambda
+  gets called without an argument, the local variable i is assigned the default value
+  
+  
+  
+3. use of Arg and karg best expalined :
+==============================================
+Soln: 
+class Foo():
+    def __init__(self, data = False, *args, **kwargs):
+        print kwargs, args, data
+
+Foo()
+Foo(data = True)
+Foo(data = True, data1 = "Welcome")
+Foo(True, 1, data1 = "Welcome")
+# Foo(True, data1 = "Welcome", 1) # This will throw an error
+Output
+
+{} () False
+{} () True
+{'data1': 'Welcome'} () True
+{'data1': 'Welcome'} (1,) True
+In this example,
+
+We don't pass a value to data, so default value (False) is assumed
+We explicitly pass a value to data, so that value is taken
+We explicitly pass a value to data and another keyword argument.
+We explicitly pass a value to data, positional parameter and a keyword argument.
+This will throw an error because no positional parameter should occur after a keyword argument. Order is very important
+
+4. generator(tuple) vs lsit comprehension
+==================================================
+[myClass().Function(things) for things in biggerThing]
+Function is a method, and it builds a list. The method itself doesn't return anything, but lists get manipulated within.
+
+Now when I change it to a generator ,
+
+(myClass().Function(things) for things in biggerThing)
+
+Wont work 
+Soln:
+
+1). map(myClass().Function, biggerThing) 
+map(function, iterable, ...)
+
+Apply function to every item of iterable and return a list of the results. If additional iterable arguments are passed, function must take that many arguments and is applied to the items from all iterables in parallel. If one iterable is shorter than another it is assumed to be extended with None items. If function is None, the identity function is assumed; if there are multiple arguments, map() returns a list consisting of tuples containing the corresponding items from all iterables (a kind of transpose operation). The iterable arguments may be a sequence or any iterable object; the result is always a list.
+
+
+2). 
+Generators are evaluated on the fly, as they are consumed. So if you never iterate over a generator, its elements are never evaluated.
+So, if you did:
+
+for _ in (myClass().Function(things) for things in biggerThing):
+    pass
+
+
+5.create a dictionary with list comprehension
+============================================================
+
+Soln:
+
+d = {key: value for (key, value) in iterable}
+Of course, you can use the iterable in any way you want (tuples and lists literals, generator comprehensions, list comprehensions, generator functions, functional composition... feel creative) as long as each element is an iterable itself of two elements:
+
+d = {value: foo(value) for value in sequence if bar(value)}
+
+def key_value_gen(k):
+   yield chr(k+65)
+   yield chr((k+13)%26+65)
+d = dict(map(key_value_gen, range(26)))
+
