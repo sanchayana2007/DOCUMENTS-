@@ -35,6 +35,16 @@ Here is the output:
 See, nothing bad happened. You worry too much!
 
 
+Python 3.x:
+class MyClass(object): = new-style class
+class MyClass: = new-style class (implicitly inherits from object)
+
+Python 2.x:
+class MyClass(object): = new-style class
+class MyClass: = OLD-STYLE CLASS
+ew style objects have a different object model to classic objects, and some things won't work properly with old style objects, for instance, super(), @property and descrpnt
+Explanation:
+
 OOPS in python :
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -270,16 +280,13 @@ Python Expression	Results	 Description
 	L[2]	'SPAM!'	Offsets start at zero
 	L[-2]	'Spam'	Negative: count from the right
 	L[1:]	['Spam', 'SPAM!']	Slicing fetches sections
-No Enclosing Delimiters:
-Any set of multiple objects, comma-separated, written without identifying symbols, i.e., brackets for lists, parentheses
-for tuples, etc., default to tuples, as indicated in these short examples:
+
  
-2)List :
+2)List : Comprehension
 
 ---------------
-The list is a most versatile datatype available in Python which can be written as a list of comma-separated
-values (items) between square brackets. Good thing about a list is that items in a list need not all have the same type.
-Creating a list is as simple as putting different comma-separated values between squere brackets. For example:
+The list is a most versatile datatype available in Python  Good thing about a list is that items in a list need not all have the same type.
+Creating a list is putting different comma-separated values between squere brackets. For example:
 
 list1 = ['physics', 'chemistry', 1997, 2000];
 Basic List Operations:
@@ -318,6 +325,16 @@ It starts from the end and prints every element
 g[::-2]
 >> db
 It starts from the end and prints every next element  element
+
+Use of enumerate
+-------------------------------------
+refactored in a list comprehension like this:
+>>> def _treatment(pos, element):
+... return '%d: %s' % (pos, element)
+...
+>>> seq = ["one", "two", "three"]
+>>> [_treatment(i, el) for i, el in enumerate(seq)]
+['0: one', '1: two', '2: three']
 
 
  
@@ -428,11 +445,15 @@ NameError: name '_' is not defined
 'alright!'
 >>> _
 'alright!'
-As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the next person reading your code to know that, by convention, a certain name is assigned but not intended to be used. For instance, you may not be interested in the actual value of a loop counter:
+As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the next person reading your code to know that, by convention, a certain name is assigned but not intended to be used. 
+For instance, you may not be interested in the actual value of a loop counter:
 
 n = 42
 for _ in range(n):
     do_something()
+
+So overe here we dont care what number the loop is currently at we ajuts need to do something for 42 times and this saves 
+n extra variable 
 i18n: One may also see _ being used as a function. In that case, it is often the name used for the function that does internationalisation and localisation string translation lookups. This seems to have originated from and follow the corresponding C convention. For instance, as seen in the Django documentation for translation, you may have:
 
 from django.utils.translation import ugettext as _
@@ -1007,7 +1028,101 @@ from the beginning until it hits yield, then it'll return the first value of the
 The generator is considered empty once the function runs but does not hit yield anymore. It can be because the loop 
 had come to an end, or because you do not satisfy a "if/else" anymore.
 
+Iterators:
+-----------------------------------------------------------
+An iterator is nothing more than a container object that implements the iterator
+protocol
 
+i = iter([1,2,3,4])
+>> i.next()
+1
+>> i.next()
+2
+... like that 
+the way this is implemented is by using two methods 
+a) next, which returns the next item of the container
+b) __iter__, which returns the iterator itself
+
+Now we can write our own iterators in the same way just have to implement the __iter__ method 
+and next() this next name can be different its not a mandate
+
+class myiter(object):
+	def __init__(self,step):
+		self.step=step
+	def next(self):
+		if step ==0:
+			raise Exception("Ended")
+		step -=1
+		return self.step
+	def __iter__(self):
+		"""return the the iteratoe itself"""
+		return self
+		
+>>i =  myiter(5)
+>> for el in MyIterator(4):
+... print el
+
+
+
+		
+	
+	
+
+Generators :
+-------------------------------------------------------------
+generators provide an elegant way to write simple and efficient
+code for functions that return a list of elements. Based on the yield directive, they
+allow you to pause a function and return an intermediate result. The function saves
+its execution context and can be resumed later if necessary.
+
+Ex:
+def fibonacci():
+	a, b = 0, 1
+	while True:
+		yield b
+		a, b = b, a + b
+fib = fibonacci()
+[fib.next() for i in range(10)]
+[3, 5, 8, 13, 21, 34, 55, 89, 144, 233]
+
+This function returns a generator object, a special iterator, which knows how to
+save the execution context. It can be called indefinitely, yielding the next element of
+the suite each time.
+
+*** when to use 
+generators should be considered every time you deal with a
+function that returns a sequence or works in a loop. Returning the elements one at a
+time can improve the overall performance, when they are passed to another function
+for further work.
+
+One step up again it looks like we will be using yeild as expression and 
+
+but makes yield return the value passed. The function can,
+therefore, change its behavior depending on the client code. Two other functions
+were added to complete this behavior: throw and close. They raise an error into
+the generator:
+throw allows the client code to send any kind of exception to be raised.
+close acts in the same way, but raises a specific exception: GeneratorExit.
+In that case, the generator function must raise GeneratorExit again, or
+StopIteration.
+Therefore, a typical template for a generator would look like the following:
+>>> def my_generator():
+... try:
+... yield 'something'
+... except ValueError:
+... yield 'dealing with the exception'
+... finally:
+... print "ok let's clean"
+...
+>>> gen = my_generator()
+>>> gen.next()
+'something'
+>>> gen.throw(ValueError('mean mean mean'))
+'dealing with the exception'
+>>> gen.close()
+ok let's clean
+>>> gen.next()
+Traceback (most recent
 
 repr in python :
 ==================================================
@@ -2105,3 +2220,24 @@ def key_value_gen(k):
    yield chr((k+13)%26+65)
 d = dict(map(key_value_gen, range(26)))
 
+6.sort a list of dictionaries by values of the dictionary in Python?
+===================================================================
+[{'name':'Homer', 'age':39}, {'name':'Bart', 'age':10}]
+sorted by name, should become
+
+[{'name':'Bart', 'age':10}, {'name':'Homer', 'age':39}]
+
+
+sol:
+newlist = sorted(list_to_be_sorted, key=lambda k: k['name']) 
+
+7.  list to make a dictionary
+===================================
+a = [1,2,3,4] and I want d = {1:0, 2:0, 3:0, 4:0}
+
+sol:
+zip can be usedinsid a dict to make a key value pair
+a = [1,2,3,4] and I want d = {1:0, 2:0, 3:0, 4:0}
+
+
+dict(zip(x ,[0 for x in range(0,len(x))]))
