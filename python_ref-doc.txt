@@ -2188,8 +2188,108 @@ print get_random_futurama_quote()
 Python itself provides several decorators: property, staticmethod, etc. Django use decorators to manage caching and view permissions. Twisted to fake inlining asynchronous functions calls. This really is a large playground.
 
 EDIT: given the success of this answer, and people asking me to do the same with metaclasses, I did.
+The common patterns for decorators are:
+Argument checking
+Caching
+Proxy
+Context provider
 
+1. Argument checking
+Checking the arguments that a function receives or returns can be useful when it is
+executed in a specific context. For example, if a function is to be called through
+XML-RPC, Python will not be able to directly provide its full signature as in
+the statically-typed languages.(to check the datatypes of argument wen pass/ret to a function)
 
+A decorator can be used to fixed the allowed type of user defined types fixed a class which implemnets 
+a decorator
+# Dict to store the 
+rpc_info = {} # dictionary of function name and tuple of Arguments 
+def xmlrpc(in=(),out=(type(None)): #Wrapper Bread wd default arg tuple as in/out
+	#register the Signature allowed 
+	func_name= inspect.stack()[1][3] # Get the function name which is calling this decorator
+	rpc_info[func_name]=(in,out) # the Global dict is Update Nameand args
+	
+	def _check_types(elements, types):
+		"""Subfunction that checks the types."""
+		if len(elements) != len(types):    #
+			raise TypeError('argument count is wrong')
+		typed = enumerate(izip(elements, types))#(int,string)(int,string)=(int,int)(string,string)
+		
+		for index, couple in typed:
+			arg, of_the_right_type = couple
+			if isinstance(arg, of_the_right_type):
+				continue
+			raise TypeError('arg #%d should be %s' % \(index, of_the_right_type)
+	
+	#Ingredeints  wrapper sits above sandvich 
+	def __xmlrpc(*args): #args = (arg1,arg2)
+		#Extracting the Args input
+		input_args = arg[1:]
+		_check_types(input_args,in) # Lets current arg list wd the fixed type 
+		# Now free to call our Sandvich function with arguments
+		res = function(*args) ## The function call is the name taken from above
+		
+		#Check the output as  a list or Tuple 
+		if not Type(res) in [list,tuple]
+			chck_res= (res,)
+		else:
+			chck_res=  res
+		_check_type(chck_res)
+		return res
+	return __xmlrpc
+return _xmlrpc
+
+Lets write a class that uses this decorator 
+class RPC(object):
+	@xmlrpc((int,int))
+	def meth1(int,int):
+		print "received 2 ints as arg n ret type"
+
+	@xmlrpc((int,),(int,))
+	def meth2(int):
+		print "received 1 ints as arg n ret type as int"
+			
+lets use the class 
+my =RPC()
+my.meth1(1,2)  # Runs OK 
+my.meth2(1,2) #Throws an error 
+
+2. Caching :
+A simple decorator but focuses on those functions whose internal state does not affect the output. Each set of
+arguments can be linked to a unique result. So is a good decorator to provide on CPU intensive functions,
+the idea over here is to generate a key with args and preserve it for a particular duration 
+
+cache = {} # this maintains a dict of the keys 
+def is_obsolute(entry,duration):
+	# thsi shuold return the cur time diffrence wd the func entry time 
+	return (time.time() - entry['time']) > duration
+	
+def compute_key(function,args,kw):
+	key = pickle.dumps((function.func_name,args,kw))
+	return hashlib.sha1(key).hexdigest()
+	
+def memorize(dur=10):
+	def _memorize(function):
+		def __memorize(*args,**kw):
+			key = compute_key(function,args,kw)
+			# check the key exixts or not 
+			if (key in cache) and not is_obsolute(cache[key],duration):
+				return cache[key]['value']
+			# computing 
+			result = function(*args,**kw)
+			#storing the result 
+			cache[key]={'value': result, 'time': time.time()}
+			return result
+		return __memorize
+	return _memorize
+
+@memorize()
+def add_it(a,b):
+	return a + b
+	
+add_it(2,2) # 4 
+
+Update the dur @memorize(2)
 xml handling :
 =================================
 file handling:
