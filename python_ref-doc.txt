@@ -2290,6 +2290,45 @@ def add_it(a,b):
 add_it(2,2) # 4 
 
 Update the dur @memorize(2)
+
+3. Proxy :
+Proxy decorators are used to tag and register functions with a global mechanism,
+For the use case we try to put a 
+
+UserPerev = {}
+class User(object):
+	def __init__(self,user,role)
+		self.role = role
+		self.user = user
+		UserPerev[self.user]=self.role
+		
+def protect(role):
+	def _protect(object):
+		def __protect(*args,**krgs):
+			if role is None or @protect('admin')='Admin'
+					throw an exception
+			return (func(*args))
+		return __protect
+	return _protect		
+	
+	
+Ram = User(Ram,'admin')
+
+class Myprojcts():
+		@protect('admin')
+		def waffle_recipe(self):
+			print 'use tons of butter!'
+			
+>>user = ram
+>>these_are = Myprojcts()
+
+
+4. Context Provider
+------------------------------------
+	
+
+	
+
 xml handling :
 =================================
 file handling:
