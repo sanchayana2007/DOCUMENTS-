@@ -187,6 +187,157 @@ Calling the function is same as C++
 A.fumc("dewded",12)
 
 --------------------------------------------------------------------------------------
+Class :
+-----------------------------
+The classes and the derived thing 
+> subclasing the built iin types
+> Acessing methods from the super class
+> Slots 
+> Meta-programing
+
+>subclasing the built in types :
+======================================
+And allowed programmers to subclass the built-in types such as list, tuple, or dict. So every time a class
+that behaves almost like one of the built-in types needs to be implemented, the best
+practice is to subtype it.
+
+How to get the methods in a class :
+>>> import inspect
+>>> inspect.getmembers(OptionParser, predicate=inspect.ismethod)
+[([('__init__', <unbound method OptionParser.__init__>),
+...
+ ('add_option', <unbound method OptionParser.add_option>),
+ ('add_option_group', <unbound method OptionParser.add_option_group>),
+ ('add_options', <unbound method OptionParser.add_options>),
+ 
+All classes have built in methods and user defined functions
+The dir(class/instance) will list it out , we can seee __call__ , __imfunc__ are auto written fpr amy class
+'__call__', '__class__', '__delattr__', '__dict__', '__doc__', '__get__',
+ '__getattribute__', '__hash__', '__init__', '__module__', '__name__',
+ '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__',
+ '__str__', 'func_closure', 'func_code', 'func_defaults', 'func_dict',
+ 'func_doc', 'func_globals', 'func_name']
+
+For a function dir output gives the 
+class DistinctDict(dict):
+	def __setitem__(self,key,value):
+		try:
+			value_index = self.values.index(value)
+			existing_key = self.keys()[value_index]
+			if existing_key != key:
+				raise DistictError("")
+		except valueError:
+			pass
+		super(distinctdict, self).__setitem__(key, value)
+		
+>>> my = distinctdict()
+>>> my['key'] = 'value'
+>>> my['other_key'] = 'value'
+
+Super :
+=====================
+The super is called by the sub classes to update the  base class calls 
+class Mama(object):
+	def says(self):
+		"please Go and read"
+class Sister(Mama):
+	def says(self):
+		super(Sister,self).says()
+		
+This shows thw usw of te supewr class 
+
+But there are several places when super cannot and should not be used 
+For diamond inheritancs 
+
+class A:
+ mtd m
+ 
+class B(A):
+pass 
+
+class C(A):
+ mtd m
+ 
+class DB,C():
+
+d=D  
+d.m # calls the Cmthd
+Heterogeneous Arguments
+Another issue with super usage is argument passing in initialization. How can a
+class call its base class __init__ code if it doesn't have the same signature? This
+leads to the following problem:
+>>> class BaseBase(object):
+... def __init__(self):
+... print 'basebase'
+... super(BaseBase, self).__init__()
+...
+>>> class Base1(BaseBase):
+... def __init__(self):
+... print 'base1'
+... super(Base1, self).__init__()
+...
+>>> class Base2(BaseBase):
+... def __init__(self, arg):
+... print 'base2'
+... super(Base2, self).__init__()
+...
+>>> class MyClass(Base1 , Base2):
+... def __init__(self, arg):
+... print 'my base'
+... super(MyClass, self).__init__(arg)
+...
+>>> m = MyClass(10)
+my base
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+File "<stdin>", line 4, in __init__
+TypeError: __init__() takes exactly 1 argument (2 given)
+
+
+Heterogeneous Arguments
+Another issue with super usage is argument passing in initialization. How can a
+class call its base class __init__ code if it doesn't have the same signature? This
+leads to the following problem:
+>>> class BaseBase(object):
+... def __init__(self):
+... print 'basebase'
+... super(BaseBase, self).__init__()
+...
+>>> class Base1(BaseBase):
+... def __init__(self):
+... print 'base1'
+... super(Base1, self).__init__()
+...
+>>> class Base2(BaseBase):
+... def __init__(self, arg):
+... print 'base2'
+... super(Base2, self).__init__()
+...
+>>> class MyClass(Base1 , Base2):
+... def __init__(self, arg):
+... print 'my base'
+... super(MyClass, self).__init__(arg)
+...
+>>> m = MyClass(10)
+my base
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+File "<stdin>", line 4, in __init__
+TypeError: __init__() takes exactly 1 argument (2 given)
+One solution would be to use *args and **kw magic, so that all constructors pass
+along all the parameters even if they do not use them:
+>>> class BaseBase(object):
+... def __init__(self, *args, **kw):
+... print 'basebase'
+... super(BaseBase, self).__init__(*args, **kw)
+...
+>>> class Base1(BaseBase):
+... def
+
+ 
+ 
+	
+
 --------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------
 
