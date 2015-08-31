@@ -334,7 +334,117 @@ along all the parameters even if they do not use them:
 >>> class Base1(BaseBase):
 ... def
 
- 
+ Descriptors and properties:
+===========================
+For python as there is no private keyword in the classes the name managling comes handy 
+Suppose we have a class with an atribute vale 
+
+class Myclass(object):
+	secret_value = 2
+	
+>> dir(MyClass)
+['_MyClass__secret_value','__class__', '__delattr__',]
+>> instance_of._MyClass__secret_value
+
+This is provided to avoid name collision under inheritance, as the attribute is
+renamed with the class name as a prefix. It is not a real lock, since the attribute can
+be accessed through its composed name. This feature could be used to protect
+the access of some attributes, but in practice, "__" should never be used.
+
+_ in private 
+----------------------------
+When an attribute is not public, the convention to use is a "_" prefix. This does not call any
+mangling algorithm, but just documents the attribute as being a private element of
+the class and is the prevailing style.
+
+Descriptors:
+=======================
+A descriptor lets you customize what should be done when you refer to an attribute
+on an object. 
+The descriptor classes are based on three special methods they have to implement:
+1) __set__: This is called whenever the attribute is set
+
+2) __get__: This is called whenever the attribute is read
+3) __delete__: This is called when del is invoked on the attribute.
+
+Lets Implenment each one of them 
+class A(object):
+# lets have a class with getter , setters 
+    def __init__(self):
+        self.value = ''
+
+    def __get__(self, instance, owner):
+        return self.value
+
+    def __set__(self, instance, value):
+         self.value = value
+
+# Now we will use this class in another class as an Instance 
+class Myclass(object):
+    atr = A()
+
+obj = Myclass()
+#Set some value using the instance it will call the setter associated with the instance
+obj.atr = '1st string'
+# This will call the get method of the class
+print (obj.atr)
+>> '1st string'
+# Add a new atribute on the fly with the instance
+obj.new_atr = '2nd string'
+print (obj.__dict__)
+>> {'new_atr': '2nd string'}   # this will update the dict with new value
+Another way to add an atribute 
+obj.__dict__['new_atr'] = 'New Str'
+print (obj.__dict__)
+>>{'new_ano_atr': 'New Ano  Str', 'new_atr': 'New Str'}
+
+
+
+
+
+
+
+
+Properties:
+=======================
+
+class Parrot(object):
+    def __init__(self):
+        self._voltage = 100000
+
+    @property
+    def voltage(self):
+        """Get the current voltage."""
+        return self._voltage
+
+class Parrot(object):
+    def __init__(self):
+        self._voltage = 100000
+
+    @property
+    def voltage(self):
+        """Get the current voltage."""
+        return self._voltage
+A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property with the corresponding accessor function set to the decorated function
+class C(object):
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+
+    @x.deleter
+    def x(self):
+        del self._x
+
+		
+
  
 	
 
