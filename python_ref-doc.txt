@@ -505,6 +505,53 @@ Meta-programming:
 The new-style classes brought the ability to change classes' and objects' definitions
 on the fly, through two special methods: __new__ and __metaclass__.
 
+Meta programing 
+=============================
+
+Meta-programming
+The new-style classes brought the ability to change classes' and objects' definitions
+on the fly, through two special methods: __new__ and __metaclass__.
+
+> The__new__ Method
+------------------------
+teh new method will be invoked when the class is instantiated 
+class MyClass(object):
+	def __new__(cls):
+		print '_new_called'
+	return object.__new__(cls)## This _new_ mth will returm a object.new(Classname)
+	##This will asign the memory for the class 
+	
+	
+	def __init__(self):
+		print "init mthd"
+		self.a =1 
+	#The intialisation will be taken care by the init methods 
+	
+	
+>> a = MyClass()
+_new_called'
+init mthd
+** So new can be used to make changes to class before the object /after object creation is taking place 
+Now lets inherit the class 
+class Newclass(Myclass0:
+	pass 
+
+a= Newclass()
+_new_called'
+init mthd
+My other  class 
+	
+
+Uses:  Network socket or database initializations, for instance, should be controlled in
+__new__ rather than in __init__. It tells us when the initialization must be done for
+the class to work and when it might be derived.
+
+__metaclass__ Method:
+=================================
+Metaclasses give the ability to interact when a class object is created in memory
+through its factory. They act like __new__ but at the class level. The built-in type
+type is the built-in base factory.
+
 
 
 
