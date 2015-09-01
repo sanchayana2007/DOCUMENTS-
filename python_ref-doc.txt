@@ -444,6 +444,69 @@ class C(object):
         del self._x
 
 		
+Introspection Descriptor:
+==============================
+The introspection Descriptor is needed when a class is doing introspection over tehir atribute 
+
+A property API class that render a redible documentation over the public methods of 
+
+class API(object):
+	def _print_values(self,obj):
+	# this function will take key from the dir()
+	
+		def  _print_value(key):
+			if key.startwith('_'):
+				return ' '
+			value = getattr(obj,key)
+			doc = value.__doc__
+		return '%s:%s' %(key,doc)
+		# Lets call this meth to get a mthdname: doctring combination
+		res [_print_value(e1) for e1 in dir(obj)]
+		return '\n'.join([el for el in res if el != ''])
+	
+	def __get__(self, instance, klass):
+	if instance is not None:
+		return self._print_values(instance)
+	else:
+		return self._print_values(klass)
+		
+		
+		class MyClass(object):
+			__doc__ = API()
+			def __init__(self):
+				self.a = 2
+			def meth(self):
+				"""my method"""
+			return 1
+	MyClass.__doc__
+	' meth : my method'
+	
+	
+Meta descriptor :
+======================
+perform a task.This can be useful, for example, to lower the quantity of code needed to use a class
+that provides steps.
+
+Slots :
+========================
+It allows you to set a static attribute list for a given class with the __slots__ attribute,
+and skip the creation of the __dict__ list in each instance of the class.
+> If you intend to save memory space for classes with very atributes
+> Design classes whose signature needs to be frozen
+
+class Frozen(object):
+	__slots__=['ice','cream']
+	
+>> a = Frozen()
+>> a.__dir__ # not found 
+
+Meta-programming:
+=====================================================
+The new-style classes brought the ability to change classes' and objects' definitions
+on the fly, through two special methods: __new__ and __metaclass__.
+
+
+
 
  
 	
