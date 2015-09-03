@@ -461,7 +461,62 @@ class Circle(Point):
  Point constructor
 Circle constructor
 --------------------------------------------------------------------------------------
+Polymorphism:
 
+overloading :
+1) Operator overlaoding 
+
+class Book:
+    title = ''
+    pages = 0
+
+    def __init__(self, title='', pages=0):
+        self.title = title
+        self.pages = pages
+
+    def __str__(self):
+        return self.title
+        
+      
+   a1 = book(Mybook1,100)
+   a2 = book(Mybook2,100)
+   
+   Mybook1 + Mybook2 = 200 
+   
+   + implementation:
+   ====================
+    So if the first item doesn’t know how to add itself to 0, Python fails. But before it fails, Python tries to do a revered add with the operators.
+    
+    def __add__(self, other):
+    return self.pages + other
+    
+    We have to override __radd__, or “reverse add”.
+
+def __radd__(self, other):
+    return self.pages + other
+    
+    Hash overideing for making a object as dictionary key :
+    =================================================================================================================
+   class MyThing:
+    def __init__(self,name,location,length):
+        self.name = name
+        self.location = location
+        self.length = length
+
+    def __hash__(self):
+        return hash((self.name, self.location))
+
+    def __eq__(self, other):
+        return (self.name, self.location) == (other.name, other.location) 
+    
+    
+    
+    hashable
+An object is hashable if it has a hash value which never changes during its lifetime (it needs a __hash__() method), and can be compared to other objects (it needs an __eq__() method). Hashable objects which compare equal must have the same hash value.
+
+Hashability makes an object usable as a dictionary key and a set member, because these data structures use the hash value internally.
+
+All of Python’s immutable built-in objects are hashable, while no mutable containers (such as lists or dictionaries) are. Objects which are instances of user-defined classes are hashable by default; they all compare unequal (except with themselves), and their hash value is derived from their id().
 
 --------------------------------------------------------------------------------------
 Object declaration :
@@ -3188,3 +3243,14 @@ print a
 Output:
 
 {1: {2: {'test': 6, 3: 4}, 3: {3: 5}}}
+
+10. Best way to check a key in a dict:
+==============================================================================================================
+if 'key1' in dict:
+  print "blah"
+else:
+  print "boo"
+  
+  the other methods will check for trhe whole dict 
+   key = i % 10
+    d[key] = d.get(key, 0) + 1
