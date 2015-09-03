@@ -74,8 +74,144 @@ The dir(class/instance) will list it out , we can seee __call__ , __imfunc__ are
  '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__',
  '__str__', 'func_closure', 'func_code', 'func_defaults', 'func_dict',
  'func_doc', 'func_globals', 'func_name']
+Lets describe this Methods :
+> __repr__() and __str__() methods
+**************************************************************************************************
+ • Generally, the str() method representation of an object is commonly
+expected to be more friendly to humans. This is built by an object's __str__
+() method.
+• The repr() method representation is often going to be more technical,
+perhaps even a complete Python expression to rebuild the object.
+• The print() function will use str() to prepare an object for printing.
+• The format() method of a string can also access these methods. When we
+use {!r} or {!s} formatting, we're requesting __repr__() or __str__(),
+respectively.
+The following is a simple
+collection with both __str__() and __repr__() methods:
+class Hand:
+def __init__( self, dealer_card, *cards ):
+self.dealer_card= dealer_card
+self.cards= list(cards)
+def __str__( self ):
+return ", ".join( map(str, self.cards) )
+def __repr__( self ):
+return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
+format(
+__class__=self.__class__,
+_cards_str=", ".join( map(repr, self.cards) ),
+**self.__dict__ )
+The __str__() method is a simple recipe, as follows:
+1. Map str() to each item in the collection. This will create an iterator over the
+resulting string values.
+2. Use ", ".join() to merge all the item strings into a single, long string.
 
-For a function dir output gives the 
+> __format__()
+**************************************************************************************************
+The __format__() method is used by string.format() as well as the format()
+built-in function. Both of these interfaces are used to get presentable string versions
+of a given object.
+The following are the two ways in which arguments will be presented
+to __format__():
+• someobject.__format__(""): This happens when the application
+does format(someobject) or something equivalent to "{0}".
+format(someobject). In these cases, a zero-length string specification was
+provided. This should produce a default format.
+• someobject.__format__(specification): This happens when the
+application does format(someobject, specification) or something
+equivalent to "{0:specification}".format(someobject).
+
+__hash__()
+**************************************************************************************************
+ The built-in hash() function invokes the __hash__() method of a given object.
+This hash is a calculation which reduces a (potentially complex) value to a small
+integer value. Ideally, a hash reflects all the bits of the source value. Other hash
+calculations—often used for cryptographic purposes—can produce very large values.
+
+Deciding what to hash
+Not every object should provide a hash value. Specifically, if we're creating a class of
+stateful, mutable objects, the class should never return a hash value. The definition of
+__hash__ should be None.
+Immutable objects, on the other hand, might sensibly return a hash value so that
+the object can be used as the key in a dictionary or a member of a set. In this case,
+the hash value needs to parallel the way the test for equality works. It's bad to have
+objects that claim to be equal and have different hash values. The reverse—objects
+with the same hash that are actually not equal—is acceptable
+
+There are three use cases for defining equality tests and hash values via the
+__eq__() and __hash__() method functions:
+
+Mutable objects: These are stateful objects that can be modified internally.
+We have one design choice:
+°° Define __eq__() but set __hash__ to None. These cannot be used as
+dict keys or items in sets.
+
+__bool__()
+**************************************************************************************************
+if some_object:
+process( some_object )
+Under the hood, this is the job of the bool() built-in function. This function depends
+on the __bool__() method of a given object.
+The default __bool__() method returns True. We can see this with the
+following code:
+>>> x = object()
+>>> bool(x)
+True
+
+
+__bytes__()
+**************************************************************************************************
+In the most common situation, an application can create a string representation, and
+the built-in encoding capabilities of the Python IO classes will be used to transform
+the string into bytes.
+
+ comparison operator methods
+**************************************************************************************************
+• x<y calls x.__lt__(y)
+• x<=y calls x.__le__(y)
+• x==y calls x.__eq__(y)
+• x!=y calls x.__ne__(y)
+• x>y calls x.__gt__(y)
+• x>=y calls x.__ge__(y)
+
+for example a Implementation of comparison for objects of
+the same class
+We'll look at a simple same-class comparison by looking at a more complete
+BlackJackCard class:
+class BlackJackCard:
+def __init__( self, rank, suit, hard, soft ):
+self.rank= rank
+self.suit= suit
+self.hard= hard
+self.soft= soft
+def __lt__( self, other ):
+if not isinstance( other, BlackJackCard ): return
+NotImplemented
+return self.rank < other.rank
+def __le__( self, other ):
+try:
+return self.rank <= other.rank
+except AttributeError:
+return NotImplemented
+def __gt__( self, other ):
+for objects
+Now lets try the same thing of mixed classes
+We'll use the BlackJackCard class as an example to see what happens when we
+attempt comparisons where the two operands are from different classes.
+The following is a Card instance that we can compare against the int values:
+>>> two = card21( 2, '♣' )
+>>> two < 2
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+TypeError: unorderable types: Number21Card() < int()
+
+
+**************************************************************************************************
+
+
+For a function dir output gives the same as above 
+The main use is to  inherit the base class for our use suppose the dict is inherited for inheritance 
+and update it for a Distict key
+
 class DistinctDict(dict):
 	def __setitem__(self,key,value):
 		try:
@@ -256,6 +392,8 @@ class MyClass :
             function_call = inspect.stack()[1][4][0].strip()
 
             # See if the function_call has "self." in the begining
+            # For the function called from the inside the class = self.private-function() 
+            # if the function is called outside the class wd an object then it will be obj.private-function() 
             matched = re.match( '^self\.', function_call )
             if not matched :
                 print 'This is Private Function, Go Away'
@@ -445,7 +583,81 @@ class C(object):
     @x.deleter
     def x(self):
         del self._x
+        
+ take a look at two basic design patterns for properties       
+• Eager calculation: In this design pattern, when we set a value via a property,
+other attributes are also computed
+• Lazy calculation: In this design
+common features of the Hand object into an abstract superclass, as follows:
+class Hand:
+def __str__( self ):
+return ", ".join( map(str, self.card) )
+def __repr__( self ):
+return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
+format(
+__class__=self.__class__,
+_cards_str=", ".join( map(repr, self.card) ),
+**self.__dict__ )
+In the preceding code, we defined just some string representation methods and
+nothing else.
+The following is a subclass of Hand, where total is a lazy property that is computed
+only when needed:
+class Hand_Lazy(Hand):
+def __init__( self, dealer_card, *cards ):
+self.dealer_card= dealer_card
+self._cards= list(cards)
+@property
+def total( self ):
+delta_soft = max(c.soft-c.hard for c in self._cards)
+hard_total = sum(c.hard for c in self._cards)
+if hard_total+delta_soft <= 21: return hard_total+delta_soft
+return hard_total
+@property
+def card( self ):
+return self._cards
+@card.setter
+def card( self, aCard ):
+self._cards.append( aCard )
+@card.deleter
+def card( self ):
+self._cards.pop(-1)
+The Hand_Lazy class initializes a Hand object with a list of the Cards object.
+The total property is a method that computes the total only when requested.
 
+Eagerly computed properties:
+ class Hand_Eager(Hand):
+def __init__( self, dealer_card, *cards ):
+self.dealer_card= dealer_card
+self.total= 0
+self._delta_soft= 0
+self._hard_total= 0
+self._cards= list()
+for c in cards:
+self.card = c
+@property
+def card( self ):
+return self._cards
+@card.setter
+def card( self, aCard ):
+self._cards.append(aCard)
+self._delta_soft = max(aCard.soft-aCard.hard,
+self._delta_soft)
+self._hard_total += aCard.hard
+self._set_total()
+@card.deleter
+def card( self ):
+removed= self._cards.pop(-1)
+self._hard_total -= removed.hard
+# Issue: was this the only ace?
+self._delta_soft = max( c.soft-c.hard for c in self._cards
+)
+self._set_total()
+def _set_total( self ):
+if self._hard_total+self._delta_soft <= 21:
+self.total= self._hard_total+self._delta_soft
+else:
+self.total= self._hard_total
+In this case, each time a card is added, the total attribute is updated.
 		
 Introspection Descriptor:
 ==============================
