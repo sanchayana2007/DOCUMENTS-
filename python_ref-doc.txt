@@ -113,7 +113,6 @@ resulting string values.
 2. Use ", ".join() to merge all the item strings into a single, long string.
 difference between __str__ and __repr__ 
 -----------------------------------------:
-
 log(INFO, "I am in the weird function and a is", a, "and b is", b, "but I got a null C — using default", default_c)
 But you have to do the last step — make sure every object you implement has a useful repr, so code like that can just work.
 This is why the “eval” thing comes up: if you have enough information so eval(repr(c))==c, that means you know everything 
@@ -314,25 +313,25 @@ Another issue with super usage is argument passing in initialization. How can a
 class call its base class __init__ code if it doesn't have the same signature? This
 leads to the following problem:
 >>> class BaseBase(object):
-... def __init__(self):
-... print 'basebase'
-... super(BaseBase, self).__init__()
-...
+ def __init__(self):
+	 print 'basebase'
+	super(BaseBase, self).__init__()
+
 >>> class Base1(BaseBase):
-... def __init__(self):
-... print 'base1'
-... super(Base1, self).__init__()
-...
+ def __init__(self):
+	 print 'base1'
+	super(Base1, self).__init__()
+
 >>> class Base2(BaseBase):
-... def __init__(self, arg):
-... print 'base2'
-... super(Base2, self).__init__()
-...
+ def __init__(self, arg):
+ 	print 'base2'
+ 	super(Base2, self).__init__()
+
 >>> class MyClass(Base1 , Base2):
-... def __init__(self, arg):
-... print 'my base'
-... super(MyClass, self).__init__(arg)
-...
+def __init__(self, arg):
+ 	print 'my base'
+ 	super(MyClass, self).__init__(arg)
+.
 >>> m = MyClass(10)
 my base
 Traceback (most recent call last):
@@ -432,12 +431,6 @@ class MyClass :
         self.private_function()
 
 ### End ###
-
-
-
-
-
-
 --------------------------------------------------------------------------------------
 Inheritance:
 
@@ -942,13 +935,6 @@ just defined with simple statements into a complex hook to a database field.
 Django makes something complex look simple by exposing a simple API and using metaclasses, recreating code from
  this API to do the real job behind the scenes.
  
-
-
- 
-	
-
---------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------
 
 
 variables and values are REFERENCES
@@ -1468,9 +1454,6 @@ Creating a module is as simple as creating a file ,and Import it to use it
 Creating a folder Module will include a __init__.py file to make it a Module 
 
 
-
-
-
 Importing and using of Module methods:
 -----------------------------------------
 File_mod/File_handler.py    A folder containing a file  having a class test
@@ -1715,8 +1698,6 @@ class MyClass(object):
 MyClass.the_static_method(2) # outputs 2
 
 
-
- 
  
 Magical methods :
 ===============================================================================
@@ -2913,18 +2894,120 @@ class Myprojcts():
 
 4. Context Provider
 ------------------------------------
+
+
+OPTIMISATION OF APPLICATION S
 	
 Time Checks for Modules :
 -------------------------------------------
-	
+Write a Speed Test
+
+def test_speed():
+   import time
+   start = time.time()
+   #The function to be tested 
+   func()
+   interval =time.time() - start
+   assert interval > 10
+Profiling CPU Usage:
+=============================================================================
+Macro-profiling: Profiles the whole program while it is being used, and
+generates statistics.
+Micro-profiling: Measures a precise part of the program by instrumenting
+it manually.
+
+Macro-profiling:
+=======================
+python -m cProfile myapp.py
+1212 function calls in 10.120 CPU seconds
+Ordered by: standard name
+ncalls tottime cumtime percall file
+1 0.000 10.117 10.117 myapp.py:16(main)
+400 0.004 4.077 0.010 myapp.py:3(lighter)
+200 0.002 2.035 0.010 myapp.py:6(light)
+2 0.005 10.117 5.058 myapp.py:9(heavy)
+3 0.000 0.000 0.000 {range}
+602 10.106 10.106 0.017 {time.sleep}
+
+Micro-Profiling:
+=======================
+When the slow function is found, it is sometimes necessary to do more profiling
+work that tests just a part of the program. This is done by manually instrumenting a
+part of the code in a speed test.
+For instance, the cProfile module can be used from a decorator:
+>>> import tempfile, os, cProfile, pstats
+>>> def profile(column='time', list=5):
+	 def _profile(function):
+		def __profile(*args, **kw):
+			s = tempfile.mktemp()
+			profiler = cProfile.Profile
+			profiler.runcall(function, *args, **kw)
+			profiler.dump_stats(s)
+			p = pstats.Stats(s)
+			p.sort_stats(column).print_stats(list)
+		return __profile
+ 	return _profile
+
+>>> from myapp import main
+>>> @profile('time', 6)
+    def main_profiled():
+
+
+Profiling Memory Usage:
+=======================
+Another problems is memory consumption. If a program that runs starts to eat so
+much memory that the system swaps, there is probably a place in your application
+where too many objects are created. This is often easy to detect through classical
+profiling because consuming enough memory to make a system swap involves a lot
+of CPU work that can be detected.
+
+So objects that remain in memory are:
+Global objects
+Objects that are still referenced in some way
+
+Profiling Memory:
+=======================
+Knowing how many objects are controlled by the garbage collector and their real
+size is a bit tricky.
+
+
+
+Profiling Network Usage:
+=======================
+As I said earlier, an application that communicates with third-party programs such
+as a database or an LDAP server can be slowed down when those applications are
+slow. This can be tracked with a regular code profiling method on the application
+side. But if the third-party software works fine on its own, the culprit is probably
+the network.
+
+
+
+
+
 
 xml handling :
 =================================
 file handling:
 =================================
+f = open('workfile', 'w')
+f.read()
+>> 'This is the entire file.\n'
+>>> f.readline()
+'This is the first line of the file.\n'
+>>> f.readline()
+'Second line of the file\n'
+>>> f.readline()
+''
+>>> f = open('workfile', 'r+')
+>>> f.write('0123456789abcdef')
+>>> f.seek(5)     # Go to the 6th byte in the file
+>>> f.read(1)
+'5'
+>>> f.seek(-3, 2) # Go to the 3rd byte before the end
+>>> f.read(1)
+'d'
 
-regex Uses:
-======================================
+
 Reg Expresions:
 ======================================
 import re
@@ -3008,7 +3091,77 @@ Split :
 ----------
 Split string by the occurrences of pattern. If capturing parentheses are used in pattern, then the text 
 f all groups in the pattern are also returned as part of the resulting list. If maxsplit is nonzero, at
-most maxsplit splits occur, and the remainder of the string is returned as the final element of the list.
+most maxsplit splits occur, and the remainder of the string is returned as the final element of the list
+
+
+Matching Versus Searching
+--------------------------------------------------
+Python offers two different primitive operations based on regular expressions: match checks for a match only at the beginning of the string, while search checks for a match anywhere in the string (this is what Perl does by default).
+
+Example
+#!/usr/bin/python
+import re
+
+line = "Cats are smarter than dogs";
+
+matchObj = re.match( r'dogs', line, re.M|re.I)
+if matchObj:
+   print "match --> matchObj.group() : ", matchObj.group()
+else:
+   print "No match!!"
+
+searchObj = re.search( r'dogs', line, re.M|re.I)
+if searchObj:
+   print "search --> searchObj.group() : ", searchObj.group()
+else:
+   print "Nothing found!!"
+When the above code is executed, it produces the following result −
+
+No match!!
+search --> matchObj.group() :  dogs
+
+Search and Replace:
+------------------------------------------------------------
+#!/usr/bin/python
+import re
+
+phone = "2004-959-559 # This is Phone Number"
+
+# Delete Python-styleWhen the above code is executed, it produces the following result −
+
+Phone Num :  2004-959-559
+Phone Num :  2004959559
+
+
+
+comments
+num = re.sub(r'#.*$', "", phone)
+print "Phone Num : ", num
+
+# Remove anything other than digits
+num = re.sub(r'\D', "", phone)    
+print "Phone Num : ", num
+
+
+
+When the above code is executed, it produces the following result −
+
+Phone Num :  2004-959-559
+Phone Num :  2004959559
+
+Modifier	Description
+re.I	Performs case-insensitive matching.
+re.L	Interprets words according to the current locale. This interpretation affects the alphabetic group (\w and \W), as well as word boundary behavior (\b and \B).
+re.M	Makes $ match the end of a line (not just the end of the string) and makes ^ match the start of any line (not just the start of the string).
+
+
+Pattern	Description
+^	Matches beginning of line.
+$	Matches end of line.
+.	Matches any single character except newline. Using m option allows it to match newline as well.
+[...]	Matches any single character in brackets.
+[^...]	Matches any single character not in brackets
+
 
 
 things to practice:
@@ -3017,7 +3170,7 @@ things to practice:
 1. Tuple of list 
 ==================
 first_lst = [('-2.50', 0.49, 0.52), ('-2.00', 0.52, 0.50)]
-this is not the correct way and willl throw a generator error
+this is not the correct way and will throw a generator error
 >> print first_lst 
 >> <generator object <genexpr> at 0x02261288>
 
