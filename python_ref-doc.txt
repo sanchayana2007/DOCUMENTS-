@@ -14,6 +14,13 @@ Edit the path and add the python in the path to launch it fromany place
 
 Python is an Interpretted language
 ++++++++++++++++++++++++++++++++++
+Interpreted : A high level language run and executed by an Interpreter(a program which converts the high-level language to machine code and then executing) on the go; It processes the program a little at a time.
+
+python is an interpreted language but it's not interpreted to the machine code, instead to some intermediate code(like byte-code or IL).That bytecode is either interpreted (note that there's a difference, both in theory and in practical performance, between interpreting directly and first compiling to some intermediate representation and interpret that), as with the reference implementation (CPython),
+
+
+
+
 Python and LUA are handled quite differently—interpreted rather than compiled. When you run a Python program 
 (a file with an extension of .PY), it is not compiled, it is run. You could insert syntax errors into a function
 in Python and unless that function is called, Python will never complain about the errors!
@@ -104,6 +111,21 @@ The __str__() method is a simple recipe, as follows:
 1. Map str() to each item in the collection. This will create an iterator over the
 resulting string values.
 2. Use ", ".join() to merge all the item strings into a single, long string.
+difference between __str__ and __repr__ 
+-----------------------------------------:
+
+log(INFO, "I am in the weird function and a is", a, "and b is", b, "but I got a null C — using default", default_c)
+But you have to do the last step — make sure every object you implement has a useful repr, so code like that can just work.
+This is why the “eval” thing comes up: if you have enough information so eval(repr(c))==c, that means you know everything 
+there is to know about c. If that’s easy enough, at least in a fuzzy way, do it. If not, make sure you have enough information about c anyway. I usually use an eval-like format: "MyClass(this=%r,that=%r)" % (self.this,self.that). It does not mean that you can actually construct MyClass, or that those are the right constructor arguments — but it is a useful form to express “this is everything you need to know about this instance”.
+
+Note: I used %r above, not %s. You always want to use repr() [or %r formatting character, equivalently] inside __repr__ 
+implementation, or you’re defeating the goal of repr. You want to be able to differentiate MyClass(3) and MyClass("3").
+
+The goal of __str__ is to be readable
+
+Specifically, it is not intended to be unambiguous — notice that str(3)==str("3"). Likewise, if you implement an IP abstraction, having the str of it look like 192.168.1.1 is just fine. When implementing a date/time abstraction, the str can be "2010/4/12 15:35:22", etc. The goal is to represent it in a way that a user, not a programmer, would want to read it. Chop off useless digits, pretend to be some other class — as long is it supports readability, it is an improvement
+
 
 > __format__()
 **************************************************************************************************
@@ -511,7 +533,7 @@ def __radd__(self, other):
     
     
     
-    hashable
+hashable
 An object is hashable if it has a hash value which never changes during its lifetime (it needs a __hash__() method), and can be compared to other objects (it needs an __eq__() method). Hashable objects which compare equal must have the same hash value.
 
 Hashability makes an object usable as a dictionary key and a set member, because these data structures use the hash value internally.
@@ -528,7 +550,6 @@ Calling the function is same as C++
 A.fumc("dewded",12)
 
 --------------------------------------------------------------------------------------
-
 
  Descriptors and properties:
 ===========================
@@ -593,12 +614,6 @@ Another way to add an atribute
 obj.__dict__['new_atr'] = 'New Str'
 print (obj.__dict__)
 >>{'new_ano_atr': 'New Ano  Str', 'new_atr': 'New Str'}
-
-
-
-
-
-
 
 
 Properties:
@@ -694,24 +709,22 @@ def card( self ):
 return self._cards
 @card.setter
 def card( self, aCard ):
-self._cards.append(aCard)
-self._delta_soft = max(aCard.soft-aCard.hard,
-self._delta_soft)
-self._hard_total += aCard.hard
-self._set_total()
+	self._cards.append(aCard)
+	self._delta_soft = max(aCard.soft-aCard.hard,self._delta_soft)
+	self._hard_total += aCard.hard
+	self._set_total()
 @card.deleter
 def card( self ):
-removed= self._cards.pop(-1)
-self._hard_total -= removed.hard
-# Issue: was this the only ace?
-self._delta_soft = max( c.soft-c.hard for c in self._cards
-)
-self._set_total()
+	removed= self._cards.pop(-1)
+	self._hard_total -= removed.hard
+	# Issue: was this the only ace?
+	self._delta_soft = max( c.soft-c.hard for c in self._cards)
+	self._set_total()
 def _set_total( self ):
-if self._hard_total+self._delta_soft <= 21:
-self.total= self._hard_total+self._delta_soft
-else:
-self.total= self._hard_total
+	if self._hard_total+self._delta_soft <= 21:
+		self.total= self._hard_total+self._delta_soft
+	else:
+		self.total= self._hard_total
 In this case, each time a card is added, the total attribute is updated.
 		
 Introspection Descriptor:
@@ -823,6 +836,112 @@ through its factory. They act like __new__ but at the class level. The built-in 
 type is the built-in base factory.
 
 
+Creating classes dynamically
+***********************************************************
+Since classes are objects, you can create them on the fly, like any object.
+
+First, you can create a class in a function using class:
+
+  >>> def choose_class(name):
+  ...     if name == 'foo':
+  ...         class Foo(object):
+  ...             pass
+  ...         return Foo # return the class, not an instance
+  ...     else:
+  ...         class Bar(object):
+  ...             pass
+  ...         return Bar
+  ...     
+  >>> MyClass = choose_class('foo') 
+  >>> print(MyClass) # the function returns a class, not an instance
+  <class '__main__.Foo'>
+  >>> print(MyClass()) # you can create an object from this class
+  <__main__.Foo object at 0x89c6d4c>
+
+Use of type in class:
+****************************************
+>>> print(type(ObjectCreator))
+<type 'type'>
+>>> print(type(ObjectCreator()))
+<class '__main__.ObjectCreator'>
+
+type works this way:
+
+  type(name of the class, 
+       tuple of the parent class (for inheritance, can be empty), 
+       dictionary containing attributes names and values)
+
+	   
+	   
+	   MyShinyClass = type('MyShinyClass', (), {}) # returns a class object
+	  
+
+What are metaclasses?
+************************
+Metaclasses are the 'stuff' that creates classes.
+metaclasses are what create these objects. They are the classes' classes, you can picture them this way:
+
+  MyClass = MetaClass()
+  MyObject = MyClass()
+You've seen that type lets you do something like this:
+
+  MyClass = type('MyClass', (), {})
+It's because the function type is in fact a metaclass. type is the metaclass Python uses to create all classes behind the scenes.
+
+__class___ Atribute :
+**************************
+Class gives the class name of the type is followed up with 
+name = 'bob'
+  >>> name.__class__
+  <type 'str'>
+ 
+c = Foo()
+c.__class__
+>><class '__main__.Foo'>
+
+
+now what is __class__.__class__ ie class of class which is metaclass
+c.__class__.__class__
+>><type 'type'>
+  
+The __metaclass__ attribute:
+***************************************
+You can add a __metaclass__ attribute when you write a class:
+
+class Foo(object):
+  __metaclass__ = something...
+  [...]
+If you do so, Python will use the metaclass to create the class Foo.
+
+Careful, it's tricky.
+
+You write class Foo(object) first, but the class object Foo is not created in memory yet.
+Python will look for __metaclass__ in the class definition. If it finds it, it will use it 
+to create the object class Foo. If it doesn't, it will use type to create the class.
+
+Why the hell would you use metaclasses?
+Now the big question. Why would you use some obscure error prone feature?
+
+Well, usually you don't:
+
+Metaclasses are deeper magic than 99% of users should ever worry about. If you wonder whether you need them, you don't (the people who actually need them know with certainty that they need them, and don't need an explanation about why).
+It allows you to define something like this:
+
+  class Person(models.Model):
+    name = models.CharField(max_length=30)
+    age = models.IntegerField()
+But if you do this:
+
+  guy = Person(name='bob', age='35')
+  print(guy.age)
+It won't return an IntegerField object. It will return an int, and can even take it directly from the database.
+
+This is possible because models.Model defines __metaclass__ and it uses some magic that will turn the Person you 
+just defined with simple statements into a complex hook to a database field.
+
+Django makes something complex look simple by exposing a simple API and using metaclasses, recreating code from
+ this API to do the real job behind the scenes.
+ 
 
 
  
@@ -833,7 +952,7 @@ type is the built-in base factory.
 
 
 variables and values are REFERENCES
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Everything is  reference of an Object except the variables user declares
 f you're used to most traditional languages, you have a mental model of what happens in the following sequence:
 
@@ -1511,119 +1630,8 @@ iii)you can add attributes to it
 iv)you can pass it as a function parameter
 	print a
 
-Creating classes dynamically
-***********************************************************
-Since classes are objects, you can create them on the fly, like any object.
-
-First, you can create a class in a function using class:
-
-  >>> def choose_class(name):
-  ...     if name == 'foo':
-  ...         class Foo(object):
-  ...             pass
-  ...         return Foo # return the class, not an instance
-  ...     else:
-  ...         class Bar(object):
-  ...             pass
-  ...         return Bar
-  ...     
-  >>> MyClass = choose_class('foo') 
-  >>> print(MyClass) # the function returns a class, not an instance
-  <class '__main__.Foo'>
-  >>> print(MyClass()) # you can create an object from this class
-  <__main__.Foo object at 0x89c6d4c>
-
-Use of type in class:
-****************************************
->>> print(type(ObjectCreator))
-<type 'type'>
->>> print(type(ObjectCreator()))
-<class '__main__.ObjectCreator'>
-
-type works this way:
-
-  type(name of the class, 
-       tuple of the parent class (for inheritance, can be empty), 
-       dictionary containing attributes names and values)
-
-	   
-	   
-	   MyShinyClass = type('MyShinyClass', (), {}) # returns a class object
-	  
-
-What are metaclasses?
-************************
-Metaclasses are the 'stuff' that creates classes.
-metaclasses are what create these objects. They are the classes' classes, you can picture them this way:
-
-  MyClass = MetaClass()
-  MyObject = MyClass()
-You've seen that type lets you do something like this:
-
-  MyClass = type('MyClass', (), {})
-It's because the function type is in fact a metaclass. type is the metaclass Python uses to create all classes behind the scenes.
-
-__class___ Atribute :
-**************************
-Class gives the class name of the type is followed up with 
-name = 'bob'
-  >>> name.__class__
-  <type 'str'>
- 
-c = Foo()
-c.__class__
->><class '__main__.Foo'>
-
-
-now what is __class__.__class__ ie class of class which is metaclass
-c.__class__.__class__
->><type 'type'>
-  
-The __metaclass__ attribute:
-***************************************
-You can add a __metaclass__ attribute when you write a class:
-
-class Foo(object):
-  __metaclass__ = something...
-  [...]
-If you do so, Python will use the metaclass to create the class Foo.
-
-Careful, it's tricky.
-
-You write class Foo(object) first, but the class object Foo is not created in memory yet.
-Python will look for __metaclass__ in the class definition. If it finds it, it will use it 
-to create the object class Foo. If it doesn't, it will use type to create the class.
-
-Why the hell would you use metaclasses?
-Now the big question. Why would you use some obscure error prone feature?
-
-Well, usually you don't:
-
-Metaclasses are deeper magic than 99% of users should ever worry about. If you wonder whether you need them, you don't (the people who actually need them know with certainty that they need them, and don't need an explanation about why).
-
-Python Guru Tim Peters
-
-The main use case for a metaclass is creating an API. A typical example of this is the Django ORM.
-
-It allows you to define something like this:
-
-  class Person(models.Model):
-    name = models.CharField(max_length=30)
-    age = models.IntegerField()
-But if you do this:
-
-  guy = Person(name='bob', age='35')
-  print(guy.age)
-It won't return an IntegerField object. It will return an int, and can even take it directly from the database.
-
-This is possible because models.Model defines __metaclass__ and it uses some magic that will turn the Person you 
-just defined with simple statements into a complex hook to a database field.
-
-Django makes something complex look simple by exposing a simple API and using metaclasses, recreating code from
- this API to do the real job behind the scenes.
- 
 OOSP pythonic Way :
-===================================================================================================================================================================================
+=======================================================
 virtual clases:
 ---------------------
 
@@ -1997,65 +2005,44 @@ If we call eval('foo'), it's the same as we type foo in the interpreter. But the
 >>> 
 
 
-difference between __str__ and __repr__ 
------------------------------------------:
-First, let me reiterate the main points in Alex’s post:
-
-The default implementation is useless (it’s hard to think of one which wouldn’t be, but yeah)
-__repr__ goal is to be unambiguous
-__str__ goal is to be readable
-Container’s __str__ uses contained objects’ __repr__
-Default implementation is useless
-
-This is mostly a surprise because Python’s defaults tend to be fairly useful. However, in this case, having a default
-for __repr__ which would act like:
-
-return "%s(%r)" % (self.__class__, self.__dict__)
-would have been too dangerous (for example, too easy to get into infinite recursion if objects reference each other). 
-So Python cops out. Note that there is one default which is true: if __repr__ is defined, and __str__ is not, the object 
-will behave as though __str__=__repr__.
-
-This means, in simple terms: almost every object you implement should have a functional __repr__ that’s usable for 
-understanding the object. Implementing __str__ is optional: do that if you need a “pretty print” functionality
-(for example, used by a report generator).
-
-The goal of __repr__ is to be unambiguous
-
-Let me come right out and say it — I do not believe in debuggers. I don’t really know how to use any debugger, 
-and have never used one seriously. Furthermore, I believe that the big fault in debuggers is their basic nature — most 
-failures I debug happened a long long time ago, in a galaxy far far away. This means that I do believe, with religious fervor, 
-in logging. Logging is the lifeblood of any decent fire-and-forget server system. Python makes it easy to log: with maybe 
-some project specific wrappers, all you need is a
-
-log(INFO, "I am in the weird function and a is", a, "and b is", b, "but I got a null C — using default", default_c)
-But you have to do the last step — make sure every object you implement has a useful repr, so code like that can just work.
-This is why the “eval” thing comes up: if you have enough information so eval(repr(c))==c, that means you know everything 
-there is to know about c. If that’s easy enough, at least in a fuzzy way, do it. If not, make sure you have enough information about c anyway. I usually use an eval-like format: "MyClass(this=%r,that=%r)" % (self.this,self.that). It does not mean that you can actually construct MyClass, or that those are the right constructor arguments — but it is a useful form to express “this is everything you need to know about this instance”.
-
-Note: I used %r above, not %s. You always want to use repr() [or %r formatting character, equivalently] inside __repr__ 
-implementation, or you’re defeating the goal of repr. You want to be able to differentiate MyClass(3) and MyClass("3").
-
-The goal of __str__ is to be readable
-
-Specifically, it is not intended to be unambiguous — notice that str(3)==str("3"). Likewise, if you implement an IP abstraction, having the str of it look like 192.168.1.1 is just fine. When implementing a date/time abstraction, the str can be "2010/4/12 15:35:22", etc. The goal is to represent it in a way that a user, not a programmer, would want to read it. Chop off useless digits, pretend to be some other class — as long is it supports readability, it is an improvement
-
-
-
-
-
 
 Greedy vs. Non-Greedy:
 ================================
 
-
-
-
-
 Exception Handling:
 ==============================
+Type of Errors:
 
-raising the exceptions :
+>>> 10 * (1/0)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+ZeroDivisionError: integer division or modulo by zero
+>>> 4 + spam*3
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+NameError: name 'spam' is not defined
+>>> '2' + 2
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+TypeError: cannot concatenate 'str' and 'int' objects
 
+How the for statement works?
+Any time you use for to iterate over an iterable (basically, all sequence types and anything that defines __iter__() or __getitem__()), it needs to know when to stop iterating. Take a look at the code below:
+
+words = ['exceptions', 'are', 'useful']
+for word in words:
+    print(word)
+How does for know when it's reached the last element in words and should stop trying to get more items? The answer may surprise you: the list raises a StopIteration exception.
+
+In fact, all iterables follow this pattern. When a for statement is first evaluated, it calls iter() on the object being iterated over. This creates an iterator for the object, capable of returning the contents of the object in sequence. For the call to iter() to succeed, the object must either support the iteration protocol (by defining __iter__()) or the sequence protocol (by defining __getitem__()).
+
+As it happens, both the __iter__() and __getitem__() functions are required to raise an exception when the items to iterate over are exhausted. __iter__() raises the StopIteration exception, as discussed earlier, and __getitem__() raises the IndexError exception. This is how for knows when to stop
+
+
+
+
+Raising the exceptions :
+-------------------------------------------------------------------------------
 def _check_parents_equal(self, other):
         if not self._parents_equal(other):
             raise TypeError(
@@ -2080,65 +2067,9 @@ def __getitem__(cls, other):
 
 Decorators:
 =================================
-ython's functions are objects
+Python's functions are objects
 To understand decorators, you must first understand that functions are objects in Python. This has important consequences. Let's see why with a simple example :
 
-def shout(word="yes"):
-    return word.capitalize()+"!"
-
-print shout()
-# outputs : 'Yes!'
-
-# As an object, you can assign the function to a variable like any
-# other object 
-
-scream = shout
-
-# Notice we don't use parentheses: we are not calling the function, we are
-# putting the function "shout" into the variable "scream". 
-# It means you can then call "shout" from "scream":
-
-print scream()
-# outputs : 'Yes!'
-
-# More than that, it means you can remove the old name 'shout', and
-# the function will still be accessible from 'scream'
-
-del shout
-try:
-    print shout()
-except NameError, e:
-    print e
-    #outputs: "name 'shout' is not defined"
-
-print scream()
-# outputs: 'Yes!'
-OK, keep that in mind, we are going back to it soon. Another interesting property of Python functions is they can be defined... inside another function!
-
-def talk():
-
-    # You can define a function on the fly in "talk" ...
-    def whisper(word="yes"):
-        return word.lower()+"..."
-
-    # ... and use it right away!
-
-    print whisper()
-
-# You call "talk", that defines "whisper" EVERY TIME you call it, then
-# "whisper" is called in "talk". 
-talk()
-# outputs: 
-# "yes..."
-
-# But "whisper" DOES NOT EXIST outside "talk":
-
-try:
-    print whisper()
-except NameError, e:
-    print e
-    #outputs : "name 'whisper' is not defined"*
-    
     
 Functions references:
 ===========================
@@ -2983,7 +2914,8 @@ class Myprojcts():
 4. Context Provider
 ------------------------------------
 	
-
+Time Checks for Modules :
+-------------------------------------------
 	
 
 xml handling :
