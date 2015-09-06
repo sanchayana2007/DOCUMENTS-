@@ -2936,7 +2936,192 @@ int main() {
 			cout << "found at position "
 		}
 		
-Interator explained implementation:
+Pairs
+A pair in the sense of the STL is an encapsulation of two objects which belong
+together and which can be of different types.
+
+template <class T1, class T2>
+struct pair {
+T1 first;
+T2 second;
+pair(){}; // see text
+// initialize first with x and second with y:
+pair(const T1& x, const T2& y);
+// copy constructor:
+template<class U, class V> pair(const pair<U, V> &p);
+};
+The default constructor causes the elements to be initiated with the default constructors
+of their type. In addition to the class definition, there are some comparison
+operators:
+template <class T1, class T2>
+bool operator==(const pair<T1, T2>& x,
+const pair<T1, T2>& y) {
+return x.first == y.first && x.second == y.second;
+}
+
+template <class T1, class T2>
+bool operator<(const pair<T1, T2>& x,
+const pair<T1, T2>& y) {
+return x.first < y.first
+|| (!(y.first < x.first)
+&& x.second < y.second);
+}
+
+When the first objects are equal, the return value of the < operator is determined
+by the comparison of the second objects. However, in order to make only minimum
+demands on the objects, the equality operator == is not used in the second template.
+It might be the case that equality of two pairs is not required in a program.
+
+template <class T1, class T2>
+bool operator!=(const pair<T1, T2>& x,
+const pair<T1, T2>& y);
+template <class T1, class T2>
+bool operator> (const pair<T1, T2>& x,
+const pair<T1, T2>& y);
+template <class T1, class T2>
+bool operator>=(const pair<T1, T2>& x,
+const pair<T1, T2>& y);
+template <class T1, class T2>
+bool operator<=(const pair<T1, T2>& x,
+const pair<T1, T2>& y);
+
+A function facilitates the generation of pairs:
+template <class T1, class T2>
+pair<T1, T2> make_pair(const T1& x, const T2& y) {
+return pair<T1, T2>(x, y);
+}
+
+Function objects:
+=======================
+
+Then an object can be called in the same way as a function. Algorithmic objects
+of this kind are called function objects or functors.
+Functors are objects which behave like functions but have all the properties of
+objects. They can be generated, passed as arguments, or have their state modified.
+The change of state allows a flexible application which, with functions, would be
+only possible via additional parameters.
+
+Comparisons
+The STL provides a large number of template classes for comparisons. Objects of
+this class appear later under the name of comparison object.
+template<class Arg1, class Arg2, class Result>
+struct binary_function {
+typedef Arg1 first_argument_type;
+typedef Arg2 second_argument_type;
+typedef Result result_type;
+};
+For unary classes, a corresponding template unary_function is defined. The
+word struct saves the public label. Everything can be public, because the class
+has no data to be protected. This, for example, is the equal_to template for equality:
+template<class T>
+struct equal_to : binary_function<T, T, bool> {
+bool operator()(const T& x, const T& y) const {
+return x == y;
+}
+};
+
+
+template<class T, class CompareType>
+void bubble_sort(T* array, int Count,
+const CompareType& Compare) {
+for(int i = 0; i < Count; ++i) {
+for(int j = i+1; j < Count; ++j)
+if (Compare(array[i], array[j])) { // functor call
+// exchange
+const T temp = array[i];
+array[i] = array[j];
+array[j] = temp;
+}
+}
+}
+// Auxiliary procedure for display
+void Display(int *Array, int N) {
+for(int i = 0; i < N; ++i) {
+std::cout.width(7);
+std::cout << Array[i];
+}
+std::cout << std::endl;
+}
+
+Function adapters
+Function adapters are nothing more than function objects which cooperate with other
+function objects to adapt them to different requirements. This allows us to get by with
+existing functors and avoid writing new ones.
+not1
+The function not1 takes a functor as the parameter which represents a predicate
+with one argument (thus the suffix 1) and returns a functor which converts the
+
+
+Iterators :
+==========================
+A preliminary remark: iterators closely cooperate with containers. A parallel presentation
+of iterators and containers in a sequential text is however difficult and probably
+not very clear, and for this reason the containers of the STL are described only in the
+following chapter.
+// scheme of a simple iterator:
+template<class T>
+class Iterator {
+public:
+// constructors, destructor ....
+bool operator==(const Iterator<T>&) const;
+bool operator!=(const Iterator<T>&) const;
+Iterator<T>& operator++(); // prefix
+Iterator<T> operator++(int); // postfix
+T& operator*() const;
+T* operator->() const;
+private:
+// association with the container ...
+};
+
+States
+========================================
+Iterators are a generalization of pointers. They allow you to work with different
+containers in the same way. An iterator can assume several states.
+• An iterator can be generated even without being associated with a container. The
+association with the container is then made at a later stage. Such an iterator cannot
+be dereferenced. A comparable C++ pointer could, for example, have the value 0.
+• An iterator can be associated with a container during generation or at a later stage.
+Typically – but not compulsorily – after initialization it points to the beginning of
+the container. The method begin() of a container supplies the starting position.
+If the container is not empty, the iterator can in this case be dereferenced. Thus,
+it can be used to access an element of the container. With the exception of the
+end() position (see next point) the iterator can be dereferenced for all values that
+can be reached with the ++ operation.
+• In C++ the value of a pointer which points to a position directly past the last
+element of a C array is always defined. Similarly, the method end() of a container
+always returns an iterator with exactly this meaning, even if the container is not
+an array but, for example, a list.
+
+
+advance()
+----------------
+In order to advance an iterator by a given distance, the function advance() can be
+used:
+template<class InputIterator_type, class Distance_type>
+void advance(InputIterator_type& I, Distance_type N);
+The iterator I is advanced by N steps. For iterators that can move forward and
+
+
+Categories
+The STL provides different iterators for the container in question. Each of these
+iterators can be assigned to one of the following five categories:
+• input iterator
+• output iterator
+• forward iterator
+• bidirectional iterator
+• random access iterator
+* Reverse iterators
+A reverse iterator is always possible with a bidirectional iterator. A reverse iterator
+moves backward through a container by way of the ++ operation.
+*Const iterators
+The standard containers also provide iterators of the type const_iterator and
+const_reverse_iterator. These iterators are comparable to a pointer to const,
+e.g. const char*: they are not const but cannot be used to modify an element
+backward (bidirectional iterators) N may be negative.
+Stream iterators
+Stream iterators are used to work directly with input and output streams. The following
+sections show how stream iterators are employed for reading and writing
+sequential files.
 ---------------------------------------------------------------------
 ----------------------------------------------------------------------
 template<class T>
