@@ -2820,9 +2820,234 @@ The statement f(b) in userCode(Base&) will invoke b.do_f(), which is virtual. Th
 Derived::do_f() will get control if b is actually a object of class Derived. Note that Derived
 overrides the behavior of the protected virtual member function do_f(); it does not have its own
 variation of the friend function, f(Base&).
+----------------------------------------------------------------------------------------------------------------
+
+if(Number != -1) {
+// use of container methods:
+br_stl::slist<int>::iterator Position =
+std::fin
+
+Containers
+====================
+The STL provides different kinds of containers which are all formulated as template
+classes. Containers are objects which are used to manage other objects, where it is
+left to the user to decide whether the objects are deposited by value or by reference.
+
+
+A means of making different algorithms work with different containers is to
+choose the same names (which are evaluated at compile time) for similar operations.
+The method size(), for example, returns the number of elements in a container,
+no matter whether it is of vector, list, or map type. Other examples are the
+methods begin() and end() which are used to determine the position of the first
+element and the position after the last element.
+
+
+
+Iterators
+====================
+Iterators work like pointers. Depending on the application, they can be common
+pointers or objects with pointer-like properties. Iterators are used to access container
+elements. They can move from one element to the other, with the kind of movement
+being hidden to the outside (control abstraction).
+
+
+Algorithms
+==========================
+The template algorithms work with iterators that access containers. Since not only
+user-defined data types, but also the data types already existing in C++, such as int,
+char, and so on are supported, the algorithms have been designed in such a way that
+they can also work with normal pointers .
+
+Interplay
+============================
+Containers make iterators available, algorithms use them:
+Containers <----->() Iterators ()<---------> Algorithms
+This leads to a separation which allows an exceptionally clear design. In the
+following example, variations of one program will be used to show that algorithms
+function just as well with C arrays as with template classes of the STL.
+
+#include<iostream> // see Section 1.7.2 for header conventions
+using namespace std;
+// new type name IteratorType for pointer to const int
+// (we don’t want to modify the values here)
+typedef const int* IteratorType;
+// prototype of the algorithm
+	IteratorType find(IteratorType begin, IteratorType end,
+	const int& Value);
+	int main() {
+		const int Count = 100;
+		int aContainer[Count]; // define container
+		IteratorType begin = aContainer; // pointer to the beginning
+		// position after the last element
+		IteratorType end = aContainer + Count;
+		// fill container with even numbers
+		for(int i = 0; i < Count; ++i)
+			aContainer[i] = 2*i;
+		int Number = 0;
+		while(Number != -1) {
+			cout << " enter required number (-1 = end):";
+			cin >> Number;
+			if(Number != -1) { // continue?
+				IteratorType position = find(begin, end, Number);
+				if (position != end)
+					cout << "found at position "<< (position - begin) << endl;
+				else
+					cout << Number << " not found!" << endl;
+			}
+		}
+	}
+// implementation
+IteratorType find(IteratorType begin, IteratorType end,const int& Value) {
+	while(begin != end // pointer comparison && *begin != Value) // dereferencing and object comparison
+		++begin; // next position
+	return begin;
+}
+
+// variation 2: algorithm as template 
+// new type name IteratorType for pointer to const int
+// (we don’t want to modify the values here)
+typedef const int* IteratorType;
+
+typedef vector<int>::const_iterator IteratorType;
+// algorithm as template
+template<class Iteratortype, class T> 
+Iteratortype find(Iteratortype begin, Iteratortype end,const T& Value)
+ {
+	while(begin != end // iterator comparison   
+	&& *begin != Value) // object comparison
+		++begin; // next position
+	return begin;
+}
+
+
+int main() {
+	const int Count = 100;
+	vector<int> aContainer(Count); // define container
+	for(int i = 0; i < Count; ++i) // fill container with
+		aContainer[i] = 2*i; // even numbers
+	int Number = 0;
+	while(Number != -1) {
+		cout << " enter required number (-1 = end):";
+		cin >> Number;
+		if(Number != -1) {
+			// use global find() defined above
+			IteratorType position = ::find(aContainer.begin(),aContainer.end(), Number);
+		if (position != aContainer.end())
+			cout << "found at position "
+		}
+		
+Interator explained implementation:
+---------------------------------------------------------------------
+----------------------------------------------------------------------
+template<class T>
+class slist {
+public:
+/*Some types of the class get public names. Then it is possible to use them outside
+the class without knowing the implementation.
+*/
+typedef T value_type;
+typedef ptrdiff_t difference_type;
+typedef T* pointer;
+typedef T& reference;
+// etc. see text
+slist() : firstElement(0), Count(0) {}
+/*copy constructor, destructor and assignment operator are omitted! The implementation
+of push_front() creates a new list element and inserts it at the beginning
+of the list:
+*/
+void push_front(const T& Datum) { // insert at beginning
+firstElement = new ListElement(Datum, firstElement);
+++Count;
+}
+private:
+struct ListElement
+{
+T Data;
+ListElement *Next;
+ListElement(const T& Datum, ListElement* p)
+: Data(Datum), Next(p) {}
+};
+ListElement *firstElement;
+size_t Count;
+public:
+class iterator {
+public:
+typedef std::forward_iterator_tag iterator_category;
+typedef T value_type;
+typedef T* pointer;
+typedef T& reference;
+typedef size_t size_type;
+typedef ptrdiff_t difference_type;
+iterator(ListElement* Init = 0)
+: current(Init){}
+
+T& operator*() { // dereferencing
+return current->Data;
+}
+const T& operator*() const { // dereferencing
+return current->Data;
+}
+iterator& operator++() { // prefix
+if(current) // not yet arrived at the end?
+current = current->Next;
+return *this;
+}
+iterator operator++(int) { // postfix
+iterator temp = *this;
+++*this;
+return temp;
+}
+bool operator==(const iterator& x) const {
+return current == x.current;
+}
+bool operator!=(const iterator& x) const {
+return current != x.current;
+}
+private:
+ListElement* current; // pointer to current element
+}; // iterator
+
+
+template<class Iterator>
+Iterator::difference_type operator-(Iterator second,
+Iterator first) {
+Iterator::difference_type count = 0; // type maybe int
+/*The difference between the iterators is determined by incrementing first until the
+second iterator is reached. Thus, the condition is that first lies not after the second
+iterator. In other words: second must be able to reach the iterator by means of the
+++ operator.
+*/
+while(first != second
+&& first != Iterator()) {
+++first;
+++count;
+}
+// In case of inequality, second is not reachable by first
+assert(first == second);
+return count;
+}
+
+if(Number != -1) {
+// use of container methods:
+br_stl::slist<int>::iterator Position =
+std::find(aContainer.begin(),
+aContainer.end(), Number);
+if(Position != aContainer.end())
+std::cout << "found at position "
+<< (Position - aContainer.begin())
+<< std::endl;
+else
+std::cout << Number << " not found!"
+<< std::endl;
+}
+
+
+
+
+
 
 -=------------------------------------------------------------------------------------------------------------------------------------------------------
-The Tekplate :
+The Template :
 
 1) The compiler will generate Constructor / Destructors for the Data type whenever an explicit or Implicit declaration of the object
  is been done or a function call is been made 
