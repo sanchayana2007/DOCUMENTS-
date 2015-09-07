@@ -3226,6 +3226,1153 @@ std::cout << Number << " not found!"
 << std::endl;
 }
 
+Containers 3
+Summary: A container is an object that is used to manage other objects which in this
+context are called elements of the container. It deals with allocation and deallocation
+of memory and controls insertion and deletion of elements.
+
+In part, the STL containers are typical implicit data types in the sense of Section 1.2.
+They include vector, list, and deque. Other containers, in contrast, are abstract
+data types which are implemented by means of the implicit data types. These include
+stack, queue, and priority_queue.
+Further abstract data types are set, map, multiset, and multimap. They are
+implemented by means of so-called red-black trees
+
+
+Data type interface
+Each container provides a public set of data types that can be used in a program. The
+data type vector<int>::iterator has already been mentioned on page 9. It can
+be identical to a pointer type such as int*, but this is not compulsory.
+The aim of data types is to ensure that the interface to a container in a program
+is unique at compile time.
+container data types required for user-defined containers
+and already provided by the containers of the STL
+Data type Meaning
+X::value_type T
+X::reference reference to container element
+X::const_reference ditto for read-only purposes
+X::iterator type of iterator
+X::const_iterator ditto, but cannot be used to modify an element
+X::difference_type signed integral type (see distance type, page 32)
+X::size_type unsigned integral type for size specifications
+
+Container methods
+Each container provides a public set of methods which can be used in a program.
+The methods begin() and end()
+
+An example of the swap() method can be found A vector<int> with a 16-bit size_t
+can contain at most 32 767 elements. The current size, returned by the size() function,
+results from the distance between beginning and end, as calculated by the function
+distance(a.begin(), a.end(), n)
+Reversible containers
+Reversible containers allow iterators to traverse backward. Such iterators may be
+bidirectional and random access
+
+Return type method Meaning
+X() default constructor; creates empty container
+X(const X&) copy constructor
+~X() destructor; calls the destructors for all elements
+of the container
+iterator begin() beginning of the container
+const_iterator begin() beginning of the container
+iterator end() position after the last element
+const_iterator end() ditto
+size_type max_size() maximum possible container size (see text)
+size_type size() current size of the container (see text)
+bool empty() size() == 0 or begin() == end()
+void swap(X&) swapping with argument container
+X& operator=(const X&) assignment operator
+bool operator==(const X&) operator ==
+bool operator!=(const X&) operator !=
+bool operator<(const X&) operator <
+bool operator>(const X&) operator >
+bool operator<=(const X&) operator <=
+bool operator>=(const X&) operator >=
+Table 3.2: Container methods
+
+X::reverse_iterator
+X::const_reverse_iterator
+and the methods
+rbegin() // points to last element
+rend() // points to fictitious position before the first element
+
+
+Sequences
+A sequence is a container whose elements are arranged in a strictly linear way Notation for intervals
+It is frequently necessary to specify intervals. For this purpose, the usual mathematical
+interval is used, where square brackets denote intervals including the boundary
+values, and round parentheses denote intervals excluding the boundary values. Thus,
+[i, j) is an interval including i and excluding j. sequential container; i and j are of input iterator type; p and q are dereferenceable
+iterators; n is of type X::size_type and t is an element of type X::value_type.
+
+Return type method Meaning
+X(n, t) Creates a sequence of type X with n copies of
+t.
+X(i, j) Creates a sequence with the elements of the
+range [i, j) copied into the sequence.
+iterator insert(p, t) Copies a copy of t before the location p. The
+return value points to the inserted copy.
+void insert(p, n, t) Copies n copies of t before the location p.
+void insert(p, i, j) Copies the elements of the range [i, j) before
+the location p. i, j refer to another container
+than that for which insert() is called.
+iterator erase(q) Deletes the element pointed to by q. The returned
+iterator points to the element immediately
+following q prior to the deletion operation,
+provided it exists. Otherwise, end() is
+returned.
+iterator erase(q1, q2) Deletes the elements of the range [q1, q2).
+The returned iterator points to the element that
+pointed to q2 immediately prior to the deletion
+operation, provided it exists. Otherwise, end()
+is returned.
+void clear() Deletes all elements; corresponds to
+erase(begin(), end()).
+The STL contains three kinds of sequential containers, namely vector, list,
+and deque. A list (list) should be used when frequent insertions and deletions are
+needed somewhere in the middle. A queue with two ends (deque = double ended
+queue) is reasonable when insertion and deletion frequently take place at either end.
+vector corresponds to an array. deque and vector allow random access to elements.
+The above-mentioned operations together with their containers need only constant
+time. Other
+
+for comparison, where Container can be one of the types vector, list or deque.
+In addition to the data types of Table 3.1, the types of Table 3.4 are provided.
+Data type Meaning
+X::pointer pointer to container element
+X::const_pointer ditto, but cannot be used to modify container elements
+
+
+Vector
+Now that all essential properties of a vector container have been described, let us
+look at some examples of its application. First, a vector with 10 places is filled with
+the numbers 0 to 9. At the end, the number 100 is appended,
+
+#include<vector>
+#include<iostream>
+using namespace std;
+int main() {
+// an int vector of 10 elements
+vector<int> intV(10);
+for(size_t i = 0; i < intV.size(); ++i)
+intV[i] = i; // fill vector, random access
+// vector increases on demand
+intV.insert(intV.end(), 100); // append the number 100
+// use as array
+for(size_t i = 0; i < intV.size(); ++i)
+cout << intV[i] << endl;
+// use with an iterator
+for(vector<int>::iterator I = intV.begin();
+I != intV.end(); ++I)
+cout << *I << endl;
+
+
+Return type method Meaning
+void assign(n, t = T()) Deletes the container elements
+and subsequently inserts n elements
+t.
+void assign(i, j) Deletes the container elements
+and subsequently inserts the elements
+of the iterator range [i,
+j).
+reference front() Supplies a reference to the first element
+of a container.
+const_reference front() Ditto, but cannot be used to modify
+container elements.
+reference back() Supplies a reference to the last element
+of a container.
+const_reference back() Ditto, but cannot be used to modify
+container elements.
+void push_back(t) Inserts t at the end.
+void pop_back() Deletes the last element.
+void resize(n, t = T()) Changes the container size. n -
+size() elements t are inserted at
+the end or size()-n elements are
+deleted at the end, depending on
+whether n is greater or less than
+the current size.
+reverse_iterator rbegin() Returns the begin iterator for
+backward traversal. This iterator
+points to the last element.
+const_reverse_iterator rbegin() Ditto, but cannot be used to modify
+container elements.
+reverse_iterator rend() Returns the end iterator for backward
+traversal.
+const_reverse_iterator rend() Ditto, but cannot be used to modify
+container elements.
+
+//swap() from Table 3.2 shows a very fast method for
+// swapping two vectors.
+newV.swap(intV);
+cout << "\n newV after swapping = ";
+for(size_t i = 0; i < newV.size(); ++i)
+cout << newV[i] << ’ ’; // old contents of intV
+cout << "\n\n intV = ";
+for(size_t i = 0; i < intV.size(); ++i)
+cout << intV[i] << ’ ’; // old contents of newV
+cout << endl;
+}
+
+how an element is deleted which leads to a change in the number of elements. All
+elements following the deleted element shift by one position. This process is a timeconsuming
+operation. Finally, a reverse_iterator is used which traverses the
+container backward.
+#include<vector>
+#include<iostream>
+#include<string>
+using namespace std;
+int main() {
+// a string vector of 4 elements
+vector<string> stringVec(4);
+stringVec[0] = "First";
+stringVec[1] = "Second";
+stringVec[2] = "Third";
+stringVec[3] = "Fourth";
+// vector increases size on demand
+stringVec.insert(stringVec.end(), string("Last"));
+cout << "size() = "
+<< stringVec.size() << endl; // 5
+// delete the element ‘Second’
+vector<string>::iterator I = stringVec.begin();
+++I; // 2nd position
+cout << "erase: "
+<< *I << endl;
+stringVec.erase(I); // delete Second
+cout << "size() = "
+<< stringVec.size() << endl; //
+for(I = stringVec.begin(); I != stringVec.end(); ++I)
+cout << *I << endl;
+/* Output: First
+Third
+Fourth
+Last
+*/
+cout << "backwards with reverse_iterator:" << endl;
+for(vector<string>::reverse_iterator
+revI = stringVec.rbegin(); revI != stringVec.rend();
+++revI)
+cout << *revI << endl;
+} // main.cpp
+
+On average, deletion or insertion of an element at the end of a vector takes constant
+time, that is O(1) in complexity notation (for example, pop_back()). Insertion
+or deletion of an element somewhere in the middle takes a time proportional
+
+List
+This example refers to the program on page 41 for the determination of identifiers
+contained in a file. It makes use of the Identifier class described there, with
+the difference that the identifiers are not written into a file, but into a list which is
+subsequently displayed:
+// k3/list/identify/main.cpp
+#include<iterator>
+#include<fstream>
+#include<list>
+#include"identif.h"
+int main( ) {
+// define and open input file
+std::ifstream Source("main.cpp");
+std::list<Identifier> Identifier_list;
+std::istream_iterator<Identifier> iPos(Source), end;
+
+Return type method Meaning
+reference operator[](n) Returns a reference to the nth element
+(usage: a[n], when a is the container).
+const_reference operator[](n) Ditto, but cannot be used to modify
+container elements.
+reference at(n) Checks if n is within the valid range.
+If yes, a reference to the nth element
+is returned, otherwise an exception is
+thrown.
+const_reference at(n) Ditto, but cannot be used to modify
+container elements.
+void reserve(n) Reserves memory space, so that the
+available space (capacity) exceeds the
+currently needed space. Aim: avoiding
+memory allocation operation during
+vector use.
+size_type capacity() Returns the capacity value (see
+reserve()). size() is always less
+than or equal to capacity().
+Table 3.6: Additional vector methods.
+if(iPos == end)
+std::cout << "File not found!" << std::endl;
+else
+while(iPos != end)
+// insert identifier and read next one
+Identifier_list.push_back(*iPos++);
+// output
+std::list<Identifier>::const_iterator
+I = Identifier_list.begin();
+while(I != Identifier_list.end())
+std::cout << *I++ << std::endl;
+}
+The structure of the main() programs resembles the one on page 43. This resemblance
+facilitates learning how to use iterators and containers. In contrast to the
+vector, insert() and erase() do not invalidate iterators that point to elements of
+the list, with the exception of an iterator that points to an element to be deleted.
+In addition to the methods of Tables 3.2 to 3.5, list provides the methods
+
+Merging of sorted lists
+Two small sorted lists are to be merged into one big sorted list. After the end of
+the process, the calling list contains all elements of the two lists, whereas the called
+list is empty. merge() is stable; thus, the relative order of the elements of a list is
+maintained.
+// k3/list/merge.cpp
+#include<list>
+#include<iostream>
+// auxiliary function
+void displayIntList(const std::list<int> & L) {
+std::list<int>::const_iterator I = L.begin();
+while(I != L.end())
+std::cout << *I++ << ’ ’;
+std::cout << " size() ="
+<< L.size() << std::endl;
+}
+int main( ) {
+std::list<int> L1, L2;
+// fill lists with sorted numbers
+for(int i = 0; i < 10; ++i) {
+L1.push_back(2*i); // even numbers
+L2.push_back(2*i+1); // odd numbers
+}
+displayIntList(L1); // 0 2 4 6 8 10 12 14 16 18 size() =10
+displayIntList(L2); // 1 3 5 7 9 11 13 15 17 19 size() =10
+L1.merge(L2); // merge
+displayIntList(L1);
+// 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 size() =20
+displayIntList(L2); // size() =0
+}
+The example first outputs a list of even numbers and a list of odd numbers. After
+the merge() operation, the first list contains all the numbers; the second list is
+empty.
+
+Splicing of lists
+The term ‘splicing’ originates from the nautical cabling technique and denotes the
+fastening together or uniting of several ropes by tucking several strands of rope or
+cable into each other. Here, we talk about uniting lists. Of the possibilities listed in
+Table 3.7, we only look at how to transfer a section of a list into another list. From
+the previous example, only the line containing the merge() operation is substituted
+with the following program fragment:
+list<int>::iterator I = L2.begin();
+advance(I, 4); // 4 steps
+L1.splice(L1.begin(), L2, I, L2.end());
+State of the lists before splice():
+L1: 0 2 4 6 8 10 12 14 16 18
+L2: 1 3 5 7 9 11 13 15 17 19
+State of the lists after splice():
+L1: 9 11 13 15 17 19 0 2 4 6 8 10 12 14 16 18
+L2: 1 3 5 7
+All elements of list L2 from position 4 (counting starts with 0) onward up to
+the end of the list are transferred to the beginning of list L1. Afterwards, list L2
+contains only the first four elements, whereas list L1 has grown by six elements at begin
+
+
+Deque
+Deque is an abbreviation for double ended queue. Like a vector, this sequence allows
+random access iterators and, exactly like a list, it allows insertion and deletion at the
+beginning or the end in constant time. Insertions and deletions somewhere in the
+middle, however, are quite costly (O(n)), because many elements must be shifted.
+A deque might be seen as being internally organized as an arrangement of several
+memory blocks, where memory management is hidden in a similar way to vector.
+During insertion at the beginning or the end, a new block of memory is added whenever
+available space is no longer sufficient.
+
+showSequence
+A remark to start with: showSequence() is not an algorithm of the STL, but a
+sequence display tool written for the examples in this book If nothing different is specified, output is written to cout. The sequence is output
+completely, that is, from begin() to (but excluding) end(). The sep character
+string separates the individual elements. It defaults to a space if nothing else is specified
+in the function call. With these definitions, you can simply write
+br_stl::showSequence(v);
+in your program to display an int vector v, instead of
+std::vector<int>::const_iterator iter = v.begin();
+while(iter != v.end()) std::cout << *iter++ << " ";
+std::cout << std::endl;
+The function is neither designed for nor suited to simple C arrays. Its advantage
+is that because of the shorter notation, programs become more readable. The
+function template is read into memory with #include<showseq.h>. Inclusion of
+#include<iostream> is done by showseq.h 
+
+Types of iteraror :
+
+template<class Iterator>
+typename iterator_traits<Iterator>::iterator_category
+get_iteratortype(const Iterator&) {
+typename iterator_traits<Iterator>::iterator_category typeobject;
+return typeobject;
+}
+// overloaded functions
+void whichIterator(const input_iterator_tag&) {
+cout << "Input iterator!" << endl;
+}
+void whichIterator(const output_iterator_tag&) {
+cout << "Output iterator!" << endl;
+}
+void whichIterator(const forward_iterator_tag&) {
+cout << "Forward iterator!" << endl;
+}
+void whichIterator(const random_access_iterator_tag&) {
+cout << "Random access iterator!" << endl;
+}
+// application
+int main( ) {
+// In case of basic data types we have to use the iterator_traits template
+int *ip; // random access iterator
+// display of iterator type
+whichIterator(get_iteratortype(ip));
+whichIterator(
+iterator_traits<int*>::iterator_category());
+// define a file object for reading
+// (actual file is not required here)
+ifstream Source;
+// an istream_iterator is an input iterator
+istream_iterator<string> IPos(Source);
+// display of iterator type
+whichIterator(get_iteratortype(IPos)); // or alternatively:
+whichIterator(iterator_traits<istream_iterator<string> >
+::iterator_category());
+// define a file object for writing
+ofstream Destination;
+// an ostream_iterator is an output iterator
+ostream_iterator<string> OPos(Destination);
+// display of iterator type
+whichIterator(get_iteratortype(OPos)); // or alternatively:
+whichIterator(iterator_traits<ostream_iterator<string> >
+::iterator_category());
+vector<int> v(10);
+// display of iterator type
+whichIterator(get_iteratortype(v.begin()));
+// or some other iterator
+whichIterator(iterator_traits<vector<int>::iterator>
+::iterator_category());
+}
+
+// application
+int main( ) {
+// In case of basic data types we have to use the iterator_traits template
+int *ip; // random access iterator
+// display of iterator type
+whichIterator(get_iteratortype(ip));
+whichIterator(
+iterator_traits<int*>::iterator_category());
+// define a file object for reading
+// (actual file is not required here)
+ifstream Source;
+// an istream_iterator is an input iterator
+istream_iterator<string> IPos(Source);
+// display of iterator type
+whichIterator(get_iteratortype(IPos)); // or alternatively:
+whichIterator(iterator_traits<istream_iterator<string> >
+::iterator_category());
+// define a file object for writing
+ofstream Destination;
+// an ostream_iterator is an output iterator
+ostream_iterator<string> OPos(Destination);
+// display of iterator type
+whichIterator(get_iteratortype(OPos)); // or alternatively:
+whichIterator(iterator_traits<ostream_iterator<string> >
+::iterator_category());
+vector<int> v(10);
+// display of iterator type
+whichIterator(get_iteratortype(v.begin()));
+// or some other iterator
+whichIterator(iterator_traits<vector<int>::iterator>
+::iterator_category());
+}
+A furthther implementation show last elements 
+
+// calling implementation
+template<class Iterator>
+void showLastElements(Iterator last,
+typename std::iterator_traits<Iterator>::difference_type
+n) {
+typename std::iterator_traits<Iterator>::iterator_category
+typeobject
+
+showLastElements(last, n, typeobject);
+}
+/*This function now calls the corresponding overloaded variation, where the selection at
+compile time is carried out by the parameter iterator_category() whose type
+corresponds to an iterator tag. Therefore, the third parameter is an iterator tag object
+constructed by calling its default constructor.
+*/
+// first overloaded function
+template<class Iterator, class Distance>
+void showLastElements(Iterator last, Distance n,
+std::bidirectional_iterator_tag) {
+Iterator temp = last;
+std::advance(temp, -n);
+while(temp != last) {
+std::cout << *temp << ’ ’;
+++temp;
+}
+std::cout << std::endl;
+}
+/*The bidirectional iterator does not allow random access and therefore no iterator arithmetic.
+Only the operators ++ and -- are allowed for moving. Therefore, advance()
+is used to go back n steps and then display the remaining elements. A random access
+iterator allows arithmetic, which makes the implementation of this case slightly easier:
+*/
+// second overloaded function
+template<class Iterator, class Distance>
+void showLastElements(Iterator last, Distance n,
+std::random_access_iterator_tag) {
+Iterator first = last - n; // arithmetic
+while(first != last)
+std::cout << *first++ << ’ ’;
+std::cout << std::endl;
+}
+// main-program
+int main( ) {
+std::list<int> L; // list
+for(int i=0; i < 10; ++i) L.push_back(i);
+// call of 1st implementation
+showLastElements(L.end(), 5L); // 5 long
+std::vector<int> v(10); // vector
+for(int i = 0; i < 10; ++i) v[i] = i;
+// call of 2nd implementation
+showLastElements(v.end(), 5); // 5 int
+}
+This scheme – providing a function as an interface which then calls one of the
+overloaded functions with the implementation – allows you to use completely different
+implementations with one and the same function call.
+
+Derivation of value and distance types
+The STL is based on the fact that algorithms use iterators to work with containers.
+However, this also means that inside an algorithm the container and its properties
+are not known, and that all the required information must be contained in the iterators.
+The information are determined by means of the iterator traits classes
+
+#include<vector>
+#include<iterator>
+template<class BidirectionalIterator>
+void reverseIt(BidirectionalIterator first,
+BidirectionalIterator last) {
+typename std::iterator_traits<BidirectionalIterator>
+::iterator_category typeobject;
+reverseIt(first, last, typeobject);
+}
+/*Reversing the order means that one element must be intermediately stored. For this, its
+type must be known. Following the well-proven scheme, the function calls the suitable
+implementation for the iterator type:
+*/
+template<class BidirectionalIterator>
+void reverseIt(BidirectionalIterator first,
+BidirectionalIterator last,
+std::bidirectional_iterator_tag) {
+// Use of the difference type to calculate the number of exchanges. The
+// difference type is derived from the iterator type:
+typename std::iterator_traits<
+BidirectionalIterator>::difference_type
+n = std::distance(first, last) -1;
+while(n > 0) {
+// The value type is also derived from the iterator type:
+typename std::iterator_traits<BidirectionalIterator>
+::value_type temp = *first;
+*first++ = *--last;
+*last = temp;
+n -= 2;
+}
+}
+
+Iterators for insertion into containers
+The idiom shown on page 43
+while(first != last) *result++ = *first++;
+copies an input range into an output range, where oPos and iPos in Section 2.2.2
+represent output and input iterators for streams. An output stream normally has more
+than sufficient space for all copied elements container Source(100), Target(100);
+// fill Source with values here
+typename container::iterator first = Source.begin(),
+last = Source.end(),
+result = Target.begin();
+// copying of the elements
+while(first != last) *result++ = *first++;
+There can, however, be a problem: this scheme fails when the Target container
+is smaller than the Source container, because at some time result will no longer
+The insert iterators provide the operators operator*() and operator++() in
+both prefix and postfix version, together with operator=(). All operators return a
+reference to the iterator. The first two have no other function. They exist only for
+keeping the usual notation *result++ = *last++:
+// Implementation of some operators (excerpt)
+template <class Container>
+class insert_iterator
+: public iterator<output_iterator_tag,
+typename Container::value_type,
+typename Container::difference_type> {
+public:
+insert_iterator<Container>& operator*() {return *this;}
+insert_iterator<Container>& operator++() {return *this;}
+insert_iterator<Container>& operator++(int)
+{ return *this;}
+// ... and so on
+};
+Only the assignment operator calls a member function of the container, which is
+dependent on the kind of container. Now Now, let us look at the expression *result++
+= *last++ in detail, remembering that the order of evaluation is from right to left,
+because unary operators are right-associative. *last is the value to be inserted. The
+call of the first two operators yields a reference to the iterator itself
+result.oper{zator++(int)}.operator*().operator=(*last++);
+result.op{zerator*()}.operator=(*last++);
+result.operator=(*last++);
+The compiler optimizes the first two calls, so that the task of insertion only remains
+with the assignment operator.
+
+back_insert_iterator
+A back insert iterator inserts new elements into a container at the end, making use
+of the element function push_back() of the container, called by the assignment
+operator:
+// Implementation of an assignment operator
+back_insert_iterator<Container>& operator=(
+typename Container::const_reference value) {
+// c points to the container (private pointer attribute of the iterator)
+c->push_back(value);
+return *this;
+}
+The following example shows the application of a back insert iterator in which
+the numbers 1 and 2 are appended to a vector:
+// k3/iterator/binsert.cpp
+// Insert iterators : back insert
+#include<showseq.h>
+#include<vector>
+#include<iterator>
+int main() {
+std::vector<int> aVector(5); // 5 zeros
+std::cout << "aVector.size() = "
+<< aVector.size() << std::endl; // 5
+br_stl::showSequence(aVector); // 0 0 0 0 0
+std::back_insert_iterator<std::vector<int> >
+aBackInserter(aVector);
+// insertion by means of the operations *, ++, =
+int i = 1;
+while(i < 3)
+*aBackInserter++ = i++;
+std::cout << "aVector.size() = "
+<< aVector.size() << std::endl; // 7
+br_stl::showSequence(aVector); // 0 0 0 0 0 1 2
+}
+The predefined function back_inserter() returns a back insert iterator and
+facilitates passing iterators to functions. Let us assume a function copyadd() which
+copies the contents of one container into another or adds it when the iterator used is
+an insert iterator:
+template <clasInputIterator, class OutputIterator>
+OutputIterator copyadd(InputIterator first,
+InputIterator last,
+OutputIterator result) {
+while (first != last)
+*result++ = *first++;
+return result;
+}
+
+Insertion iteraor:
+The insertion position is stored in the private variable iter.
+// k3/iterator/insert.cpp
+// Insert iterator
+#include<showseq>
+#include<vector>
+#include<iterator>
+int main() {
+std::vector<int> aVector(5); // 5 zeros
+std::cout << "aVector.size() = "
+<< aVector.size() << std::endl; // 5
+br_stl::showSequence(aVector); // 0 0 0 0 0
+// insertion by means of the operations *, ++, =
+std::insert_iterator<std::vector<int> >
+aBeginInserter(aVector, aVector.begin());
+int i = 1;
+while(i < 3) *aBeginInserter++ = i++;
+// vector: 1 2 0 0 0 0 0, size() is now 7
+/*In contrast to the front_insert_iterator, the insert-position remains the
+same, i.e. after inserting an element the position is not the beginning of the vector!
+*/
+std::insert_iterator<vector<int> >
+aMiddleInserter(aVector, aVector.begin() +
+aVector.size()/2);
+while(i < 6) *aMiddleInserter++ = i++;
+// vector: 1 2 0 3 4 5 0 0 0 0, size() is now 10
+std::insert_iterator<vector<int> >
+anEndInserter(aVector, aVector.end());
+while(i < 9) *anEndInserter++ = i++;
+std::cout << "aVector.size() = "
+<< aVector.size() << std::endl; // 13
+br_stl::showSequence(aVector); // 1 2 0 3 4 5 0 0 0 0 6 7 8
+}
+Here, the insert iterator is used to insert elements at the beginning, in the middle,
+tip and at the end. It should be noted that an insert iterator invalidates references to the
+container when, for reasons of space, the container is moved to a different memory
+
+Abstract data types
+=======================
+chapter first deals with
+the abstract data types stack, queue, and priority_queue which are provided
+as template classes by the STL. Subsequently, the sorted associative containers set,
+map, multiset, and multimap are considered.
+Stack
+A stack is a container which allows insertion, retrieving, and deletion only at one
+end. Objects inserted first are removed last. As an implicit data type, all sequential
+container classes are allowed which support the operations back(), push_back(),
+and pop_back() namespace std {
+template <class T,
+class Container = deque<T> > // default
+class stack {
+public:
+typedef typename Container::value_type value_type;
+typedef typename Container::size_type size_type;
+typedef typename Container container_type;
+protected:
+Container c;
+public:
+explicit stack(const Container& = Container());
+bool empty() const { return c.empty();}
+size_type size() const { return c.size(); }
+value_type& top() { return c.back(); }
+const value_type& top() const { return c.back(); }
+void push(const value_type& x) { c.push_back(x); }
+void pop() { c.pop_back(); }
+};
+template <class T, class Container>
+bool operator==(const stack<T,Container>& x,
+const stack<T,Container>& y) {
+return x.c == y.c;
+}
+template <class T, class Container>
+bool operator<(const stack<T,Container>& x,
+const stack<T,Container>& y) {
+return x.c < y.c;
+}
+There are also the relational operators !=, <= etc. In particular, you can also
+choose vector or list instead of the standard value deque.
+
+Queue
+A queue allows you to insert objects at one end and to remove them from the opposite
+end. The objects at both ends of the queue can be read without being removed.
+Both list and deque are suitable data types for implementation. The class queue
+provides the following interface:
+template<class T, class Container = deque<T> >
+class queue {
+public:
+explicit queue(const Container& = Container());
+typedef typename Container::value_type value_type;
+typedef typename Container::size_type size_type;
+typedef Container container_type;
+bool empty() const;
+size_type size() const;
+value_type& front(); // read value in front
+const value_type& front() const; // read value in front
+value_type& back(); // read value at end
+const value_type& back() const; // read value at end
+void push(const value_type& x); // append x
+void pop(); // delete first element
+// private/protected parts omitted
+};
+Of course, the underlying implementation is very similar to that of the stack. The
+operators == and < exist as well. queue::value_type and queue::size_type
+are both derived from the type (deque or list) used for the container.
+pplication of queue and stack as
+simply as possible
+#include<stack>
+#include<queue>
+#include<deque>
+#include<list>
+#include<vector>
+#include<iostream>
+int main() {
+std::queue<int, std::list<int> > aQueue;
+int numbers[] = {1, 5, 6, 0, 9, 1, 8, 7, 2};
+const int count = sizeof(numbers)/sizeof(int);
+std::cout << "Put numbers into the queue:" << std::endl;
+for(int i = 0; i < count; ++i) {
+std::cout.width(6); std::cout << numbers[i];
+aQueue.push(numbers[i]);
+}
+std::stack<int> aStack;
+std::cout << "\n\n Read numbers from the queue (same "
+"order)\n and put them into the stack:"
+<< std::endl;
+while(!aQueue.empty()) {
+int Z = aQueue.front(); // read value
+std::cout.width(6); std::cout << Z;
+aQueue.pop(); // delete value
+aStack.push(Z);
+}
+This little program puts a sequence of int numbers into a queue, reads them back
+out, and puts them on a stack. The stack is built with a deque (default), whereas the
+queue uses a list (list).
+
+Priority queue
+A priority queue always returns the element with the highest priority. The priority
+criterion must be specified when creating the queue. In the simplest case, it is the
+greatest (or smallest) number in the queue. The criterion is characterized by a class
+of suitable function objects for comparison 
+priorities. For simplicity, only int elements are used
+in the example. The continuation of the program of the previous section shows the
+application, in which the priority queue internally uses a vector and employs the
+standard comparison type greater:
+// continued from Section 4.2
+std::priority_queue<int, std::vector<int>,
+std::greater<int> > aPrioQ;
+// greater: small elements first (= high priority)
+// less: large elements first
+std::cout << "\n\n Read numbers from the stack "
+"(reverse order!)\n"
+" and put them into the priority queue:"
+<< std::endl;
+while(!aStack.empty()) {
+int Z = aStack.top(); // read value
+std::cout.width(6); std::cout << Z; // display
+aStack.pop(); // delete value
+aPrioQ.push(Z);
+}
+std::cout << "\n\n Read numbers from the priority "
+" queue (sorted order!)" << std::endl;
+while(!aPrioQ.empty()) {
+int Z = aPrioQ.top(); // read value
+std::cout.width(6); std::cout << Z; // display
+aPrioQ.pop(); // delete value
+}
+}
+Because of the priority queue’s internal representation as a binary heap for efficiency
+reasons (see Section 5.7), only implicit data types with random access iterators
+are suited, for example deque and vector. priority_queue provides the
+following interfaces, where Container and Compare denote the data types for the
+implicit container and the comparison type:
+template<class T, class Container = vector<T>,
+class Compare = less<Container::value_type> >
+class priority_queue {
+public:
+typedef typename Container::value_type value_type;
+typedef typename Container::size_type size_type;
+typedef Container container_type;
+bool empty() const;
+size_type size() const;
+const value_type& top() const;
+void push(const value_type& x);
+void pop();
+The meaning of the above methods corresponds to that of stack and queue; the
+constructor, however, looks slightly different:
+explicit priority_queue(const Compare& x = Compare(),
+const Container& = Container());
+The constructor requires a Compare object. If none is passed, an object generated
+by the default constructor of the Compare class is passed. In the sample program
+above, this is greater<int>().
+priority_queue(InputIterator first, InputIterator last,
+const Compare& x = Compare(),
+const Container& = Container());
+This constructor takes input iterators as the argument, in order to create a priority
+queue for a large range in one go. This is more efficient than a series of push()
+operations. In our sample program on page 72, a further priority queue could be
+created by means of the instruction
+priority_queue<int, vector<int>, greater<int> >
+anOtherPrioQ(numbers, numbers+count);
+and at the same time be initialized with the whole number array. The name of the
+array numbers is to be taken as a constant pointer, as is usual in C++.
+Operators == and < do not exist because the comparison does not seem
+
+Sorted associative containers
+An associative container allows fast access to data by means of a key which need not
+coincide with the data. For example, the name and address of an employee could be
+accessed via a personnel number used as a key. In sets and multisets, the data itself is
+used as a key, whereas in maps and multimaps, key and data are different. The STL
+provides four types of associative containers:
+• set: The keys coincide with the data. There are no elements with the same key in
+the set, that is, a key occurs either once or it does not occur at all.
+• multiset: The keys coincide with the data. There may be identical keys (elements)
+in the set, that is, a key can occur not at all, once, or any number of times.
+• map: The keys do not coincide with the data. For example, the key could be a
+number (personnel number) by means of which the data (address, salary, ...) can
+be accessed. Keys can be any kind of objects. In a dictionary, for example, the
+key could be an English word which is used to determine a foreign language word
+(the data). map maps a set of keys to a set of associated data. The elements of
+a map container are pairs of keys and data. They describe a binary relation, that
+is, a relation between elements of two sets. The set of possible keys is called the
+‘definition range’ of the map, the set of associated data is called the ‘value range.’
+The map type is characterized by a unique map, because one key is associated
+with exactly one datum. There are no identical keys, that is, a key either does not
+occur at all or occurs only once.
+• multimap: A multimap object has the properties described under map, with one
+exception: there may be identical keys. This means that a key can occur not at all,
+once or any number of times. Unambiguousness is therefore no longer given.
+The STL containers store the keys sorted, although this is not required by the
+actual task described in the above points. This is just an implementation detail that
+allows you to store these containers in a very compact way as balanced binary trees
+(red-black trees). Because of the sorting, access to the elements is very fast and the
+tree grows only by the strictly required amount.
+
+Example for sets
+#include<set>
+#include<showseq.h>
+int main() {
+std::set<int> Set; // comparison object: less<int>()
+for(int i = 0; i < 10; ++i) Set.insert(i);
+for(int i = 0; i < 10; ++i) Set.insert(i); // no effect
+br_stl::showSequence(Set); // 0 1 2 3 4 5 6 7 8 9
+/*The display shows that the elements of the set really occur exactly once. In the next
+part of the program, elements are deleted. In the first variation, first the element is
+sought in order to delete it with the found iterator. In the second variation, deletion
+is carried out via the specified key.
+*/
+std::cout << "Deletion by iterator\n"
+"Delete which element? (0..9)" ;
+int i;
+std::cin >> i;
+std::set<int>::const_iterator iter = Set.find(i);
+if(iter == Set.end())
+std::cout << i << " not found!\n";
+else {
+std::cout << "The element " << i
+<< " exists" << Set.count(i) // 1
+<< " times." << std::endl;
+Set.erase(iter);
+std::cout << i << " deleted!\n";
+std::cout << "The element " << i
+<< " exists" << Set.count(i) // 0
+<< " times." << std::endl;
+}
+br_stl::showSequence(Set);
+/*The count() method yields either 0 or 1. Thus, it is an indicator as to whether an
+element is present in the set.
+*/
+std::cout << "Deletion by value\n"
+"Delete which element? (0..9)" ;
+std::cin >> i;
+int Count = Set.erase(i);
+if(Count == 0)
+std::cout << i << " not found!\n";
+br_stl::showSequence(Set);
+/*A further set NumberSet is not initialized with a loop, but by specifying the range
+to be inserted in the constructor. Suitable iterators for int values are pointers of
+int* type. The name of a C array can be interpreted as a constant pointer to the
+beginning of the array. When the number of array elements is added to this pointer,
+the result is a pointer that points to the position after the last array element. Both
+pointers can be used as iterators for initialization of a set:
+*/
+std::cout << "call constructor with iterator range\n";
+// 2 and 1 twice!
+int Array[] = { 1, 2, 2, 3, 4, 9, 13, 1, 0, 5};
+Count = sizeof(Array)/sizeof(Array[0]);
+std::set<int> NumberSet(Array, Array + Count);
+br_stl::showSequence(NumberSet); // 0 1 2 3 4 5 9 13
+}
+In this example it can also be seen that the occurring elements are displayed only
+once although duplicates exist in the original array.
+
+Multiset
+A multiset behaves like a set with the exception that not just one, but arbitrarily many
+identical elements may be present. Table 4.4 shows insert() as the only method
+which behaves differently from its counterpart in the set class and has a different
+return type.
+Return type method Meaning Complexity
+iterator insert(t) Inserts the element t independently
+of whether an element with the
+same key already exists. The iterator
+points to the newly inserted element
+
+Map
+Exactly like a set, a map is an associative container, in which, however, unlike set,
+keys and associated data are different. Here, the difference between key_compare
+and value_compare mentioned on page 75 takes effect. In the declaration of a set
+container, the types of key and possibly comparison objects must be specified; in
+map, the data type is needed as well:
+map<int, string, greater<int> > aMap;
+The definition is a mapping of int numbers onto string objects, with the
+numbers internally sorted in descending order. As with set, sorting is not a property
+of the map, but of internal storage. The type of the comparison object can
+be left out: map<int, string> aMap is then the same as map<int, string,
+less<int> > aMap.
+
+The elements of a map container are pairs: the type value_type is identical
+to key_type in set or multiset, whereas map::value_type is equivalent to
+pair< Key, T>, with Key being the type of key and T the type of data.
+The map class essentially provides constructors with the same parameters and
+methods with the same names and parameters as the set class. The meaning is
+equivalent; it is sufficient to remember that pairs are stored instead of single values.
+There are only two exceptions. The method
+value_compare value_comp();
+differs in its meaning from the one in set. It returns a function object which can
+be used for comparison of objects of type value_type (that is, pairs
+pair<int, string> p(9921, "algorithms"),
+q(2726, "data structures");
+Now, if there is a map M which during construction was connected to the comparison
+object CK for the comparison of keys, then the call
+bool x = M.value_comp()(p,q);
+is identical to
+bool x = CK(p.first, q.first);
+that is, the comparison of the keys stored in first. The second exception is the
+index operator provided in map, which also allows you to access the data via the key
+as an index. The key must not necessarily be a number:
+// int key
+cout << AddressMap[6]; // output of a name
+// string key
+cout << DictionaryMap["hello"]; // ‘Hallo
+
+Example for map
+#include<map>
+#include<string>
+#include<iostream>
+using namespace std;
+// two typedefs for abbreviations
+// comparison object: less<long>()
+typedef std::map<long, std::string> MapType;
+typedef MapType::value_type ValuePair;
+int main() {
+MapType aMap;
+aMap.insert(ValuePair(836361136, "Andrew"));
+aMap.insert(ValuePair(274635328, "Berni"));
+aMap.insert(ValuePair(260736622, "John"));
+aMap.insert(ValuePair(720002287, "Karen"));
+aMap.insert(ValuePair(138373498, "Thomas"));
+aMap.insert(ValuePair(135353630, "William"));
+// insertion of Xaviera is not executed, because the key already exists.
+aMap.insert(ValuePair(720002287, "Xaviera"));
+/*Owing to the underlying implementation, the output of the names is sorted by
+numbers:
+*/
+std::cout << "Output:\n";
+MapType::const_iterator iter = aMap.begin();
+while(iter != aMap.end()) {
+std::cout << (*iter).first << ’:’ // number
+<< (*iter).second // name
+<< std::endl;
+++iter;
+}
+std::cout << "Output of the name after entering"
+" the number\n"
+<< "Number: ";
+long Number;
+std::cin >> Number;
+iter = aMap.find(Number);
+if(iter != aMap.end())
+std::cout << (*iter).second // O(1)
+<< ’ ’
+<< Map[Number] // O(logN)
+<< std:: endl;
+elsestd:: cout << "Not found!" << std::endl;
+}
+
+Multimap
+multimap differs from map in the same way as multiset differs from set:
+multiple entries of elements with identical keys are possible, for example, the
+name Xaviera in the sample program of the previous section.
+
+Standard algorithms
+Without especially mentioning it, all the algorithms presented in this chapter are
+in namespace std. They are completely separated from the special implementation
+of the containers on which they work. They only know iterators which can be used to
+access the data structures in containers For this reason, iterators can be both complex objects and simple
+pointers. Some algorithms bear the same names as container methods. However,
+because of the different way in which they are used, no confusion will occur.
+The complete separation can, however, also have disadvantages: a very generic
+find() algorithm will have to search a container from beginning to end. The complexity
+is O(N),
+
+Copying algorithms
+For reasons of speed, some algorithms exist in two variations: the first works directly
+on the container, the second copies the container. The second variation is always
+sensible when a copy process is required, for example to keep the original data, and
+when, with regard to complexity, the algorithm itself
+
+1. A copy B is to be made of container A, removing all elements from the copy which
+satisfy a given condition, for example all clients with less than 50,000 dollars of
+turnover. The following alternatives exist:
+• copy A to B and remove all unwanted elements from B, or
+• copy all elements from A to B, but only if they satisfy a given criterion.
+Both alternatives are of complexity O(n).
+
+2. A sorted copy B is to be generated of container A. Here too, two possibilities exist:
+• copy A to B and sort B, or
+• take all elements of A and insert them sorted into B.
+The second possibility is no better than the first one. The sorting process is at
+least of complexity O(N logN),
+
+Algorithms with predicates
+‘Predicate’ means a function object (see Section 1.6.3) which is passed to an algorithm
+and returns a value of type bool when it is applied to a dereferenced iterator.
+The dereferenced iterator is simply a reference to an object stored in the container.
+The function object is to determine whether this object has a given property.
+Only if this question is answered with true is the algorithm applied to this object.
+A general scheme for this is:
+template <class InputIterator, class Predicate>
+void algorithm(InputIterator first,
+InputIterator last,
+Predicate pred) {
+while (first != last) {
+if(pred(*first)) { // does predicate apply?
+show_it(*first); // ... or another function
+}
+++first;
+}
+}
+
+Algorithms with binary predicates
+A binary predicate requires two arguments. This allows you to formulate a condition
+for two objects in the container, for example a comparison. The algorithm might
+contain the following kernel:
+if(binary_pred(*first, *second)) { // does the predicate apply?
+do_something_with(*first, *second);
+// ...
+In this sense, you can also use objects of the classes of Table 1.2 as binary
+predicates. The second parameter of a binary predicate, however, need not be an
+iterator:
+template <class InputIterator,
+class binaryPredicate,
+class T>
+void another_algorithm(InputIterator first,
+InputIterator last,
+binaryPredicate bpred,
+T aValue)
+{ while (first != last) {
+if(bpred(*first, aValue)) {
+show_it(*first);
+}
+++first;
+}
+}
+5.3 Nonmutating sequence operations
+The algorithms described in this section work on sequences, but do not alter them.
+With one exception, all algorithms are of complexity O(N), where N is the number
+of elements in the sequence
+
+for_each
+The for_each algorithm causes a function to be executed on each element of a
+container. The definition is so short and simple that it is shown in its entirety:
+template <class InputIterator, class Function>
+Function for_each(InputIterator first,
+while(first != last)
+f(*first++);
+return f;
+}
+The returned object f is mostly ignored. However, the returned object can transport
+data outside the function body, e.g. the maximum value of the iterated sequence.
+In the following program, the function is the display of an int value which, together
+with the for_each algorithm, writes a vector on the standard output.
+
+#include<algorithm>
+#include<vector>
+#include<iostream>
+using namespace std;
+void display(int x) { // nonmutating function
+cout << x << ’ ’;
+}
+class Increment { // functor class
+public:
+Increment(int i = 1) : howmuch(i) {}
+void operator()(int& x) { // mutating operator
+x += howmuch;
+}
+private:
+int howmuch;
+};
+int main() {
+vector<int> v(5); // vector of 5 zeros
+// v is not changed:
+for_each(v.begin(), v.end(), display); // 0 0 0 0 0
+cout << endl;
+// with Increment constructor
+// v is changed by the functor, not by for_each:
+for_each(v.begin(), v.end(), Increment(2));
+for_each(v.begin(), v.end(), display); // 2 2 2 2 2
+cout << endl;
+// with Increment object
+Increment anIncrement(7);
 
 
 
