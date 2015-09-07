@@ -1187,7 +1187,6 @@ Derived& dr = static_cast<Derived&>(br);
 
 3)reinterpret_cast
 ======================
-======================
       einterpret_cast is a bit more powerful, and concomitantly less safe, than the static_cast.
 You can use it to perform some casts that are not technically allowed by C++ type rules, but which might
 make sense to the programmer in some circumstances. For example, you can cast a pointer type to any
@@ -1902,7 +1901,7 @@ for (int i = 0; i < size; i++) {
                          // object.
 
 
--------------------------------------
+-----------------------------------------------------
 A Variable Argument List is not Function Overloading
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
@@ -1948,7 +1947,7 @@ int main( )
 
 
 
-ome advantages of function object listed in "The C++ Standard Library" by Nicolai M. Josuttis.
+Some advantages of function object listed in "The C++ Standard Library" by Nicolai M. Josuttis.
 
 -------------------------------------
 Function object are "smart functions." 
@@ -2026,8 +2025,7 @@ do not overload the new or delete.
 
 
 
-
- two overloaded versions of operator new and operator delete functions:
+Two overloaded versions of operator new and operator delete functions:
 
 void *operator new(size_t);	// allocate an object
 void *perator new[](size_t);  	// allocate an array
@@ -2686,147 +2684,7 @@ pop_front
 
 It can be considered as a dobly link llist
 
-
-
-
---------------------------------------------------------------------------------------------
-
-
-The answer is that C++ utilizes a hidden pointer named “this”!
-class Simple
- 
-{
-            void SetID(int nID) { m_nID = nID; }
-     
-}
-	Simple a ;
-	a.SetID(2);
-Although it looks like this function only has one parameter, it actually has two! When you call cSimple.SetID(2);, C++ internally converts this to 
-			SetID(&cSimple, 2);. 
-Note that this is just a normal function call where C++ has added a parameter, and automatically passed in the address of the class object!
-			
-			void SetID(Simple* const this, int nID) 
-			{ this->m_nID = = nID; }
-
-this is a const pointer — you can change the value of the object it points to, but you can not make it point to something else!
-Uses:
-1)
-	class Something
-
-	{
- 
-
-	private:
-
-   		int nData;
- 
-
-    		Something(int nData)
-
-    		{
- 
-
-       			 this->nData = nData;
-
-    		}
-	}
-2) Returning *this will return a reference to the object that was implicitly passed to the function by C++.
-
-One use for this feature is that it allows a series of functions to be “chained” together, so that the output of one function becomes 
-the input of another function!
-
-
-4)-------------------------------------------------------------------------------------------------------------------------------------
-
-Freind class :
-*******************
-Friend  is a declaration to the compiler saying that it allowed to modify the private variables of a class by the freind function or class.
-
-
-Declaring as freind class one class to see the private variables of another class, even though these variables should probably not be made
- part of the public  interface that the class supports
-
-class Node 
-{
-    private: 
-    	int data;
-    	int key;
-    // ...
-
-    friend class BinaryTree; // class BinaryTree can now access data directly
-};
-
-
-class BinaryTree
-
-{
-
-f(Node n)
-{
-
-Node *ptr = n;
-ptr->data;
-
-}
-
-
-}
-
-
-Points about freinds:
-*I****************
-
-1> Freinds can be declared at any access level(protected , public n all) but they can access private varirable
-
-2> Freinds are not inherited by a derived class
-
-32992221
-
-
-Freind function:
-*********************
-Member functions and friend functions are equally privileged (100% vested). The major
-difference is that a friend function is called like f(x), while a member function is called like x.f().
-Thus the ability to choose between member functions (x.f()) and friend functions (f(x)) allows a
-designer to select the syntax that is deemed most readable, which lowers maintenance costs.
-The major disadvantage of friend functions is that they require an extra line of code when you
-want dynamic binding. To get the effect of a virtual friend, the friend function should call a
-hidden (usually protected) virtual member function. This is called the Virtual Friend Function
-Idiom. For example:
-class Base {
-public:
-friend void f(Base& b);
-...
-protected:
-virtual void do_f();
-...
-};
-inline void f(Base& b)
-{
-b.do_f();
-}
-class Derived : public Base {
-public:
-...
-protected:
-virtual void do_f(); // "Override" the behavior of f(Base& b)
-...
-};
-void userCode(Base& b)
-{
-f(b);
-}
-The statement f(b) in userCode(Base&) will invoke b.do_f(), which is virtual. This means that
-Derived::do_f() will get control if b is actually a object of class Derived. Note that Derived
-overrides the behavior of the protected virtual member function do_f(); it does not have its own
-variation of the friend function, f(Base&).
-----------------------------------------------------------------------------------------------------------------
-
-if(Number != -1) {
-// use of container methods:
-br_stl::slist<int>::iterator Position =
-std::fin
-
+-------------------details of STL----------------------------------------------------
 Containers
 ====================
 The STL provides different kinds of containers which are all formulated as template
@@ -2872,8 +2730,7 @@ using namespace std;
 // (we don’t want to modify the values here)
 typedef const int* IteratorType;
 // prototype of the algorithm
-	IteratorType find(IteratorType begin, IteratorType end,
-	const int& Value);
+	IteratorType find(IteratorType begin, IteratorType end,const int& Value);
 	int main() {
 		const int Count = 100;
 		int aContainer[Count]; // define container
@@ -2942,138 +2799,177 @@ together and which can be of different types.
 
 template <class T1, class T2>
 struct pair {
-T1 first;
-T2 second;
-pair(){}; // see text
-// initialize first with x and second with y:
-pair(const T1& x, const T2& y);
-// copy constructor:
-template<class U, class V> pair(const pair<U, V> &p);
+	T1 first;
+	T2 second;
+	pair(){}; // see text
+	// initialize first with x and second with y:
+	pair(const T1& x, const T2& y);
+	// copy constructor:
+	template<class U, class V> pair(const pair<U, V> &p);
 };
+
 The default constructor causes the elements to be initiated with the default constructors
 of their type. In addition to the class definition, there are some comparison
 operators:
 template <class T1, class T2>
-bool operator==(const pair<T1, T2>& x,
-const pair<T1, T2>& y) {
-return x.first == y.first && x.second == y.second;
+bool operator==(const pair<T1, T2>& x,const pair<T1, T2>& y) {
+	return x.first == y.first && x.second == y.second;
 }
 
 template <class T1, class T2>
-bool operator<(const pair<T1, T2>& x,
-const pair<T1, T2>& y) {
-return x.first < y.first
-|| (!(y.first < x.first)
-&& x.second < y.second);
+bool operator<(const pair<T1, T2>& x,const pair<T1, T2>& y) {
+	return x.first < y.first || (!(y.first < x.first) && x.second < y.second);
 }
 
+Explaination : 
 When the first objects are equal, the return value of the < operator is determined
 by the comparison of the second objects. However, in order to make only minimum
-demands on the objects, the equality operator == is not used in the second template.
+demands on the objects, the equality operator == is not used in the second template.and (!(y.first < x.first)
+if y.first is only greater then it will return 1
 It might be the case that equality of two pairs is not required in a program.
 
 template <class T1, class T2>
-bool operator!=(const pair<T1, T2>& x,
-const pair<T1, T2>& y);
+bool operator!=(const pair<T1, T2>& x,const pair<T1, T2>& y);
+
 template <class T1, class T2>
-bool operator> (const pair<T1, T2>& x,
-const pair<T1, T2>& y);
+bool operator> (const pair<T1, T2>& x,const pair<T1, T2>& y);
+
 template <class T1, class T2>
-bool operator>=(const pair<T1, T2>& x,
-const pair<T1, T2>& y);
+bool operator>=(const pair<T1, T2>& x,const pair<T1, T2>& y);
+
 template <class T1, class T2>
-bool operator<=(const pair<T1, T2>& x,
-const pair<T1, T2>& y);
+bool operator<=(const pair<T1, T2>& x,const pair<T1, T2>& y);
 
 A function facilitates the generation of pairs:
 template <class T1, class T2>
 pair<T1, T2> make_pair(const T1& x, const T2& y) {
-return pair<T1, T2>(x, y);
+	return pair<T1, T2>(x, y);
 }
 
 Function objects:
 =======================
 
-Then an object can be called in the same way as a function. Algorithmic objects
+A object can be called in the same way as a function. Algorithmic objects
 of this kind are called function objects or functors.
 Functors are objects which behave like functions but have all the properties of
 objects. They can be generated, passed as arguments, or have their state modified.
 The change of state allows a flexible application which, with functions, would be
 only possible via additional parameters.
 
-Comparisons
+Comparisons:
+=======================
 The STL provides a large number of template classes for comparisons. Objects of
 this class appear later under the name of comparison object.
+
 template<class Arg1, class Arg2, class Result>
 struct binary_function {
-typedef Arg1 first_argument_type;
-typedef Arg2 second_argument_type;
-typedef Result result_type;
+	typedef Arg1 first_argument_type;
+	typedef Arg2 second_argument_type;
+	typedef Result result_type;
 };
 For unary classes, a corresponding template unary_function is defined. The
 word struct saves the public label. Everything can be public, because the class
 has no data to be protected. This, for example, is the equal_to template for equality:
-template<class T>
-struct equal_to : binary_function<T, T, bool> {
-bool operator()(const T& x, const T& y) const {
-return x == y;
-}
-};
+	template<class T>
+	struct equal_to : binary_function<T, T, bool> {
+		bool operator()(const T& x, const T& y) const {
+			return x == y;
+		}
+	};
 
-
+***Now lets use struct this as template Type to do a functional test, So we can pass any Algo
+like that as a functor to a single function shown below
 template<class T, class CompareType>
-void bubble_sort(T* array, int Count,
-const CompareType& Compare) {
-for(int i = 0; i < Count; ++i) {
-for(int j = i+1; j < Count; ++j)
-if (Compare(array[i], array[j])) { // functor call
-// exchange
-const T temp = array[i];
-array[i] = array[j];
-array[j] = temp;
-}
-}
-}
+void bubble_sort(T* array, int Count,const CompareType& Compare) {
+	for(int i = 0; i < Count; ++i) {
+		for(int j = i+1; j < Count; ++j)
+			if (Compare(array[i], array[j])) { // functor call
+			// exchange
+				const T temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+			}
+		}
+	}
 // Auxiliary procedure for display
 void Display(int *Array, int N) {
-for(int i = 0; i < N; ++i) {
-std::cout.width(7);
-std::cout << Array[i];
-}
-std::cout << std::endl;
+	for(int i = 0; i < N; ++i) {
+		std::cout.width(7);
+		std::cout << Array[i];
+   	}
+	std::cout << std::endl;
 }
 
 Function adapters
+==========================
 Function adapters are nothing more than function objects which cooperate with other
 function objects to adapt them to different requirements. This allows us to get by with
 existing functors and avoid writing new ones.
 not1
 The function not1 takes a functor as the parameter which represents a predicate
-with one argument (thus the suffix 1) and returns a functor which converts the
+with one argument (thus the suffix 1) and returns a functor which converts the return type to a 
+opposite one 
+Example: 
+Lets consider a function which is just a unary function 
+struct odd : public unary_function<int, bool> {
+	bool operator () (int x) const {
+	return (x % 2) != 0;
+	}
+};
+
+use odd : odd()(2)  # False
+Now lets use not1 which takes this funcyor as an argument and negate its outcome 
+
+not1(odd())(2)  # True
+not1 generates
+a functor whose operator () is called with the argument i. How does this work? The
+STL provides a class out of which not1 generates an object:
+
+template <class Predicate>
+class unary_negate : public unary_function<typename Predicate::argument_type, bool> {
+	
+	protected:
+		Predicate pred;
+	public:
+		explicit unary_negate(const Predicate& x) : pred(x) {}
+		bool operator()(const typename Predicate::argument_type& x) const {
+			return !pred(x);
+		}
+};
+
+bind1st, bind2nd
+These functions transform binary function objects into unary function objects by
+binding one of the two arguments to a value. They accept a function object with
+two arguments and a value x. They return a unary function object whose first or
+second argument is bound to the value x.
+
+Example :
+std::find(v.begin(), v.end(),std::bind2nd(std::less<int>(), 1000));
+finds the first number in the int vector v which is less than 1000,
+
+std::find(v.begin(), v.end(),std::bind1st(std::less<int>(), 1000));
+finds the first number in the int vector v which is greater than 1000
 
 
 Iterators :
 ==========================
-A preliminary remark: iterators closely cooperate with containers. A parallel presentation
-of iterators and containers in a sequential text is however difficult and probably
-not very clear, and for this reason the containers of the STL are described only in the
-following chapter.
+ iterators closely cooperate with containers. 
 // scheme of a simple iterator:
 template<class T>
-class Iterator {
-public:
-// constructors, destructor ....
-bool operator==(const Iterator<T>&) const;
-bool operator!=(const Iterator<T>&) const;
-Iterator<T>& operator++(); // prefix
-Iterator<T> operator++(int); // postfix
-T& operator*() const;
-T* operator->() const;
-private:
-// association with the container ...
+	class Iterator {
+		public:
+		// constructors, destructor ....
+		bool operator==(const Iterator<T>&) const;
+		bool operator!=(const Iterator<T>&) const;
+		Iterator<T>& operator++(); // prefix
+		Iterator<T> operator++(int); // postfix
+		T& operator*() const;
+		T* operator->() const;
+	private:
+		// association with the container ...
 };
 
-States
+States olf iterators
 ========================================
 Iterators are a generalization of pointers. They allow you to work with different
 containers in the same way. An iterator can assume several states.
@@ -3103,6 +2999,7 @@ The iterator I is advanced by N steps. For iterators that can move forward and
 
 
 Categories
+----------------
 The STL provides different iterators for the container in question. Each of these
 iterators can be assigned to one of the following five categories:
 • input iterator
@@ -3111,152 +3008,150 @@ iterators can be assigned to one of the following five categories:
 • bidirectional iterator
 • random access iterator
 * Reverse iterators
-A reverse iterator is always possible with a bidirectional iterator. A reverse iterator
-moves backward through a container by way of the ++ operation.
+	A reverse iterator is always possible with a bidirectional iterator. A reverse iterator
+	moves backward through a container by way of the ++ operation.
 *Const iterators
-The standard containers also provide iterators of the type const_iterator and
-const_reverse_iterator. These iterators are comparable to a pointer to const,
-e.g. const char*: they are not const but cannot be used to modify an element
-backward (bidirectional iterators) N may be negative.
+	The standard containers also provide iterators of the type const_iterator and
+	const_reverse_iterator. These iterators are comparable to a pointer to const,
+	e.g. const char*: they are not const but cannot be used to modify an element
+	backward (bidirectional iterators) N may be negative.
 Stream iterators
-Stream iterators are used to work directly with input and output streams. The following
-sections show how stream iterators are employed for reading and writing
-sequential files.
+	Stream iterators are used to work directly with input and output streams. The following
+	sections show how stream iterators are employed for reading and writing
+	sequential files.
 ---------------------------------------------------------------------
 ----------------------------------------------------------------------
 template<class T>
 class slist {
-public:
-/*Some types of the class get public names. Then it is possible to use them outside
-the class without knowing the implementation.
-*/
-typedef T value_type;
-typedef ptrdiff_t difference_type;
-typedef T* pointer;
-typedef T& reference;
-// etc. see text
-slist() : firstElement(0), Count(0) {}
+	public:
+	/*Some types of the class get public names. Then it is possible to use them outside
+	the class without knowing the implementation.
+	*/
+		typedef T value_type;
+		typedef ptrdiff_t difference_type;
+		typedef T* pointer;
+		typedef T& reference;
+	// etc. see text
+		slist() : firstElement(0), Count(0) {}
 /*copy constructor, destructor and assignment operator are omitted! The implementation
 of push_front() creates a new list element and inserts it at the beginning
 of the list:
 */
-void push_front(const T& Datum) { // insert at beginning
-firstElement = new ListElement(Datum, firstElement);
-++Count;
-}
-private:
-struct ListElement
-{
-T Data;
-ListElement *Next;
-ListElement(const T& Datum, ListElement* p)
-: Data(Datum), Next(p) {}
-};
-ListElement *firstElement;
-size_t Count;
-public:
-class iterator {
-public:
-typedef std::forward_iterator_tag iterator_category;
-typedef T value_type;
-typedef T* pointer;
-typedef T& reference;
-typedef size_t size_type;
-typedef ptrdiff_t difference_type;
-iterator(ListElement* Init = 0)
-: current(Init){}
+		void push_front(const T& Datum) { // insert at beginning
+			firstElement = new ListElement(Datum, firstElement);
+			++Count;
+		}
+	private:
+		struct ListElement
+		{
+			T Data;
+			ListElement *Next;
+			ListElement(const T& Datum, ListElement* p): Data(Datum), Next(p) {}
+		};
+		ListElement *firstElement;
+		size_t Count;
+public: class iterator {
+	public:
+		typedef std::forward_iterator_tag iterator_category;
+		typedef T value_type;
+		typedef T* pointer;
+		typedef T& reference;
+		typedef size_t size_type;
+		typedef ptrdiff_t difference_type;
+		iterator(ListElement* Init = 0): current(Init){}
 
-T& operator*() { // dereferencing
-return current->Data;
-}
-const T& operator*() const { // dereferencing
-return current->Data;
-}
-iterator& operator++() { // prefix
-if(current) // not yet arrived at the end?
-current = current->Next;
-return *this;
-}
-iterator operator++(int) { // postfix
-iterator temp = *this;
-++*this;
-return temp;
-}
-bool operator==(const iterator& x) const {
-return current == x.current;
-}
-bool operator!=(const iterator& x) const {
-return current != x.current;
-}
-private:
-ListElement* current; // pointer to current element
+		T& operator*() { // dereferencing
+			return current->Data;
+		}
+		const T& operator*() const { // dereferencing
+			return current->Data;
+		}
+		iterator& operator++() { // prefix
+			if(current) // not yet arrived at the end?
+				current = current->Next;
+			return *this;
+		}
+		iterator operator++(int) { // postfix
+			iterator temp = *this;
+			++*this;
+			return temp;
+		}
+		
+		bool operator==(const iterator& x) const {
+			return current == x.current;
+		}
+		
+		bool operator!=(const iterator& x) const {
+			return current != x.current;
+		}
+	private:
+		ListElement* current; // pointer to current element
 }; // iterator
 
 
 template<class Iterator>
-Iterator::difference_type operator-(Iterator second,
-Iterator first) {
-Iterator::difference_type count = 0; // type maybe int
+Iterator::difference_type operator-(Iterator second,Iterator first)
+{
+	Iterator::difference_type count = 0; // type maybe int
 /*The difference between the iterators is determined by incrementing first until the
 second iterator is reached. Thus, the condition is that first lies not after the second
 iterator. In other words: second must be able to reach the iterator by means of the
 ++ operator.
 */
-while(first != second
-&& first != Iterator()) {
-++first;
-++count;
-}
-// In case of inequality, second is not reachable by first
-assert(first == second);
-return count;
+	while(first != second && first != Iterator()) {
+		++first;
+		++count;
+	}
+	// In case of inequality, second is not reachable by first
+	assert(first == second);
+	return count;
 }
 
 if(Number != -1) {
 // use of container methods:
-br_stl::slist<int>::iterator Position =
-std::find(aContainer.begin(),
-aContainer.end(), Number);
-if(Position != aContainer.end())
-std::cout << "found at position "
-<< (Position - aContainer.begin())
-<< std::endl;
-else
-std::cout << Number << " not found!"
-<< std::endl;
+	br_stl::slist<int>::iterator Position =	std::find(aContainer.begin(),aContainer.end(), Number);
+	if(Position != aContainer.end())
+		std::cout << "found at position "<< (Position - aContainer.begin())<< std::endl;
+	else
+		std::cout << Number << " not found!"<< std::endl;
 }
 
-Containers 3
+Containers 
+========================================
 Summary: A container is an object that is used to manage other objects which in this
 context are called elements of the container. It deals with allocation and deallocation
 of memory and controls insertion and deletion of elements.
 
-In part, the STL containers are typical implicit data types in the sense of Section 1.2.
-They include vector, list, and deque. Other containers, in contrast, are abstract
-data types which are implemented by means of the implicit data types. These include
+In part, the STL containers are typical implicit data types in 
+They include vector, list, and deque.
+
+Other containers, in contrast, are abstract data types which are implemented by means of the implicit data types. 
+These include
 stack, queue, and priority_queue.
-Further abstract data types are set, map, multiset, and multimap. They are
-implemented by means of so-called red-black trees
+
+Further abstract data types are 
+set, map, multiset, and multimap. 
+They are implemented by means of so-called red-black trees
 
 
 Data type interface
+--------------------------------
 Each container provides a public set of data types that can be used in a program. The
-data type vector<int>::iterator has already been mentioned on page 9. It can
-be identical to a pointer type such as int*, but this is not compulsory.
+data type vector<int>::iterator . It can be identical to a pointer type such as int*, but this is not compulsory.
 The aim of data types is to ensure that the interface to a container in a program
 is unique at compile time.
-container data types required for user-defined containers
-and already provided by the containers of the STL
-Data type Meaning
-X::value_type T
-X::reference reference to container element
-X::const_reference ditto for read-only purposes
-X::iterator type of iterator
-X::const_iterator ditto, but cannot be used to modify an element
-X::difference_type signed integral type (see distance type, page 32)
-X::size_type unsigned integral type for size specifications
+container data types required for user-defined containers and already provided by the containers of the STL
+Data typ		 Meaning
+X::value_typ		 T
+X::reference 		reference to container element
+X::const_reference 	ditto for read-only purposes
+X::iterator 		type of iterator
+X::const_iterator 	ditto, but cannot be used to modify an element
+X::difference_typ	 signed integral type (see distance type, page 32)
+X::size_typ		 unsigned integral type for size specifications
 
 Container methods
+--------------------------------
 Each container provides a public set of methods which can be used in a program.
 The methods begin() and end()
 
@@ -3265,30 +3160,30 @@ can contain at most 32 767 elements. The current size, returned by the size() fu
 results from the distance between beginning and end, as calculated by the function
 distance(a.begin(), a.end(), n)
 Reversible containers
+--------------------------------
 Reversible containers allow iterators to traverse backward. Such iterators may be
 bidirectional and random access
 
-Return type method Meaning
-X() default constructor; creates empty container
-X(const X&) copy constructor
-~X() destructor; calls the destructors for all elements
-of the container
-iterator begin() beginning of the container
-const_iterator begin() beginning of the container
-iterator end() position after the last element
-const_iterator end() ditto
-size_type max_size() maximum possible container size (see text)
-size_type size() current size of the container (see text)
+Return type method 			Meaning
+X() 					default constructor; creates empty container
+X(const X&) 				copy constructor
+~X() 					destructor; calls the destructors for all elements of the container
+iterator begin() 			beginning of the container
+const_iterator begin() 			beginning of the container
+iterator end(				 position after the last element
+const_iterator end() 			ditto
+size_type max_size() 			maximum possible container size (see text)
+size_type size() 			current size of the container (see text)
 bool empty() size() == 0 or begin() == end()
-void swap(X&) swapping with argument container
-X& operator=(const X&) assignment operator
-bool operator==(const X&) operator ==
-bool operator!=(const X&) operator !=
-bool operator<(const X&) operator <
-bool operator>(const X&) operator >
-bool operator<=(const X&) operator <=
-bool operator>=(const X&) operator >=
-Table 3.2: Container methods
+void swap(X&) 				swapping with argument container
+X& operator=(const X&) 			assignment operator
+bool operator==(const X&) 		operator ==
+bool operator!=(const X&		 operator !=
+bool operator<(const X&)		 operator <
+bool operator>(const X&) 		operator >
+bool operator<=(const X&		 operator <=
+bool operator>=(const X&) 		operator >=
+
 
 X::reverse_iterator
 X::const_reverse_iterator
@@ -3298,6 +3193,7 @@ rend() // points to fictitious position before the first element
 
 
 Sequences
+========================================
 A sequence is a container whose elements are arranged in a strictly linear way Notation for intervals
 It is frequently necessary to specify intervals. For this purpose, the usual mathematical
 interval is used, where square brackets denote intervals including the boundary
@@ -3305,29 +3201,24 @@ values, and round parentheses denote intervals excluding the boundary values. Th
 [i, j) is an interval including i and excluding j. sequential container; i and j are of input iterator type; p and q are dereferenceable
 iterators; n is of type X::size_type and t is an element of type X::value_type.
 
-Return type method Meaning
-X(n, t) Creates a sequence of type X with n copies of
-t.
-X(i, j) Creates a sequence with the elements of the
-range [i, j) copied into the sequence.
-iterator insert(p, t) Copies a copy of t before the location p. The
-return value points to the inserted copy.
-void insert(p, n, t) Copies n copies of t before the location p.
-void insert(p, i, j) Copies the elements of the range [i, j) before
-the location p. i, j refer to another container
-than that for which insert() is called.
-iterator erase(q) Deletes the element pointed to by q. The returned
-iterator points to the element immediately
-following q prior to the deletion operation,
-provided it exists. Otherwise, end() is
-returned.
-iterator erase(q1, q2) Deletes the elements of the range [q1, q2).
-The returned iterator points to the element that
-pointed to q2 immediately prior to the deletion
-operation, provided it exists. Otherwise, end()
-is returned.
-void clear() Deletes all elements; corresponds to
-erase(begin(), end()).
+Return type metho		 Meaning
+X(n, t				 Creates a sequence of type X with n copies oft.
+X(i, j				 Creates a sequence with the elements of the
+range [i, j) 			copied into the sequence.
+iterator insert(p, t) 		Copies a copy of t before the location p. The return value points to the inserted copy.
+void insert(p, n, t		 Copies n copies of t before the location p.
+void insert(p, i, j) 		Copies the elements of the range [i, j) beforethe location p. i, j refer to another container
+				than that for which insert() is called.
+iterator erase(q) 		Deletes the element pointed to by q. The returned
+				iterator points to the element immediately
+				following q prior to the deletion operation,
+				provided it exists. Otherwise, end() is
+				returned.
+iterator erase(q1, q2) 		Deletes the elements of the range [q1, q2).
+
+void clear() 			Deletes all elements; corresponds to erase(begin(), end()).
+
+
 The STL contains three kinds of sequential containers, namely vector, list,
 and deque. A list (list) should be used when frequent insertions and deletions are
 needed somewhere in the middle. A queue with two ends (deque = double ended
@@ -3344,6 +3235,7 @@ X::const_pointer ditto, but cannot be used to modify container elements
 
 
 Vector
+========================================
 Now that all essential properties of a vector container have been described, let us
 look at some examples of its application. First, a vector with 10 places is filled with
 the numbers 0 to 9. At the end, the number 100 is appended,
@@ -3352,71 +3244,59 @@ the numbers 0 to 9. At the end, the number 100 is appended,
 #include<iostream>
 using namespace std;
 int main() {
-// an int vector of 10 elements
-vector<int> intV(10);
-for(size_t i = 0; i < intV.size(); ++i)
-intV[i] = i; // fill vector, random access
-// vector increases on demand
-intV.insert(intV.end(), 100); // append the number 100
-// use as array
-for(size_t i = 0; i < intV.size(); ++i)
-cout << intV[i] << endl;
-// use with an iterator
-for(vector<int>::iterator I = intV.begin();
-I != intV.end(); ++I)
-cout << *I << endl;
+	// an int vector of 10 elements
+	vector<int> intV(10);
+	for(size_t i = 0; i < intV.size(); ++i)
+	intV[i] = i; // fill vector, random access
+	// vector increases on demand
+	intV.insert(intV.end(), 100); // append the number 100
+	// use as array
+	for(size_t i = 0; i < intV.size(); ++i)
+	cout << intV[i] << endl;
+	// use with an iterator
+	for(vector<int>::iterator I = intV.begin();
+		I != intV.end(); ++I)
+	cout << *I << endl;
 
 
-Return type method Meaning
-void assign(n, t = T()) Deletes the container elements
-and subsequently inserts n elements
-t.
-void assign(i, j) Deletes the container elements
-and subsequently inserts the elements
-of the iterator range [i,
-j).
-reference front() Supplies a reference to the first element
-of a container.
-const_reference front() Ditto, but cannot be used to modify
-container elements.
-reference back() Supplies a reference to the last element
-of a container.
-const_reference back() Ditto, but cannot be used to modify
-container elements.
-void push_back(t) Inserts t at the end.
-void pop_back() Deletes the last element.
-void resize(n, t = T()) Changes the container size. n -
-size() elements t are inserted at
-the end or size()-n elements are
-deleted at the end, depending on
-whether n is greater or less than
-the current size.
-reverse_iterator rbegin() Returns the begin iterator for
-backward traversal. This iterator
-points to the last element.
-const_reverse_iterator rbegin() Ditto, but cannot be used to modify
-container elements.
-reverse_iterator rend() Returns the end iterator for backward
-traversal.
-const_reverse_iterator rend() Ditto, but cannot be used to modify
-container elements.
+Return type method 			Meaning
+void assign(n, t = T()) 		Deletes the container elements
+					and subsequently inserts n elements
+					t.
+void assign(i, j) 			Deletes the container elements
+					and subsequently inserts the elements
+					of the iterator range [i,j).
+reference front(			 Supplies a reference to the first element of a container.
+const_reference front() 		Ditto, but cannot be used to modify container elements.
+reference back() 			Supplies a reference to the last element of a container.
+const_reference back() 			Ditto, but cannot be used to modify container elements.
+void push_back(t) 			Inserts t at the end.
+void pop_back() 			Deletes the last element.
+void resize(n, t = T()) 		Changes the container size. n -size() elements t are inserted at
+					the end or size()-n elements are
+					deleted at the end, depending on
+					whether n is greater or less than the current size.
+reverse_iterator rbegin() 		Returns the begin iterator for backward traversal. This iterator
+					points to the last element.
+const_reverse_iterator rbegin() 	Ditto, but cannot be used to modify container elements.
+reverse_iterator rend(			 Returns the end iterator for backward traversal.
+const_reverse_iterator rend() 		Ditto, but cannot be used to modify, container elements.
 
 //swap() from Table 3.2 shows a very fast method for
 // swapping two vectors.
 newV.swap(intV);
 cout << "\n newV after swapping = ";
 for(size_t i = 0; i < newV.size(); ++i)
-cout << newV[i] << ’ ’; // old contents of intV
-cout << "\n\n intV = ";
+	cout << newV[i] << ’ ’; // old contents of intV
+	cout << "\n\n intV = ";
 for(size_t i = 0; i < intV.size(); ++i)
-cout << intV[i] << ’ ’; // old contents of newV
-cout << endl;
+	cout << intV[i] << ’ ’; // old contents of newV
+	cout << endl;
 }
 
 how an element is deleted which leads to a change in the number of elements. All
 elements following the deleted element shift by one position. This process is a timeconsuming
-operation. Finally, a reverse_iterator is used which traverses the
-container backward.
+operation. Finally, a reverse_iterator is used which traverses the container backward.
 #include<vector>
 #include<iostream>
 #include<string>
@@ -4373,6 +4253,147 @@ for_each(v.begin(), v.end(), display); // 2 2 2 2 2
 cout << endl;
 // with Increment object
 Increment anIncrement(7);
+
+
+
+
+--------------------------------------------------------------------------------------------
+
+
+The answer is that C++ utilizes a hidden pointer named “this”!
+class Simple
+ 
+{
+            void SetID(int nID) { m_nID = nID; }
+     
+}
+	Simple a ;
+	a.SetID(2);
+Although it looks like this function only has one parameter, it actually has two! When you call cSimple.SetID(2);, C++ internally converts this to 
+			SetID(&cSimple, 2);. 
+Note that this is just a normal function call where C++ has added a parameter, and automatically passed in the address of the class object!
+			
+			void SetID(Simple* const this, int nID) 
+			{ this->m_nID = = nID; }
+
+this is a const pointer — you can change the value of the object it points to, but you can not make it point to something else!
+Uses:
+1)
+	class Something
+
+	{
+ 
+
+	private:
+
+   		int nData;
+ 
+
+    		Something(int nData)
+
+    		{
+ 
+
+       			 this->nData = nData;
+
+    		}
+	}
+2) Returning *this will return a reference to the object that was implicitly passed to the function by C++.
+
+One use for this feature is that it allows a series of functions to be “chained” together, so that the output of one function becomes 
+the input of another function!
+
+
+4)-------------------------------------------------------------------------------------------------------------------------------------
+
+Freind class :
+*******************
+Friend  is a declaration to the compiler saying that it allowed to modify the private variables of a class by the freind function or class.
+
+
+Declaring as freind class one class to see the private variables of another class, even though these variables should probably not be made
+ part of the public  interface that the class supports
+
+class Node 
+{
+    private: 
+    	int data;
+    	int key;
+    // ...
+
+    friend class BinaryTree; // class BinaryTree can now access data directly
+};
+
+
+class BinaryTree
+
+{
+
+f(Node n)
+{
+
+Node *ptr = n;
+ptr->data;
+
+}
+
+
+}
+
+
+Points about freinds:
+*I****************
+
+1> Freinds can be declared at any access level(protected , public n all) but they can access private varirable
+
+2> Freinds are not inherited by a derived class
+
+32992221
+
+
+Freind function:
+*********************
+Member functions and friend functions are equally privileged (100% vested). The major
+difference is that a friend function is called like f(x), while a member function is called like x.f().
+Thus the ability to choose between member functions (x.f()) and friend functions (f(x)) allows a
+designer to select the syntax that is deemed most readable, which lowers maintenance costs.
+The major disadvantage of friend functions is that they require an extra line of code when you
+want dynamic binding. To get the effect of a virtual friend, the friend function should call a
+hidden (usually protected) virtual member function. This is called the Virtual Friend Function
+Idiom. For example:
+class Base {
+public:
+friend void f(Base& b);
+...
+protected:
+virtual void do_f();
+...
+};
+inline void f(Base& b)
+{
+b.do_f();
+}
+class Derived : public Base {
+public:
+...
+protected:
+virtual void do_f(); // "Override" the behavior of f(Base& b)
+...
+};
+void userCode(Base& b)
+{
+f(b);
+}
+The statement f(b) in userCode(Base&) will invoke b.do_f(), which is virtual. This means that
+Derived::do_f() will get control if b is actually a object of class Derived. Note that Derived
+overrides the behavior of the protected virtual member function do_f(); it does not have its own
+variation of the friend function, f(Base&).
+----------------------------------------------------------------------------------------------------------------
+
+if(Number != -1) {
+// use of container methods:
+br_stl::slist<int>::iterator Position =
+std::fin
 
 
 
