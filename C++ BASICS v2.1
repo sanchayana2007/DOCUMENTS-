@@ -2290,11 +2290,34 @@ alloc.deallocate(sp, 2); // and delete sp itself again.
 The STL contains sequence containers and associative containers. The standard sequence containers include vector,
  deque, and list. The standard associative containers are set, multiset, map, and multimap. There are also container adaptors
  queue, priority_queue, and stack, that are containers with specific interface, using other containers as implementation.
+
+
+Creating vectors:
+******************
+ // constructors used in the same order as described above:
+  std::vector<int> first;                                // empty vector of ints
+  std::vector<int> second (4,100);                       // four ints with value 100
+  std::vector<int> third (second.begin(),second.end());  // iterating through second
+  std::vector<int> fourth (third);                       // a copy of third
+
+  // the iterator constructor can also be used to construct from arrays:
+  int myints[] = {16,2,77,29};
+  std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+
+
+
+
+
+Modifiers:
+******************
+
+
 1) for(int i= 0 ; i<=6;i++)
                 d.push_back(i);
+                d.pop_back(); //Delete last element, effectively reducing the container size by one. No return 
 
 
-2)  d.insert(d.end(),1,0);  // one element wd value 0 at postion end(0
+2) d.insert(d.end(),1,0);  // one element wd value 0 at postion end(0
 
 3) d.insert(d.begin() + d.size()/2, 1, 1);// At postion middle
 
@@ -2302,19 +2325,78 @@ The STL contains sequence containers and associative containers. The standard se
 
 d.erase(d.begin() +3,d.begin() +5 );// erase at index 3 to 5 all 3 elemnts
 
+5) Assign 
+Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
+d.assign (7,100) // 7 ints with a value of 100
+iterator version of assign 
+std::vector<int>::iterator it;
+it=b.begin()+1;
 
+ d1.assign (it,first.end()-1); // the 5 central values of d
+
+
+6) Exchanges the value of the items 
+std::vector<int> foo (3,100);   // three ints with a value of 100
+std::vector<int> bar (5,200);   // five ints with a value of 200
+
+  foo.swap(bar);
+result:
+-----------
+foo contains: 200 200 200 200 200 
+bar contains: 100 100 100 
+
+7) d.clear() // Clears the content of the vector with no gurentee of the aloctaion  
+
+
+
+Element access:
+----------------
+// assign some values:
+  for (unsigned i=0; i<myvector.size(); i++)
+    myvector.at(i)=i;
+Access first/last element
+Returns a reference to the first/last element in the vector.
+Unlike member vector::begin/end, which returns an iterator just past this element, this function returns a direct reference
+myvector.back()
+myvector.front()
+
+Capacity:
+----------------
 4) d.resize(5) // resizee the vector its current size = 5 
+Resizes the container so that it contains n elements.
+myvector.resize(8,100);
 
 5) Their is no find function in vector
 
 6)  vector<int> *p= new vector<int>(6);
-    p->resize(7);
-7)as vectors grows by size the fuctionality is shown by capacity
+    p->resize(7); as vectors grows by size the fuctionality is shown by capacity
 
 
-d.size() ; // show the filled size with elemnts
-d.capacity() // Actual allocation it grows by a power of 2 when the previous elents are filled ... 2.4.8.16.....
+for (int i=0; i<100; i++) myvector.push_back(i);
 
+  std::cout << "size: " << myvector.size() << "\n"; // show the filled size with elemnts
+  std::cout << "capacity: " << myvector.capacity() << "\n";  // Actual allocation it grows by a power of 2 when the previous elents are filled ... 2.4.8.16....
+  std::cout << "max_size: " << myvector.max_size() << "\n";/ amx possible size
+o/p:
+size: 100
+capacity: 128
+max_size: 107374182
+
+d.size() ; 
+d.capacity().
+
+check for empty
+
+while (!myvector.empty())
+  {
+     sum += myvector.back();
+     myvector.pop_back();
+  }
+  
+  Sets the cpapacity of the vecot to 100 not 128which it would automatically take
+  bar.reserve(100);
+  
+  
 8) 2d vectors :
 ----------------------------------
 vector <vector<char> > my_2D_vector;
@@ -2329,10 +2411,6 @@ my_2D_vector[0].push_back('b');
 --------------
 1, a, b, c
 2, d, e, f
-
-
-
-
 
 -----------------------------------------------------------------------------------------------------------------------------
 Iterators:
@@ -2477,6 +2555,9 @@ is a generalization of a map or associative array abstract data type in which mo
    // insert two value_type objects in pairs
    pairs.insert(  multimap< int, double,less< int > >::value_type( 15, 2.7,) );
 ***********************************************************************************
+
+List:
+
 The list data structure is stored non-contiguously in memory. This allows the list data structure avoid the 
 reallocation (O(n) operation)experienced with vectors.
 The list data structure allocates and deallocates memory as needed; therefore, it does not allocate memory
