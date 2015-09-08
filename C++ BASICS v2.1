@@ -2630,40 +2630,7 @@ int main ()
 
 
 --------------------------------------------------------------------------------
-Regular expression
-A regular expression is an object defining a particular pattern to be matched against a sequence of characters
- using the tools of the standard regex library.
 
- :regex_match
- 
- *********************
- Returns whether the target sequence matches the regular expression rgx. The target sequence is either s or the character sequence between first and last,
- depending on the version used.
- 
-  std::string s ("subject");
-  std::regex e ("(sub)(.*)");  // match any thing after sub 
-  
-  std::smatch sm;    // same as std::match_results<string::const_iterator> sm;
-  std::regex_match (s,sm,e);
-  std::cout << "string object with " << sm.size() << " matches\n";
-
-  for (unsigned i=0; i<sm.size(); ++i) {   //3 mathes subject sub ject
-    std::cout << "[" << sm[i] << "] ";
-
-	regex_search:
- *********************
-Search sequence:
-Returns whether some sub-sequence in the target sequence (the subject) matches the regular expression rgx (the pattern). The target sequence is either s or the character sequence
-between first and last, depending on the version used.
-
- 
-  std::regex e ("\\b(sub)([^ ]*)");  // only letters begining wd sub
-  std::regex_search (s,m,e)
-  
-  
-  }
- 
- 
 
 -----------------------------------------------------------------------------
  class deque;
@@ -4217,8 +4184,8 @@ container. The definition is so short and simple that it is shown in its entiret
 template <class InputIterator, class Function>
 Function for_each(InputIterator first,
 while(first != last)
-f(*first++);
-return f;
+	f(*first++);
+		return f;
 }
 The returned object f is mostly ignored. However, the returned object can transport
 data outside the function body, e.g. the maximum value of the iterated sequence.
@@ -4230,32 +4197,65 @@ with the for_each algorithm, writes a vector on the standard output.
 #include<iostream>
 using namespace std;
 void display(int x) { // nonmutating function
-cout << x << ’ ’;
+	cout << x << ’ ’;
 }
 class Increment { // functor class
-public:
-Increment(int i = 1) : howmuch(i) {}
-void operator()(int& x) { // mutating operator
-x += howmuch;
-}
-private:
-int howmuch;
+	public:
+		Increment(int i = 1) : howmuch(i) {}
+		void operator()(int& x) { // mutating operator
+			x += howmuch;
+		}
+	private:
+		int howmuch;
 };
 int main() {
 vector<int> v(5); // vector of 5 zeros
 // v is not changed:
 for_each(v.begin(), v.end(), display); // 0 0 0 0 0
-cout << endl;
+	cout << endl;
 // with Increment constructor
 // v is changed by the functor, not by for_each:
 for_each(v.begin(), v.end(), Increment(2));
 for_each(v.begin(), v.end(), display); // 2 2 2 2 2
-cout << endl;
+	cout << endl;
 // with Increment object
 Increment anIncrement(7);
 
+--------------------------------------------------------------------------------------------
+Regular expression
+A regular expression is an object defining a particular pattern to be matched against a sequence of characters
+ using the tools of the standard regex library.
 
+ :regex_match
+ 
+ *********************
+ Returns whether the target sequence matches the regular expression rgx. The target sequence is either s or the character sequence between first and last,
+ depending on the version used.
+ 
+  std::string s ("subject");
+  std::regex e ("(sub)(.*)");  // match any thing after sub 
+  
+  std::smatch sm;    // same as std::match_results<string::const_iterator> sm;
+  std::regex_match (s,sm,e);
+  std::cout << "string object with " << sm.size() << " matches\n";
 
+  for (unsigned i=0; i<sm.size(); ++i) {   //3 mathes subject sub ject
+    std::cout << "[" << sm[i] << "] ";
+
+	regex_search:
+ *********************
+Search sequence:
+Returns whether some sub-sequence in the target sequence (the subject) matches the regular expression rgx (the pattern). The target sequence is either s or the character sequence
+between first and last, depending on the version used.
+
+ 
+  std::regex e ("\\b(sub)([^ ]*)");  // only letters begining wd sub
+  std::regex_search (s,m,e)
+  
+  
+  }
+ 
+ 
 
 --------------------------------------------------------------------------------------------
 
