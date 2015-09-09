@@ -3543,25 +3543,27 @@ operation. Finally, a reverse_iterator is used which traverses the container bac
 using namespace std;
 int main() {
 // a string vector of 4 elements
-vector<string> stringVec(4);
-stringVec[0] = "First";
-stringVec[1] = "Second";
-stringVec[2] = "Third";
-stringVec[3] = "Fourth";
-// vector increases size on demand
-stringVec.insert(stringVec.end(), string("Last"));
-cout << "size() = "
-<< stringVec.size() << endl; // 5
-// delete the element ‘Second’
-vector<string>::iterator I = stringVec.begin();
-++I; // 2nd position
-cout << "erase: "
-<< *I << endl;
-stringVec.erase(I); // delete Second
-cout << "size() = "
-<< stringVec.size() << endl; //
-for(I = stringVec.begin(); I != stringVec.end(); ++I)
-cout << *I << endl;
+	vector<string> stringVec(4);
+	stringVec[0] = "First";
+	stringVec[1] = "Second";
+	stringVec[2] = "Third";
+	stringVec[3] = "Fourth";
+	
+	// vector increases size on demand
+	stringVec.insert(stringVec.end(), string("Last"));
+	cout << "size() = "
+	<< stringVec.size() << endl; // 5
+	// delete the element ‘Second’
+	vector<string>::iterator I = stringVec.begin();
+	++I; // 2nd position
+	cout << "erase: "
+	<< *I << endl;
+	stringVec.erase(I); // delete Second
+	cout << "size() = "
+	<< stringVec.size() << endl; //
+	
+	for(I = stringVec.begin(); I != stringVec.end(); ++I)
+		cout << *I << endl;
 /* Output: First
 Third
 Fourth
@@ -3579,8 +3581,8 @@ time, that is O(1) in complexity notation (for example, pop_back()). Insertion
 or deletion of an element somewhere in the middle takes a time proportional
 
 List
-This example refers to the program on page 41 for the determination of identifiers
-contained in a file. It makes use of the Identifier class described there, with
+===========================================================================================
+ It makes use of the Identifier class described there, with
 the difference that the identifiers are not written into a file, but into a list which is
 subsequently displayed:
 // k3/list/identify/main.cpp
@@ -3590,41 +3592,40 @@ subsequently displayed:
 #include"identif.h"
 int main( ) {
 // define and open input file
-std::ifstream Source("main.cpp");
-std::list<Identifier> Identifier_list;
-std::istream_iterator<Identifier> iPos(Source), end;
+	std::ifstream Source("main.cpp");
+	std::list<Identifier> Identifier_list;
+	std::istream_iterator<Identifier> iPos(Source), end;
 
 Return type method Meaning
 reference operator[](n) Returns a reference to the nth element
 (usage: a[n], when a is the container).
-const_reference operator[](n) Ditto, but cannot be used to modify
+	const_reference operator[](n) Ditto, but cannot be used to modify
 container elements.
 reference at(n) Checks if n is within the valid range.
 If yes, a reference to the nth element
 is returned, otherwise an exception is
 thrown.
-const_reference at(n) Ditto, but cannot be used to modify
+	const_reference at(n) Ditto, but cannot be used to modify
 container elements.
 void reserve(n) Reserves memory space, so that the
-available space (capacity) exceeds the
-currently needed space. Aim: avoiding
-memory allocation operation during
-vector use.
-size_type capacity() Returns the capacity value (see
+	available space (capacity) exceeds the
+	currently needed space. 
+	
+	Aim: avoiding memory allocation operation during vector use.size_type capacity() Returns the capacity value (see
 reserve()). size() is always less
 than or equal to capacity().
 Table 3.6: Additional vector methods.
 if(iPos == end)
-std::cout << "File not found!" << std::endl;
+	std::cout << "File not found!" << std::endl;
 else
 while(iPos != end)
 // insert identifier and read next one
-Identifier_list.push_back(*iPos++);
+	Identifier_list.push_back(*iPos++);
 // output
 std::list<Identifier>::const_iterator
 I = Identifier_list.begin();
 while(I != Identifier_list.end())
-std::cout << *I++ << std::endl;
+	std::cout << *I++ << std::endl;
 }
 The structure of the main() programs resembles the one on page 43. This resemblance
 facilitates learning how to use iterators and containers. In contrast to the
@@ -3632,7 +3633,8 @@ vector, insert() and erase() do not invalidate iterators that point to elements 
 the list, with the exception of an iterator that points to an element to be deleted.
 In addition to the methods of Tables 3.2 to 3.5, list provides the methods
 
-Merging of sorted lists
+Merging of sorted lists:
+=======================================================
 Two small sorted lists are to be merged into one big sorted list. After the end of
 the process, the calling list contains all elements of the two lists, whereas the called
 list is empty. merge() is stable; thus, the relative order of the elements of a list is
@@ -3644,23 +3646,22 @@ maintained.
 void displayIntList(const std::list<int> & L) {
 std::list<int>::const_iterator I = L.begin();
 while(I != L.end())
-std::cout << *I++ << ’ ’;
-std::cout << " size() ="
-<< L.size() << std::endl;
+	std::cout << *I++ << ’ ’;
+	std::cout << " size() ="<< L.size() << std::endl;
 }
 int main( ) {
-std::list<int> L1, L2;
-// fill lists with sorted numbers
-for(int i = 0; i < 10; ++i) {
-L1.push_back(2*i); // even numbers
-L2.push_back(2*i+1); // odd numbers
-}
-displayIntList(L1); // 0 2 4 6 8 10 12 14 16 18 size() =10
-displayIntList(L2); // 1 3 5 7 9 11 13 15 17 19 size() =10
-L1.merge(L2); // merge
-displayIntList(L1);
-// 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 size() =20
-displayIntList(L2); // size() =0
+	std::list<int> L1, L2;
+	// fill lists with sorted numbers
+	for(int i = 0; i < 10; ++i) {
+	L1.push_back(2*i); // even numbers
+	L2.push_back(2*i+1); // odd numbers
+	}
+	displayIntList(L1); // 0 2 4 6 8 10 12 14 16 18 size() =10
+	displayIntList(L2); // 1 3 5 7 9 11 13 15 17 19 size() =10
+	L1.merge(L2); // merge
+	displayIntList(L1);
+	// 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 size() =20
+	displayIntList(L2); // size() =0
 }
 The example first outputs a list of even numbers and a list of odd numbers. After
 the merge() operation, the first list contains all the numbers; the second list is
@@ -3673,6 +3674,7 @@ cable into each other. Here, we talk about uniting lists. Of the possibilities l
 Table 3.7, we only look at how to transfer a section of a list into another list. From
 the previous example, only the line containing the merge() operation is substituted
 with the following program fragment:
+
 list<int>::iterator I = L2.begin();
 advance(I, 4); // 4 steps
 L1.splice(L1.begin(), L2, I, L2.end());
