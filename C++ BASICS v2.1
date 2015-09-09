@@ -2555,23 +2555,138 @@ is a generalization of a map or associative array abstract data type in which mo
    // insert two value_type objects in pairs
    pairs.insert(  multimap< int, double,less< int > >::value_type( 15, 2.7,) );
 ***********************************************************************************
+List
+Lists are sequence containers that allow constant time insert and erase operations anywhere within the sequence,
+and iteration in both directions.List containers are implemented as doubly-linked lists; Doubly linked lists can
+store each of the elements they contain in different and unrelated storage locations.
 
-List:
+Adv:
+-----------------------
+Compared to other base standard sequence containers (array, vector and deque), lists perform generally better in 
+inserting, 
+extracting 
+moving elements in any position within the container for which an iterator has already been obtained,
+and therefore also in algorithms that make intensive use of these, like sorting algorithms.
 
-The list data structure is stored non-contiguously in memory. This allows the list data structure avoid the 
-reallocation (O(n) operation)experienced with vectors.
-The list data structure allocates and deallocates memory as needed; therefore, it does not allocate memory
- that it is not currently using.
-Lists may hold primitive data types and user-defined classes or structs.
-Lists do not have random access ability like vectors (O(1) operation). Accessing a node in a list is an O(n)
- operation that requires a list traversal 
-  to find the node that needs to be accessed.
-Memory is freed when an element is removed from the list.
-List are efficient when inserting new elements at the ends of the list; this is an O(1) operation. 
-No shifting is required like with vectors.
+Disadv:
+-----------------------
+The main drawback of lists and forward_lists compared to these other sequence containers is that they lack direct 
+access to the elements by their position; For example, to access the sixth element in a list, one has to iterate from 
+a known position (like the beginning or the end) to that position.
 
-1) numbers.sort( );
-2)    list<int>::iterator fiveagain =  find( numbers.begin(), numbers.end(), 5 );
+Container properties
+-----------------------
+Sequence
+Elements in sequence containers are ordered in a strict linear sequence. Individual elements are accessed by their position in this sequence.
+Doubly-linked list
+Each element keeps information on how to locate the next and the previous elements, allowing constant time insert and erase operations before or after a specific element (even of entire ranges), but no direct random access.
+Allocator-aware
+The container uses an allocator object to dynamically handle its storage needs.
+
+List Creation:
+==============
+Constructor are ditto as Vectors al five types
+
+Iterators:
+--------------
+All are common to vectors except 
+
+1) rbegin/rend:
+=================
+for (std::list<int>::reverse_iterator rit=mylist.rbegin(); rit!=mylist.rend(); ++rit)
+    std::cout << ' ' << *rit;
+	
+Capacity:
+--------------
+empty , size , maxsize
+same implemented as vector
+
+Modifiers:
+-----------------
+All oters are same and this new two are dded 
+pushfront/popfront
+Value added/deleted in the front and increases or reduces size of the list 
+
+
+Operations:
+-----------
+
+Spliceing in Lists:
+Transfers elements from x into the container, inserting them at position.
+This effectively inserts those elements into the container and removes them from x, 
+altering the sizes of both containers. The operation does not involve the construction or 
+destruction of any element. They are transferred, no matter whether x is an lvalue or an
+rvalue, or whether the value_type supports move-construction or no
+
+ mylist1: 1 2 3 4
+ mylist2: 10 20 30
+ 
+ it = mylist1.begin();
+  ++it;                         // points to 2
+
+  mylist1.splice (it, mylist2); // mylist1: 1 10 20 30 2 3 4
+                                // mylist2 (empty)
+                                // "it" still points to 2 (the 5th element)
+
+								
+	mylist2.splice (mylist2.begin(),mylist1, it);
+                                // mylist1: 1 10 20 30 3 4
+                                // mylist2: 2
+                                // "it" is now invalid.
+  it = mylist1.begin();
+  std::advance(it,3);           // "it" points now to 30
+
+  mylist1.splice ( mylist1.begin(), mylist1, it, mylist1.end());
+                                // mylist1: 30 3 4 1 10 20
+								
+Remove:
+------------
+Removes from the container all the elements that compare equal to val. This calls the destructor
+ of these objects and reduces the container size by the number of elements removed.
+
+ mylist1.remove(20); // mylist1: 30 3 4 1 10 
+ 
+ 
+Unique:
+------------
+Remove duplicate values
+The version with no parameters (1), removes all but the first element from every consecutive group of equal elements in the container.
+
+Notice that an element is only removed from the list container if it compares equal to the element immediately preceding it. Thus, 
+this function is especially useful for sorted lists.
+
+// a binary predicate implemented as a function:
+bool same_integral_part (double first, double second)
+{ return ( int(first)==int(second) ); }
+
+// a binary predicate implemented as a class:
+struct is_near {
+  bool operator() (double first, double second)
+  { return (fabs(first-second)<5.0); }
+};
+	mylist.sort();             //  2.72,  3.14, 12.15, 12.77, 12.77,
+	mylist.unique();           //  2.72,  3.14, 12.15, 12.77
+	mylist.unique (same_integral_part);  //  2.72,  3.14, 12.15
+	mylist.unique (is_near());           //  2.72, 12.15, 72.25
+   								
+  
+
+merge:
+-----------
+1,2,72
+3,5,5
+
+first.merge(second);
+1,2,3,5,5,72
+// (second is now empty)
+
+
+
+reverse :
+--------------\
+This reverses the current list and the current list is a reverese list now
+  mylist.reverse();
+<int>::iterator fiveagain =  find( numbers.begin(), numbers.end(), 5 );
  // find the position of the number 5 in the list, O(n), but does not depend on the list being sorted
 
 3) // erase all the elements greater than 4
@@ -2585,8 +2700,6 @@ list<int>::iterator  itr = l.begin();
 advance(itr , 2); //incremnt the itr to 3rd elemnt
 *itr = 45; // vaue assign
 
-
-List :
    
 Code :(Use of Sort )
 ******************
