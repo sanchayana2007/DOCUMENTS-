@@ -3341,3 +3341,25 @@ else:
   the other methods will check for trhe whole dict 
    key = i % 10
     d[key] = d.get(key, 0) + 1
+	
+11. counting keyword in a strring 
+================================================================
+def name_freq(review_str,Names_list ):
+
+    total = 0
+    start = 0
+    for keyword in Names_list:
+       # print(keyword)
+        a= re.search(keyword,review_str,re.IGNORECASE)
+        if a is not None:
+            matches = re.compile(keyword,re.IGNORECASE)
+            while True:
+                mo = matches.search(review_str,start)
+              #  print(mo)
+                if mo is None:
+                    break
+                start = 1 + mo.start()
+                total = total +1
+            print(a.group(),total)
+        else :
+            print('No matches found for '+ keyword)
