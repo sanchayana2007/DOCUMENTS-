@@ -2266,7 +2266,7 @@ int main()
 {
  
 vector<string> vs;
-//lETS Invoke the allocator object
+//lETS Invoke the allocator object 
  
 allocator<string> alloc = vs.get_allocator(); // get the allocator
 // alloc. space for 3 strings
@@ -2303,8 +2303,6 @@ Creating vectors:
   // the iterator constructor can also be used to construct from arrays:
   int myints[] = {16,2,77,29};
   std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
-
-
 
 
 
@@ -2359,6 +2357,14 @@ Returns a reference to the first/last element in the vector.
 Unlike member vector::begin/end, which returns an iterator just past this element, this function returns a direct reference
 myvector.back()
 myvector.front()
+Using Iterators
+-----------------------
+
+for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
+
+
 
 Capacity:
 ----------------

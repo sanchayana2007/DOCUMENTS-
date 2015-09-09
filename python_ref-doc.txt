@@ -16,7 +16,9 @@ Python is an Interpretted language
 ++++++++++++++++++++++++++++++++++
 Interpreted : A high level language run and executed by an Interpreter(a program which converts the high-level language to machine code and then executing) on the go; It processes the program a little at a time.
 
-python is an interpreted language but it's not interpreted to the machine code, instead to some intermediate code(like byte-code or IL).That bytecode is either interpreted (note that there's a difference, both in theory and in practical performance, between interpreting directly and first compiling to some intermediate representation and interpret that), as with the reference implementation (CPython),
+python is an interpreted language but it's not interpreted to the machine code, instead to some intermediate code(like byte-code or IL).
+That bytecode is either interpreted (note that there's a difference, both in theory and in practical performance, between interpreting directly
+ and first compiling to some intermediate representation and interpret that), as with the reference implementation (CPython),
 
 
 
