@@ -2422,138 +2422,6 @@ container. The advantage of the const_iterator is that the compiler
 produces faster code when you use it. So you should use the const_iterator
 whenever you iterate over the container without modifying anything.
 
-
-
----------------------------
-Map:
---------------
-
-
-1) inserting elemetns
-***********************************
-// 1) Assignment using array index notation
-Employees["Mike C."] = 5234;
-Employees["Charlie M."] = 3374;
-
-// 2) Assignment using member function insert() and STL pair
-Employees.insert(std::pair<string,int>("David D.",1923));
-
-// 3) Assignment using member function insert() and "value_type()"
-Employees.insert(map<string,int>::value_type("John A.",7582));
-
-// 4) Assignment using member function insert() and "make_pair()"
-Employees.insert(std::make_pair("Peter Q.",5328));
-
-
-2) char *i ;
-                                map<int,string>::const_iterator itr= m1.begin();
-                                i = m1.find(data)->second; // find returns n iterator
-3)  MapType::iterator iter = my_map.begin();
-
-    // erase the first element using the erase function
-    my_map.erase(iter);
-	
-	
-int main()
-{ 
-    
-    map<string,string> m1;
-    m1.insert(make_pair("test1","1stElement"));
-    m1.insert(pair<string,string>("test2","2ndElment"));
-    m1["test3"] = "3rdElement";
-    m1.insert(map<string,string>::value_type("test4","4thElement"));
-    m1["test3"] = "3rdElement";
-    
-    map<string,string>::const_iterator itr = m1.begin();
-     for(;itr != m1.end();itr++)
-        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
-    
-    
-  // cout<< m1.find("yacck")->second;
-   cout<< m1.upper_bound("test2")->second<<endl; // next element
-   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
-    
-    //Count of all elements
-    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
-    itr = m1.find("test3")->second<<endl;
-    
-    int main()
-{ 
-    
-    map<string,string> m1;
-    m1.insert(make_pair("test1","1stElement"));
-    m1.insert(pair<string,string>("test2","2ndElment"));
-    m1["test3"] = "3rdElement";
-    m1.insert(map<string,string>::value_type("test4","4thElement"));
-    m1["test3"] = "3rdElement";
-    
-    map<string,string>::const_iterator itr = m1.begin();
-     for(;itr != m1.end();itr++)
-        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
-    
-    
-  // cout<< m1.find("yacck")->second;
-   cout<< m1.upper_bound("test2")->second<<endl; // next element
-   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
-    
-    //Count of all elements
-    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
-    itr = m1.find("test3")->second<<endl;
-    int main()
-{ 
-    
-    map<string,string> m1;
-    m1.insert(make_pair("test1","1stElement"));
-    m1.insert(pair<string,string>("test2","2ndElment"));
-    m1["test3"] = "3rdElement";
-    m1.insert(map<string,string>::value_type("test4","4thElement"));
-    m1["test3"] = "3rdElement";
-    
-    map<string,string>::const_iterator itr = m1.begin();
-     for(;itr != m1.end();itr++)
-        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
-    
-    
-  // cout<< m1.find("yacck")->second;
-   cout<< m1.upper_bound("test2")->second<<endl; // next element
-   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
-    
-    //Count of all elements
-    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
-    itr = m1.find("test3")->second<<endl;
-     //Count of all elements
-    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
-    itr = m1.find("te");
-    
-    if(itr == m1.end())
-    cout<<"not found";
-    
-   
-   
-   return 0;
-}
-    
-   
-   
-   return 0;
-}
-   
-   
-   return 0;
-}
-	
-	
-Multimap:
-------------------
-is a generalization of a map or associative array abstract data type in which more than one value may be
- associated with and returned for a given key.
- Both map and multimap are particular cases of containers . 
- 
-1) Insertion 
- multimap< int, double, less< int > > pairs; // declare the multimap pairs
-
-   // insert two value_type objects in pairs
-   pairs.insert(  multimap< int, double,less< int > >::value_type( 15, 2.7,) );
 ***********************************************************************************
 List
 Lists are sequence containers that allow constant time insert and erase operations anywhere within the sequence,
@@ -2765,7 +2633,218 @@ list<char>::iterator i;
     set1.insert(*i);
 The o/p of the set when displaye will b e a binary sorted key .
 
+map with a specific order rest all are same as map 
 
+
+
+
+Multiset:
+-----------
+Multiple-key set
+Multisets are containers that store elements following a specific order, and where multiple elements can have equivalent values.
+
+In a multiset, the value of an element also identifies it (the value is itself the key, of type T). The value of the elements in 
+a multiset cannot be modified once in the container (the elements are always const), but they can be inserted or removed from the 
+container.
+
+rest are same as set 
+
+
+
+---------------------------
+Map:
+--------------
+Internally, the elements in a map are always sorted by its key following a specific strict weak ordering criterion
+indicated by its internal comparison object (of type Compare). map containers are generally slower than unordered_map 
+containers to access individual elements by their key, but they allow the direct iteration on subsets based on their order.
+The mapped values in a map can be accessed directly by their corresponding key using the bracket operator ((operator[]).
+
+Maps are typically implemented as binary search trees.
+The elements are sorted according to the comparison object. If more than one element with equivalent keys is passed to the
+constructor, only the first one is preserved.
+
+
+
+
+Observers:
+key_comp
+------------------
+The comparison object of a map object is set on construction. Its type (member key_compare) is the third template parameter 
+of the map template. By default, this is a less object, which returns the same as operator<.
+//Lets declare the key_comp 
+std::map<char,int>::key_compare mycomp = mymap.key_comp();
+
+  mymap['a']=100;
+  mymap['b']=200;
+  mymap['c']=300;
+
+  std::cout << "mymap contains:\n";
+
+  std::map<char,int>::iterator it = mymap.begin();
+  do {
+    std::cout << it->first << " => " << it->second << '\n';
+  } while ( mycomp((*it++).first, 'c') );
+
+
+value_comp
+------------------
+Return value comparison object (public member function )
+
+
+Operations:
+-----------------
+
+find:
+-----
+Get iterator to element Searches the container for an element with a key equivalent to k and returns an 
+iterator to it if found, otherwise it returns an iterator to map::end.
+
+ it = mymap.find('b');
+  if (it != mymap.end())
+    mymap.erase (it);
+	
+Count	
+Count elements with a specific key Searches the container for elements with a key equivalent to k and returns
+the number of matches. Because all elements in a map container are unique, the function can only return 1
+ (if the element is found) or zero (otherwise).
+
+std::cout << c;
+    if (mymap.count(c)>0)
+
+Upper/lower Bound
+-----------------
+itlow=mymap.lower_bound ('b');  // itlow points to b
+  itup=mymap.upper_bound ('d');   // itup points to e (not d!)
+
+  mymap.erase(itlow,itup);        // erases [itlow,itup)
+  
+  
+
+1) inserting elemetns
+***********************************
+// 1) Assignment using array index notation
+Employees["Mike C."] = 5234;
+Employees["Charlie M."] = 3374;
+
+// 2) Assignment using member function insert() and STL pair
+Employees.insert(std::pair<string,int>("David D.",1923));
+
+// 3) Assignment using member function insert() and "value_type()"
+Employees.insert(map<string,int>::value_type("John A.",7582));
+
+// 4) Assignment using member function insert() and "make_pair()"
+Employees.insert(std::make_pair("Peter Q.",5328));
+
+
+2) char *i ;
+                                map<int,string>::const_iterator itr= m1.begin();
+                                i = m1.find(data)->second; // find returns n iterator
+3)  MapType::iterator iter = my_map.begin();
+
+    // erase the first element using the erase function
+    my_map.erase(iter);
+	
+	
+int main()
+{ 
+    
+    map<string,string> m1;
+    m1.insert(make_pair("test1","1stElement"));
+    m1.insert(pair<string,string>("test2","2ndElment"));
+    m1["test3"] = "3rdElement";
+    m1.insert(map<string,string>::value_type("test4","4thElement"));
+    m1["test3"] = "3rdElement";
+    
+    map<string,string>::const_iterator itr = m1.begin();
+     for(;itr != m1.end();itr++)
+        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
+    
+    
+  // cout<< m1.find("yacck")->second;
+   cout<< m1.upper_bound("test2")->second<<endl; // next element
+   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
+    
+    //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("test3")->second<<endl;
+    
+    int main()
+{ 
+    
+    map<string,string> m1;
+    m1.insert(make_pair("test1","1stElement"));
+    m1.insert(pair<string,string>("test2","2ndElment"));
+    m1["test3"] = "3rdElement";
+    m1.insert(map<string,string>::value_type("test4","4thElement"));
+    m1["test3"] = "3rdElement";
+    
+    map<string,string>::const_iterator itr = m1.begin();
+     for(;itr != m1.end();itr++)
+        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
+    
+    
+  // cout<< m1.find("yacck")->second;
+   cout<< m1.upper_bound("test2")->second<<endl; // next element
+   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
+    
+    //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("test3")->second<<endl;
+    int main()
+{ 
+    
+    map<string,string> m1;
+    m1.insert(make_pair("test1","1stElement"));
+    m1.insert(pair<string,string>("test2","2ndElment"));
+    m1["test3"] = "3rdElement";
+    m1.insert(map<string,string>::value_type("test4","4thElement"));
+    m1["test3"] = "3rdElement";
+    
+    map<string,string>::const_iterator itr = m1.begin();
+     for(;itr != m1.end();itr++)
+        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
+    
+    
+  // cout<< m1.find("yacck")->second;
+   cout<< m1.upper_bound("test2")->second<<endl; // next element
+   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
+    
+    //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("test3")->second<<endl;
+     //Count of all elements
+    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
+    itr = m1.find("te");
+    
+    if(itr == m1.end())
+    cout<<"not found";
+    
+   
+   
+   return 0;
+}
+    
+   
+   
+   return 0;
+}
+   
+   
+   return 0;
+}
+	
+	
+Multimap:
+------------------
+is a generalization of a map or associative array abstract data type in which more than one value may be
+ associated with and returned for a given key.
+ Both map and multimap are particular cases of containers . 
+ 
+1) Insertion 
+ multimap< int, double, less< int > > pairs; // declare the multimap pairs
+
+   // insert two value_type objects in pairs
+   pairs.insert(  multimap< int, double,less< int > >::value_type( 15, 2.7,) );
 
 -----------------------------------------------------------------------------------------------------------------------------
 
