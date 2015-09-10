@@ -3341,3 +3341,15 @@ else:
   the other methods will check for trhe whole dict 
    key = i % 10
     d[key] = d.get(key, 0) + 1
+    
+11. Select the string split 
+==============================================================================================================
+>>> line = 'asdf fjdk; afed, fjek,asdf,      foo'
+>>> import re
+>>> re.split(r'[;,\s]\s*', line)
+['asdf', 'fjdk', 'afed', 'fjek', 'asdf', 'foo']
+
+
+>> fields = re.split(r'(;|,|\s)\s*', line)
+>>> fields
+['asdf', ' ', 'fjdk', ';', 'afed', ',', 'fjek', ',', 'asdf', ',', 'foo']
