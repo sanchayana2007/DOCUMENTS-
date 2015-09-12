@@ -68,10 +68,10 @@ that behaves almost like one of the built-in types needs to be implemented, the 
 practice is to subtype it.
 
 How to get the methods in a class :
->>> import inspect
->>> inspect.getmembers(OptionParser, predicate=inspect.ismethod)
+ import inspect
+ inspect.getmembers(OptionParser, predicate=inspect.ismethod)
 [([('__init__', <unbound method OptionParser.__init__>),
-...
+   
  ('add_option', <unbound method OptionParser.add_option>),
  ('add_option_group', <unbound method OptionParser.add_option_group>),
  ('add_options', <unbound method OptionParser.add_options>),
@@ -176,8 +176,8 @@ Under the hood, this is the job of the bool() built-in function. This function d
 on the __bool__() method of a given object.
 The default __bool__() method returns True. We can see this with the
 following code:
->>> x = object()
->>> bool(x)
+ x = object()
+ bool(x)
 True
 
 
@@ -221,8 +221,8 @@ Now lets try the same thing of mixed classes
 We'll use the BlackJackCard class as an example to see what happens when we
 attempt comparisons where the two operands are from different classes.
 The following is a Card instance that we can compare against the int values:
->>> two = card21( 2, '♣' )
->>> two < 2
+ two = card21( 2, '♣' )
+ two < 2
 Traceback (most recent call last):
 File "<stdin>", line 1, in <module>
 TypeError: unorderable types: Number21Card() < int()
@@ -246,9 +246,9 @@ class DistinctDict(dict):
 			pass
 		super(distinctdict, self).__setitem__(key, value)
 		
->>> my = distinctdict()
->>> my['key'] = 'value'
->>> my['other_key'] = 'value'
+ my = distinctdict()
+ my['key'] = 'value'
+ my['other_key'] = 'value'
 
 Super :
 =====================
@@ -282,27 +282,27 @@ Heterogeneous Arguments
 Another issue with super usage is argument passing in initialization. How can a
 class call its base class __init__ code if it doesn't have the same signature? This
 leads to the following problem:
->>> class BaseBase(object):
-... def __init__(self):
-... print 'basebase'
-... super(BaseBase, self).__init__()
-...
->>> class Base1(BaseBase):
-... def __init__(self):
-... print 'base1'
-... super(Base1, self).__init__()
-...
->>> class Base2(BaseBase):
-... def __init__(self, arg):
-... print 'base2'
-... super(Base2, self).__init__()
-...
->>> class MyClass(Base1 , Base2):
-... def __init__(self, arg):
-... print 'my base'
-... super(MyClass, self).__init__(arg)
-...
->>> m = MyClass(10)
+ class BaseBase(object):
+    def __init__(self):
+    print 'basebase'
+    super(BaseBase, self).__init__()
+   
+ class Base1(BaseBase):
+    def __init__(self):
+    print 'base1'
+    super(Base1, self).__init__()
+   
+ class Base2(BaseBase):
+    def __init__(self, arg):
+    print 'base2'
+    super(Base2, self).__init__()
+   
+ class MyClass(Base1 , Base2):
+    def __init__(self, arg):
+    print 'my base'
+    super(MyClass, self).__init__(arg)
+   
+ m = MyClass(10)
 my base
 Traceback (most recent call last):
 File "<stdin>", line 1, in <module>
@@ -314,27 +314,27 @@ Heterogeneous Arguments
 Another issue with super usage is argument passing in initialization. How can a
 class call its base class __init__ code if it doesn't have the same signature? This
 leads to the following problem:
->>> class BaseBase(object):
+ class BaseBase(object):
  def __init__(self):
 	 print 'basebase'
 	super(BaseBase, self).__init__()
 
->>> class Base1(BaseBase):
+ class Base1(BaseBase):
  def __init__(self):
 	 print 'base1'
 	super(Base1, self).__init__()
 
->>> class Base2(BaseBase):
+ class Base2(BaseBase):
  def __init__(self, arg):
  	print 'base2'
  	super(Base2, self).__init__()
 
->>> class MyClass(Base1 , Base2):
+ class MyClass(Base1 , Base2):
 def __init__(self, arg):
  	print 'my base'
  	super(MyClass, self).__init__(arg)
 .
->>> m = MyClass(10)
+ m = MyClass(10)
 my base
 Traceback (most recent call last):
 File "<stdin>", line 1, in <module>
@@ -342,13 +342,13 @@ File "<stdin>", line 4, in __init__
 TypeError: __init__() takes exactly 1 argument (2 given)
 One solution would be to use *args and **kw magic, so that all constructors pass
 along all the parameters even if they do not use them:
->>> class BaseBase(object):
-... def __init__(self, *args, **kw):
-... print 'basebase'
-... super(BaseBase, self).__init__(*args, **kw)
-...
->>> class Base1(BaseBase):
-... def
+ class BaseBase(object):
+    def __init__(self, *args, **kw):
+    print 'basebase'
+    super(BaseBase, self).__init__(*args, **kw)
+   
+ class Base1(BaseBase):
+    def
 
 
 OOPS in python :
@@ -837,27 +837,27 @@ Since classes are objects, you can create them on the fly, like any object.
 
 First, you can create a class in a function using class:
 
-  >>> def choose_class(name):
-  ...     if name == 'foo':
-  ...         class Foo(object):
-  ...             pass
-  ...         return Foo # return the class, not an instance
-  ...     else:
-  ...         class Bar(object):
-  ...             pass
-  ...         return Bar
-  ...     
-  >>> MyClass = choose_class('foo') 
-  >>> print(MyClass) # the function returns a class, not an instance
+   def choose_class(name):
+          if name == 'foo':
+              class Foo(object):
+                  pass
+              return Foo # return the class, not an instance
+          else:
+              class Bar(object):
+                  pass
+              return Bar
+          
+   MyClass = choose_class('foo') 
+   print(MyClass) # the function returns a class, not an instance
   <class '__main__.Foo'>
-  >>> print(MyClass()) # you can create an object from this class
+   print(MyClass()) # you can create an object from this class
   <__main__.Foo object at 0x89c6d4c>
 
 Use of type in class:
 ****************************************
->>> print(type(ObjectCreator))
+ print(type(ObjectCreator))
 <type 'type'>
->>> print(type(ObjectCreator()))
+ print(type(ObjectCreator()))
 <class '__main__.ObjectCreator'>
 
 type works this way:
@@ -887,7 +887,7 @@ __class___ Atribute :
 **************************
 Class gives the class name of the type is followed up with 
 name = 'bob'
-  >>> name.__class__
+   name.__class__
   <type 'str'>
  
 c = Foo()
@@ -904,7 +904,7 @@ The __metaclass__ attribute:
 You can add a __metaclass__ attribute when you write a class:
 
 class Foo(object):
-  __metaclass__ = something...
+  __metaclass__ = something   
   [...]
 If you do so, Python will use the metaclass to create the class Foo.
 
@@ -1077,11 +1077,11 @@ It starts from the end and prints every next element  element
 Use of enumerate
 -------------------------------------
 refactored in a list comprehension like this:
->>> def _treatment(pos, element):
-... return '%d: %s' % (pos, element)
-...
->>> seq = ["one", "two", "three"]
->>> [_treatment(i, el) for i, el in enumerate(seq)]
+ def _treatment(pos, element):
+    return '%d: %s' % (pos, element)
+   
+ seq = ["one", "two", "three"]
+ [_treatment(i, el) for i, el in enumerate(seq)]
 ['0: one', '1: two', '2: three']
 
 
@@ -1129,14 +1129,14 @@ The sets module provides classes for constructing and manipulating unordered col
 Common uses include membership testing, removing duplicates from a sequence, and computing standard math
 operations on sets such as intersection, union, difference, and symmetric difference
 
->>> from sets import Set
->>> engineers = Set(['John', 'Jane', 'Jack', 'Janice'])
->>> programmers = Set(['Jack', 'Sam', 'Susan', 'Janice'])
->>> managers = Set(['Jane', 'Jack', 'Susan', 'Zack'])
->>> employees = engineers | programmers | managers           # union
->>> engineering_management = engineers & managers            # intersection
->>> fulltime_management = managers - engineers - programmers # difference
->>> engineers.add('Marvin')                                  # add element
+ from sets import Set
+ engineers = Set(['John', 'Jane', 'Jack', 'Janice'])
+ programmers = Set(['Jack', 'Sam', 'Susan', 'Janice'])
+ managers = Set(['Jane', 'Jack', 'Susan', 'Zack'])
+ employees = engineers | programmers | managers           # union
+ engineering_management = engineers & managers            # intersection
+ fulltime_management = managers - engineers - programmers # difference
+ engineers.add('Marvin')                                  # add element
 
 Spatialnet use of set 
 # scan for referenced poles (strip off the 'ST' from start of ID as not present in test db)
@@ -1169,9 +1169,9 @@ multiple argument
 def manyArgs(*arg):
   print "I was called with", len(arg), "arguments:", arg
 
->>> manyArgs(1)
+ manyArgs(1)
 I was called with 1 arguments: (1,)
->>> manyArgs(1, 2,3)
+ manyArgs(1, 2,3)
 I was called with 3 arguments: (1, 2, 3)	
 
 j_txt = _("jobs: ") 
@@ -1182,16 +1182,16 @@ This is typically used in 3 cases:
 
 In the interpreter: The _ name points to the result of the last executed statement in an interactive interpreter session. This was first done by the standard CPython interpreter, and others have followed too.
 
->>> _
+ _
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 NameError: name '_' is not defined
->>> 42
->>> _
+ 42
+ _
 42
->>> 'alright!' if _ else ':('
+ 'alright!' if _ else ':('
 'alright!'
->>> _
+ _
 'alright!'
 As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the next person reading your code to know that, by convention, a certain name is assigned but not intended to be used. 
 For instance, you may not be interested in the actual value of a loop counter:
@@ -1219,7 +1219,7 @@ One underline in the beginning
 Python doesn't have real private methods, so one underline in the beginning of a method or attribute means you shouldn't access this method, because it's not part of the API. It's very common when using properties:
 
 class BaseForm(StrAndUnicode):
-    ...
+       
     
     def _get_errors(self):
         "Returns an ErrorDict for the data provided for the form"
@@ -1254,7 +1254,7 @@ class B(A):
 
 b = B()
 b.method()
-and now the output is...
+and now the output is   
 
 $ python example.py
 I'm a method in A
@@ -1272,20 +1272,20 @@ Two underlines in the beginning and in the end
 When you see a method like __this__, the rule is simple: don't call it. Why? Because it means it's a method python calls,
  not you. Take a look:
 
->>> name = "igor"
->>> name.__len__()
+ name = "igor"
+ name.__len__()
 4
->>> len(name)
+ len(name)
 4
 
->>> number = 10
->>> number.__add__(20)
+ number = 10
+ number.__add__(20)
 30
->>> number + 20
+ number + 20
 30
 There is always an operator or native function that calls these magic methods. The idea here is to give you the ability 
 to override operators in your own classes. Sometimes it's just a hook python calls in specific situations. __init__(), 
-for example, is called when the object is created so you can initialize it. __new__() is called to build the instance, and so on...
+for example, is called when the object is created so you can initialize it. __new__() is called to build the instance, and so on   
 
 Here's an example:
 
@@ -1378,26 +1378,26 @@ lambda Functions:
 ==================================================
 Python supports the creation of anonymous functions (i.e. functions that are not bound to a name) at runtime, 
 diffrence between two functions
->>> def f (x): return x**2
-... 
->>> print f(8)
+ def f (x): return x**2
+    
+ print f(8)
 64
->>> 
->>> g = lambda x: x**2
->>> 
->>> print g(8)
+ 
+ g = lambda x: x**2
+ 
+ print g(8)
 64
 
 
->>> def make_incrementor (n): return lambda x: x + n
->>> 
->>> f = make_incrementor(2)
->>> g = make_incrementor(6)
->>> 
->>> print f(42), g(42)
+ def make_incrementor (n): return lambda x: x + n
+ 
+ f = make_incrementor(2)
+ g = make_incrementor(6)
+ 
+ print f(42), g(42)
 44 48
->>> 
->>> print make_incrementor(22)(33)
+ 
+ print make_incrementor(22)(33)
 55
 The above code defines a function "make_inrementor" that creates an anonymous function on the fly and returns it. The returned function increments its argument by the value that was specified when it was created.
 
@@ -1585,8 +1585,8 @@ class and objects:
 Class declaration in python
 
 class a:
- ... 
- ...
+     
+    
 
 new way of class declaration in Python
 
@@ -1625,31 +1625,31 @@ When abstractmethod() is applied in combination with other method descriptors, i
 class C(metaclass=ABCMeta):
     @abstractmethod
     def my_abstract_method(self, ...):
-        ...
+           
     @classmethod
     @abstractmethod
     def my_abstract_classmethod(cls, ...):
-        ...
+           
     @staticmethod
     @abstractmethod
     def my_abstract_staticmethod(...):
-        ...
+           
 
     @property
     @abstractmethod
     def my_abstract_property(self):
-        ...
+           
     @my_abstract_property.setter
     @abstractmethod
     def my_abstract_property(self, val):
-        ...
+           
 
     @abstractmethod
     def _get_x(self):
-        ...
+           
     @abstractmethod
     def _set_x(self, val):
-        ...
+           
     x = property(_get_x, _set_x)
 
 
@@ -1712,29 +1712,29 @@ Iterables
 
 When you create a list, you can read its items one by one, and it's called iteration:
 
->>> mylist = [1, 2, 3]
->>> for i in mylist:
-...    print(i)
+ mylist = [1, 2, 3]
+ for i in mylist:
+       print(i)
 1
 2
 3
 Mylist is an iterable. When you use a list comprehension, you create a list, and so an iterable:
 
->>> mylist = [x*x for x in range(3)]
->>> for i in mylist:
-...    print(i)
+ mylist = [x*x for x in range(3)]
+ for i in mylist:
+       print(i)
 0
 1
 4
-Everything you can use "for... in..." on is an iterable: lists, strings, files... These iterables are handy because you can read them as much as you wish, but you store all the values in memory and it's not always what you want when you have a lot of values.
+Everything you can use "for    in..." on is an iterable: lists, strings, files    These iterables are handy because you can read them as much as you wish, but you store all the values in memory and it's not always what you want when you have a lot of values.
 
 Generators
 
 Generators are iterators, but you can only iterate over them once. It's because they do not store all the values in memory, they generate the values on the fly:
 
->>> mygenerator = (x*x for x in range(3))
->>> for i in mygenerator:
-...    print(i)
+ mygenerator = (x*x for x in range(3))
+ for i in mygenerator:
+       print(i)
 0
 1
 4
@@ -1744,16 +1744,16 @@ Yield
 =============
 Yield is a keyword that is used like return, except the function will return a generator.
 
->>> def createGenerator():
-...    mylist = range(3)
-...    for i in mylist:
-...        yield i*i
-...
->>> mygenerator = createGenerator() # create a generator
->>> print(mygenerator) # mygenerator is an object!
+ def createGenerator():
+       mylist = range(3)
+       for i in mylist:
+           yield i*i
+   
+ mygenerator = createGenerator() # create a generator
+ print(mygenerator) # mygenerator is an object!
 <generator object createGenerator at 0xb7555c34>
->>> for i in mygenerator:
-...     print(i)
+ for i in mygenerator:
+        print(i)
 0
 1
 4
@@ -1784,7 +1784,7 @@ i = iter([1,2,3,4])
 1
 >> i.next()
 2
-... like that 
+    like that 
 the way this is implemented is by using two methods 
 a) next, which returns the next item of the container
 b) __iter__, which returns the iterator itself
@@ -1806,7 +1806,7 @@ class myiter(object):
 		
 >>i =  myiter(5)
 >> for el in MyIterator(4):
-... print el
+    print el
 
 Generators :
 -------------------------------------------------------------
@@ -1846,22 +1846,22 @@ close acts in the same way, but raises a specific exception: GeneratorExit.
 In that case, the generator function must raise GeneratorExit again, or
 StopIteration.
 Therefore, a typical template for a generator would look like the following:
->>> def my_generator():
-... try:
-... yield 'something'
-... except ValueError:
-... yield 'dealing with the exception'
-... finally:
-... print "ok let's clean"
-...
->>> gen = my_generator()
->>> gen.next()
+ def my_generator():
+    try:
+    yield 'something'
+    except ValueError:
+    yield 'dealing with the exception'
+    finally:
+    print "ok let's clean"
+   
+ gen = my_generator()
+ gen.next()
 'something'
->>> gen.throw(ValueError('mean mean mean'))
+ gen.throw(ValueError('mean mean mean'))
 'dealing with the exception'
->>> gen.close()
+ gen.close()
 ok let's clean
->>> gen.next()
+ gen.next()
 Traceback (most recent
 The itertools Module
 ================================================================================
@@ -1890,14 +1890,14 @@ An iterator consumes the sequence it works with. There is no turning back. tee
 provides a pattern to run several iterators over a sequence. This helps us to run over
 the data again, if provided with the information of the first run
 
->>> import itertools
->>> def with_head(iterable, headsize=1):
-... a, b = itertools.tee(iterable)
-... return list(itertools.islice(a, headsize)), b
-...
->>> with_head(seq)
+ import itertools
+ def with_head(iterable, headsize=1):
+    a, b = itertools.tee(iterable)
+    return list(itertools.islice(a, headsize)), b
+   
+ with_head(seq)
 ([1], <itertools.tee object at 0x100c698>)
->>> with_head(seq, 4)
+ with_head(seq, 4)
 ([1, 2, 3, 4], <itertools.tee object at 0x100c670>)
 In this function, if two iterators are generated with tee, then the first one is used
 with islice to get the first headsize elements of the iteration, and return them as
@@ -1909,19 +1909,19 @@ work over the whole sequence.
  It is able to group the duplicate elements from an iterator, as long as they are adjacent. A function can
 be given to the function for it to compare the elements
 Just a few lines are necessary with groupby to obtain RLE:
->>> from itertools import groupby
->>> def compress(data):
-... return ((len(list(group)), name)
-... for name, group in groupby(data))
-...
->>> def decompress(data):
-... return (car * size for size, car in data)
-...
->>> list(compress('get uuuuuuuuuuuuuuuuuup'))
+ from itertools import groupby
+ def compress(data):
+    return ((len(list(group)), name)
+    for name, group in groupby(data))
+   
+ def decompress(data):
+    return (car * size for size, car in data)
+   
+ list(compress('get uuuuuuuuuuuuuuuuuup'))
 [(1, 'g'), (1, 'e'), (1, 't'), (1, ' '),
 (18, 'u'), (1, 'p')]
->>> compressed = compress('get uuuuuuuuuuuuuuuuuup')
->>> ''.join(decompress(compressed))
+ compressed = compress('get uuuuuuuuuuuuuuuuuup')
+ ''.join(decompress(compressed))
 'get uuuuuuuuuuuuuuuuuup
 
 These function are used to make utilities for a ode libarary 
@@ -1931,9 +1931,9 @@ These function are used to make utilities for a ode libarary
 Others are:
 ------------------------------
 Infinite Iterators:
-# count(10) --> 10 11 12 13 14 ...
-# count(2.5, 0.5) -> 2.5 3.0 3.5 ...
-# cycle('ABCD') --> A B C D A B C D A B C D ...
+# count(10) --> 10 11 12 13 14    
+# count(2.5, 0.5) -> 2.5 3.0 3.5    
+# cycle('ABCD') --> A B C D A B C D A B C D    
 # repeat(10, 3) --> 10 10 10
 Iterators terminating on the shortest input sequence:
 # chain('ABC', 'DEF') --> A B C D E F
@@ -1954,25 +1954,25 @@ repr in python :
 Module provides a means for producing object representations with limits on the size of the resulting strings. This is 
 used in the Python debugger and may be useful in other contexts 
 
->>> x = 'foo'
->>> x
+ x = 'foo'
+ x
 'foo'
 So the name x is attached to 'foo' string. When you call for example repr(x) the iterpreter put 'foo' instead of x and
 then calls repr('foo').
 
->>> repr(x)
+ repr(x)
 "'foo'"
->>> x.__repr__()
+ x.__repr__()
 "'foo'"
 repr actually calls a magic method __repr__ of x, which gives a string containing the representation of the value 'foo'
 assigned to x. So it returns 'foo' inside the string "" resulting in "'foo'". The idea of repr is to give a string which
 contains a series of symbols which we can type in the interpreter and get the same value which was sent as an argument to repr.
 
->>> eval("'foo'")
+ eval("'foo'")
 'foo'
 When we call eval("'foo'"), it's the same as we type 'foo' in the interpreter. It's as we directly type the contents of the outer string "" in the interpreter.
 
->>> eval('foo')
+ eval('foo')
 
 Traceback (most recent call last):
   File "<pyshell#5>", line 1, in <module>
@@ -1981,11 +1981,11 @@ Traceback (most recent call last):
 NameError: name 'foo' is not defined
 If we call eval('foo'), it's the same as we type foo in the interpreter. But there is no foo variable an the exception is raised.
 
->>> str(x)
+ str(x)
 'foo'
->>> x.__str__()
+ x.__str__()
 'foo'
->>> 
+ 
 
 
 
@@ -1996,15 +1996,15 @@ Exception Handling:
 ==============================
 Type of Errors:
 
->>> 10 * (1/0)
+ 10 * (1/0)
 Traceback (most recent call last):
   File "<stdin>", line 1, in ?
 ZeroDivisionError: integer division or modulo by zero
->>> 4 + spam*3
+ 4 + spam*3
 Traceback (most recent call last):
   File "<stdin>", line 1, in ?
 NameError: name 'spam' is not defined
->>> '2' + 2
+ '2' + 2
 Traceback (most recent call last):
   File "<stdin>", line 1, in ?
 TypeError: cannot concatenate 'str' and 'int' objects
@@ -2094,7 +2094,7 @@ def getTalk(type="shout"):
 
 # And you can even use it directly if you feel wild:
 	print getTalk("whisper")()
-#outputs : yes...
+#outputs : yes   
 But wait, there is more. If you can return a function, then you can pass one as a parameter:
 
 def doSomethingBefore(func): 
@@ -2426,7 +2426,7 @@ def lazy_function():
     print "zzzzzzzz"
 
 #outputs: I am a ordinary function
-It's exactly the same. "my_decorator" is called. So when you @my_decorator, you are telling Python to call the function 'labeled by the variable "my_decorator"'. It's important, because the label you give can point directly to the decorator... or not! Let's start to be evil!
+It's exactly the same. "my_decorator" is called. So when you @my_decorator, you are telling Python to call the function 'labeled by the variable "my_decorator"'. It's important, because the label you give can point directly to the decorator    or not! Let's start to be evil!
 
 def decorator_maker():
 
@@ -2742,7 +2742,7 @@ def get_random_futurama_quote():
     for key, value in conn.getresponse().getheaders():
         if key.startswith("x-b") or key.startswith("x-f"):
             return value
-    return "No, I'm ... doesn't!"
+    return "No, I'm     doesn't!"
 
 print get_random_futurama_quote()
 print get_random_futurama_quote()
@@ -2897,6 +2897,498 @@ class Myprojcts():
 4. Context Provider
 ------------------------------------
 
+What is Multithreading?
+=============================================================================
+A thread is short for a thread of execution. A programmer can split his or her work
+into threads that run simultaneously and share the same memory context. 
+Multi-threading will benefit from a multiprocessor or multi-core
+machine and will parallelize each thread execution on each CPU, thus making the
+program faster.
+
+How Python Deals with Threads
+=============================
+Python uses multiple kernel-level threads that can each run any of the interpreter-level 
+threads. However, all threads accessing Python objects are serialized by one global lock. 
+This is done because much of the interpreter code as well as third-party C code is not
+thread-safe and need to be protected.
+This mechanism is called the Global Interpreter Lock (GIL)
+
+When threads contain only pure Python code, there is no point in using threads to
+speed up the program since the GIL will serialize it. However, multiple threads can
+do IO operations or execute C code in certain third-party extensions parallelly.
+
+Use of threads can be really useful in some cases. They can help in:
+Building responsive interfaces
+Delegating work
+Building multi-user applications
+
+Building Responsive Interfaces
+Let's say you ask your system to copy files from a folder to another through a
+graphical user interface. The task will possibly be pushed into the background
+and the windows will be constantly refreshed by the main thread, so you get live
+feedback on the operation. You will also be able to cancel the operation.
+
+Delegating Work
+If your process depends on third-party resources, threads might really speed up
+everything.Let's take the case of a function that indexes files in a folder and pushes the built
+indexes into a database. Depending on the type of file, the function calls a different
+external program.
+
+Starting a New Thread
+=============================================================================
+import thread
+import time
+
+# Define a function for the thread
+def print_time( threadName, delay):
+   count = 0
+   while count < 5:
+      time.sleep(delay)
+      count += 1
+      print "%s: %s" % ( threadName, time.ctime(time.time()) )
+
+# Create two threads as follows
+try:
+   thread.start_new_thread( print_time, ("Thread-1", 2, ) )
+   thread.start_new_thread( print_time, ("Thread-2", 4, ) )
+except:
+   print "Error: unable to start thread"
+
+while 1:
+   pass
+   
+When the above code is executed, it produces the following result −
+
+Thread-1: Thu Jan 22 15:42:17 2009
+Thread-1: Thu Jan 22 15:42:19 2009
+Thread-2: Thu Jan 22 15:42:19 2009
+Thread-1: Thu Jan 22 15:42:21 2009
+Thread-2: Thu Jan 22 15:42:23 2009
+Thread-1: Thu Jan 22 15:42:23 2009
+Thread-1: Thu Jan 22 15:42:25 2009
+
+Creating Thread Using Threading Module
+=============================================================================
+To implement a new thread using the threading module, you have to do the following −
+
+Define a new subclass of the Thread class.
+
+Override the __init__(self [,args]) method to add additional arguments.
+
+Then, override the run(self [,args]) method to implement what the thread should do when started.
+
+Once you have created the new Thread subclass, you can create an instance of it and then start a new thread by
+invoking the start(), which in turn calls run() method.
+
+Example
+#!/usr/bin/python
+
+import threading
+import time
+
+exitFlag = 0
+
+class myThread (threading.Thread):
+    def __init__(self, threadID, name, counter):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.counter = counter
+    def run(self):
+        print "Starting " + self.name
+        print_time(self.name, self.counter, 5)
+        print "Exiting " + self.name
+
+def print_time(threadName, delay, counter):
+    while counter:
+        if exitFlag:
+            thread.exit()
+        time.sleep(delay)
+        print "%s: %s" % (threadName, time.ctime(time.time()))
+        counter -= 1
+
+# Create new threads
+thread1 = myThread(1, "Thread-1", 1)
+thread2 = myThread(2, "Thread-2", 2)
+
+# Start new Threads
+thread1.start()
+thread2.start()
+
+print "Exiting Main Thread"
+When the above code is executed, it produces the following result −
+
+Starting Thread-1
+Starting Thread-2
+Exiting Main Thread
+Thread-1: Thu Mar 21 09:10:03 2013
+Thread-1: Thu Mar 21 09:10:04 2013
+Thread-2: Thu Mar 21 09:10:04 2013
+Thread-1: Thu Mar 21 09:10:05 2013
+Thread-1: Thu Mar 21 09:10:06 2013
+Thread-2: Thu Mar 21 09:10:06 2013
+Thread-1: Thu Mar 21 09:10:07 2013
+Exiting Thread-1
+Thread-2: Thu Mar 21 09:10:08 2013
+Thread-2: Thu Mar 21 09:10:10 2013
+Thread-2: Thu Mar 21 09:10:12 2013
+Exiting Thread-2
+
+
+Synchronizing Threads:
+=============================================================================
+The threading module provided with Python includes a simple-to-implement locking mechanism that allows you to synchronize threads.
+A new lock is created by calling the Lock() method, which returns the new lock.
+
+The acquire(blocking) method of the new lock object is used to force threads to run synchronously. 
+The optional blocking parameter enables you to control whether the thread waits to acquire the lock.
+
+If blocking is set to 0, the thread returns immediately with a 0 value if the lock cannot be acquired and with a 1 if the lock was acquired.
+ If blocking is set to 1, the thread blocks and wait for the lock to be released.
+
+The release() method of the new lock object is used to release the lock when it is no longer required.
+
+Example
+#!/usr/bin/python
+
+import threading
+import time
+
+class myThread (threading.Thread):
+    def __init__(self, threadID, name, counter):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.counter = counter
+    def run(self):
+        print "Starting " + self.name
+        # Get lock to synchronize threads
+        threadLock.acquire()
+        print_time(self.name, self.counter, 3)
+        # Free lock to release next thread
+        threadLock.release()
+
+def print_time(threadName, delay, counter):
+    while counter:
+        time.sleep(delay)
+        print "%s: %s" % (threadName, time.ctime(time.time()))
+        counter -= 1
+
+threadLock = threading.Lock()
+threads = []
+
+# Create new threads
+thread1 = myThread(1, "Thread-1", 1)
+thread2 = myThread(2, "Thread-2", 2)
+
+# Start new Threads
+thread1.start()
+thread2.start()
+
+# Add threads to thread list
+threads.append(thread1)
+threads.append(thread2)
+
+# Wait for all threads to complete
+for t in threads:
+    t.join()
+print "Exiting Main Thread"
+
+When the above code is executed, it produces the following result −
+
+Starting Thread-1
+Starting Thread-2
+Thread-1: Thu Mar 21 09:11:28 2013
+Thread-1: Thu Mar 21 09:11:29 2013
+Thread-1: Thu Mar 21 09:11:30 2013
+Thread-2: Thu Mar 21 09:11:32 2013
+Thread-2: Thu Mar 21 09:11:34 2013
+Thread-2: Thu Mar 21 09:11:36 2013
+Exiting Main Thread
+Multithreaded Priority Queue
+=============================================================================
+The Queue module allows you to create a new queue object that can hold a specific number of items. There are following methods to control the Queue −
+
+get(): The get() removes and returns an item from the queue.
+
+put(): The put adds item to a queue.
+
+qsize() : The qsize() returns the number of items that are currently in the queue.
+
+empty(): The empty( ) returns True if queue is empty; otherwise, False.
+
+full(): the full() returns True if queue is full; otherwise, False.
+
+Example
+#!/usr/bin/python
+
+import Queue
+import threading
+import time
+
+exitFlag = 0
+
+class myThread (threading.Thread):
+    def __init__(self, threadID, name, q):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.q = q
+    def run(self):
+        print "Starting " + self.name
+        process_data(self.name, self.q)
+        print "Exiting " + self.name
+
+def process_data(threadName, q):
+    while not exitFlag:
+        queueLock.acquire()
+        if not workQueue.empty():
+            data = q.get()
+            queueLock.release()
+            print "%s processing %s" % (threadName, data)
+        else:
+            queueLock.release()
+        time.sleep(1)
+
+threadList = ["Thread-1", "Thread-2", "Thread-3"]
+nameList = ["One", "Two", "Three", "Four", "Five"]
+queueLock = threading.Lock()
+workQueue = Queue.Queue(10)
+threads = []
+threadID = 1
+
+# Create new threads
+for tName in threadList:
+    thread = myThread(threadID, tName, workQueue)
+    thread.start()
+    threads.append(thread)
+    threadID += 1
+
+# Fill the queue
+queueLock.acquire()
+for word in nameList:
+    workQueue.put(word)
+queueLock.release()
+
+# Wait for queue to empty
+while not workQueue.empty():
+    pass
+
+# Notify threads it's time to exit
+exitFlag = 1
+
+# Wait for all threads to complete
+for t in threads:
+    t.join()
+print "Exiting Main Thread"
+When the above code is executed, it produces the following result −
+
+Starting Thread-1
+Starting Thread-2
+Starting Thread-3
+Thread-1 processing One
+Thread-2 processing Two
+Thread-3 processing Three
+Thread-1 processing Four
+Thread-2 processing Five
+Exiting Thread-3
+Exiting Thread-1
+Exiting Thread-2
+Exiting Main Thread
+
+Simple Example
+=============================================================================
+Let's take a small example of an application that recursively scans a directory to
+process text files. Each text file is opened and processed by an external converter.
+Using threads will possibly make it faster because the indexation work can be done
+simultaneously on several files.
+The external converter is a small Python program that does some complex work:
+#!/usr/bin/python
+	for i in range(100000):
+	i = str(i) + "y"*10000
+
+
+In a multi-threaded solution, the main program deals with a pool of threads. Each
+thread takes its work from a queue. In this use case, threads are called workers. The
+queue is the shared resource where the main program adds files it has found walking
+in the directory.It provides a multi-consumer, multiproducer 
+FIFO queue that internally uses a deque instance and is thread-safe.
+So if we want to process files that are in that queue, we just use the get method
+together with task_done, which lets the Queue instance know that the task has be
+finished for join to work:
+   
+The worker function, which will be called through a thread, takes file names from
+the queue and processes them by calling the index_file function. The sleep call
+simulates the process done by an external program, and makes the thread wait for
+the results, and therefore unlock the GIL.
+The main program can then launch workers, scan for files to be processed, and feed
+the queue with them.
+This is done by creating Thread instances with the worker method. The setDaemon
+is necessary so that the threads automatically get shut down when the program exits.
+Otherwise, the program would hang forever waiting for them to exit. This can be
+manually managed but it is not useful here.
+At the end of the index_files function, the join method will wait for the queue to
+be fully processed.
+Let's create a full script called indexer.py that runs a multithreaded version, and a
+single thread to index a directory structure containing text files:
+
+
+from threading import Thread
+import os
+import subprocess
+from Queue import Queue
+import logging
+import time
+import sys
+from pbp.scripts.profiler import profile, print_stats
+dirname = os.path.realpath(os.path.dirname(__file__))
+CONVERTER = os.path.join(dirname, 'converter.py')
+q = Queue()
+
+def index_file(filename):
+	f = open(filename)
+	try:
+		content = f.read()
+		# process is here
+		subprocess.call([CONVERTER])
+		finally:
+		f.close()
+		
+def worker():
+	while True:
+		index_file(q.get())
+		q.task_done()
+		
+def index_files(files, num_workers):
+	for i in range(num_workers):
+		t = Thread(target=worker)
+		t.setDaemon(True)
+		t.start()
+		for file in files:
+			q.put(file)
+			q.join()
+			
+def get_text_files(dirname):
+	for root, dirs, files in os.walk(dirname):
+		for file in files:
+			if os.path.splitext(file)[-1] != '.txt':
+				continue
+			yield os.path.join(root, file)
+			
+@profile('process')
+def process(dirname, numthreads):
+	dirname = os.path.realpath(dirname)
+	if numthreads > 1:
+		index_files(get_text_files(dirname), numthreads)
+	else:
+		for f in get_text_files(dirname):
+			index_file(f)
+			
+if __name__ == '__main__':
+	process(sys.argv[1], int(sys.argv[2]))
+	print_stats()
+	
+	
+This script can be used with any directory as long as it contains text files. It takes two
+parameters:
+1. The name of the directory
+2. The number of threads
+When name of the directory is usedalone, no threads are launched and the directory
+is processed in the main thread.Let's run it directory containing 36 files with 19 text files.
+The directory is composed of a structure of 6 directories:
+$ python2 indexer.py zc.buildout-1.0.6-py2.5.egg 1
+process : 301.83 kstones, 6.821 secondes, 396 bytes
+$ python indexer.py zc.buildout-1.0.6-py2.5.egg 2
+
+
+Multiprocessing
+===============
+The GIL limitation makes it impossible to speed up programs that make heavy use
+of pure Python that is CPU bound. The only way to achieve it is to use separate
+processes. This is usually done by forking the program at some point. A fork is a
+system call available through os.fork, which will create a new child process. The
+two processes then continue the program in their own right after the forking:
+ import os
+ a = []
+ def some_work():
+    a.append(2)
+    child_pid = os.fork()
+    if child_pid == 0:
+    a.append(3)
+    print "hey, I am the child process"
+    print "my pid is %d" % os.getpid()
+    print str(a)
+    else:
+    a.append(4)
+    print "hey, I am the parent"
+    print "the child is pid %d" % child_pid
+    print "I am the pid %d " % os.getpid()
+    print str(a)
+   
+ some_work()
+hey, I am the parent
+the child is pid 25513
+I am the pid 25411
+[2, 4]
+hey, I am the child process
+my pid is
+
+The memory context is also copied at the fork and then each process deals with its
+own address space. To communicate, processes need to work with system-wide
+resources or use low-level tools like signals.
+
+Pyprocessing
+=============
+pyprocessing provides a portable way to work with processes as if they
+were threads.
+
+
+Caching
+========
+The result of a function or a method that is expensive to run can be cached as long as:
+The function is deterministic and results have the same value every time,
+given the same input.
+The return value of the function continues to be useful and valid for some
+period of time (non-deterministic).
+Good candidates for caching are usually:
+Results from callables that query databases
+Results from callables that render static values, like file content, web
+requests, or PDF rendering
+Results from deterministic callables that perform complex calculations
+Global mappings that keep track of values with expiration times, like web
+session objects
+Some data that needs to be accessed often and quickly
+Deterministic Caching:
+=====================
+A simple example of deterministic caching is a function that calculates a square.
+Keeping track of the results allows you to speed it up:
+ import random, timeit
+ from pbp.scripts.profiler import profile, print_stats
+ cache = {}
+ def square(n):
+    return n * n
+   
+ @profile(‘not cached’)
+    def factory_calls():
+    for i in xrange(100):
+    square(random.randint(1, 10))
+   
+ def cached_factory(n):
+    if n not in cache:
+    cache[n] = square(n)
+    return cache[n]
+   
+ @profile(‘cached’)
+    def cached_factory_calls():
+    n = [random.randint(1, 10) for i in range(100)]
+    ns = [cached_factory(i) for i in n]
+   
+ factory_calls(); cached_factory_calls();
+ print_stats()
+not cached : 20.51 kstones, 0.340 secondes, 396 bytes
+cached : 6.07 kstones, 0.142 secondes, 480 bytes
+
+
 
 OPTIMISATION OF APPLICATION S
 	
@@ -2937,8 +3429,8 @@ When the slow function is found, it is sometimes necessary to do more profiling
 work that tests just a part of the program. This is done by manually instrumenting a
 part of the code in a speed test.
 For instance, the cProfile module can be used from a decorator:
->>> import tempfile, os, cProfile, pstats
->>> def profile(column='time', list=5):
+ import tempfile, os, cProfile, pstats
+ def profile(column='time', list=5):
 	 def _profile(function):
 		def __profile(*args, **kw):
 			s = tempfile.mktemp()
@@ -2950,8 +3442,8 @@ For instance, the cProfile module can be used from a decorator:
 		return __profile
  	return _profile
 
->>> from myapp import main
->>> @profile('time', 6)
+ from myapp import main
+ @profile('time', 6)
     def main_profiled():
 
 
@@ -2994,19 +3486,19 @@ file handling:
 f = open('workfile', 'w')
 f.read()
 >> 'This is the entire file.\n'
->>> f.readline()
+ f.readline()
 'This is the first line of the file.\n'
->>> f.readline()
+ f.readline()
 'Second line of the file\n'
->>> f.readline()
+ f.readline()
 ''
->>> f = open('workfile', 'r+')
->>> f.write('0123456789abcdef')
->>> f.seek(5)     # Go to the 6th byte in the file
->>> f.read(1)
+ f = open('workfile', 'r+')
+ f.write('0123456789abcdef')
+ f.seek(5)     # Go to the 6th byte in the file
+ f.read(1)
 '5'
->>> f.seek(-3, 2) # Go to the 3rd byte before the end
->>> f.read(1)
+ f.seek(-3, 2) # Go to the 3rd byte before the end
+ f.read(1)
 'd'
 
 
@@ -3085,8 +3577,8 @@ find all will return you a tuples of all  the matching componenst
 
 
 Ex:
->>> p = re.compile('\d+')
->>> p.findall('12 drummers drumming, 11 pipers piping, 10 lords a-leaping')
+ p = re.compile('\d+')
+ p.findall('12 drummers drumming, 11 pipers piping, 10 lords a-leaping')
 ['12', '11', '10']
 
 Split :
@@ -3187,9 +3679,9 @@ Change@Me1
 ====================================
 from functools import partial
 lambdas = [(lambda : i for i in range(3)]
->>> lambdas[0]()
+ lambdas[0]()
 2
->>> lambdas[1]()
+ lambdas[1]()
 2
 
 Sol: 
@@ -3265,7 +3757,7 @@ for _ in (myClass().Function(things) for things in biggerThing):
 Soln:
 
 d = {key: value for (key, value) in iterable}
-Of course, you can use the iterable in any way you want (tuples and lists literals, generator comprehensions, list comprehensions, generator functions, functional composition... feel creative) as long as each element is an iterable itself of two elements:
+Of course, you can use the iterable in any way you want (tuples and lists literals, generator comprehensions, list comprehensions, generator functions, functional composition    feel creative) as long as each element is an iterable itself of two elements:
 
 d = {value: foo(value) for value in sequence if bar(value)}
 
@@ -3341,6 +3833,7 @@ else:
   the other methods will check for trhe whole dict 
    key = i % 10
     d[key] = d.get(key, 0) + 1
+<<<<<<< HEAD
 	
 11. counting keyword in a strring 
 ================================================================
@@ -3363,3 +3856,17 @@ def name_freq(review_str,Names_list ):
             print(a.group(),total)
         else :
             print('No matches found for '+ keyword)
+
+    
+11. Select the string split 
+==============================================================================================================
+ line = 'asdf fjdk; afed, fjek,asdf,      foo'
+ import re
+ re.split(r'[;,\s]\s*', line)
+['asdf', 'fjdk', 'afed', 'fjek', 'asdf', 'foo']
+
+
+>> fields = re.split(r'(;|,|\s)\s*', line)
+ fields
+['asdf', ' ', 'fjdk', ';', 'afed', ',', 'fjek', ',', 'asdf', ',', 'foo']
+>>>>>>> b54797adae915e70034bfb835fe66a5c02bf182f

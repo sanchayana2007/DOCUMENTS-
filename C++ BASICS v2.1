@@ -14,7 +14,7 @@ class Employee
         void     hire();     // Hires or rehires the employee
         void     fire();     // Dismisses the employee
         void     display();
-	
+		
    private:
        int         mSalary;
        bool        fHired;
@@ -524,12 +524,12 @@ This table is used to resolve the function call as it contains the addresses of 
 This is how dynamic binding is resolved during a virtual function call.
 
 
-                                                                                when a method is called on
+when a method is c alled on
 An object, the pointer is followed into the vtable and the appropriate version of the method is executed
 based on the type of the object, not the type of the variable used to access it.
 k,
 EX:
-                 Two classes, Super and Sub. Super declares two virtual methods, foo() and bar(). As
+     Two classes, Super and Sub. Super declares two virtual methods, foo() and bar(). As
 you can see by looking at Super s vtable, each method has its own implementation defined by the
 Super class. The Sub class does not override Super s version of foo(), so the Sub vtable points to the
 same implementation of foo(). Sub does, however, override bar(), so the vtable points to the new
@@ -1193,7 +1193,7 @@ make sense to the programmer in some circumstances. For example, you can cast a 
 other pointer type, even if they are unrelated by an inheritance hierarchy. Similarly, you can cast a refer-
 ence to one type to a reference to another type, even if the types are unrelated
 
-
+ n 
 class X {};
 class Y {};
 int main(int argc, char** argv)
@@ -1997,26 +1997,27 @@ The new operator calls a function It is operator new.
 // return is void*. Since this function returns a pointer to raw which is uptyped and uninitialized memory 
 large enough to hold an object of the specified type. 
 The size_t specifies how much memory to allocate. It knows nothing about constructors. All operator new understands is memory allocation. That's it.
-It is the job of the new operator to take the raw memory that the operator new returns and make it into an object. When a compiler sees the following line,
+It is the job of the new operator to take the raw memory that the operator new returns and make it into an object.
+When a compiler sees the following line,
 
 	string *ptrStr = new string("Where is my place in Memory?");
 the compiler generate a code something like this:
 
 1st step:	void *ptrRawMemory = operator new(sizeof(string));
-					It obtains raw memory for a string object.
+It obtains raw memory for a string object.
 
 2nd Step:	call string::string("Where is my place in Memory?") 
 		
 
 3rd step:
 	It then initialize the object in the memory by calling a constructor.
-
 	string *ptrStr = static_cast(ptrRawMemory);
+	
 The line of code above makes ptrString point to the new object.
-
 When we use a delete expression to delete a dynamically allocated object:
 
 delete ptr;
+
 two things happen. First, the appropriate destructor is run on the object to which ptr points. Then, the memory used by the object is 
 freed by calling a operator delete function.Unlike other operator functions, such as operator=, the operator new and operator delete functions 
 do not overload the new or delete.
@@ -2453,7 +2454,8 @@ Container properties
 Sequence
 Elements in sequence containers are ordered in a strict linear sequence. Individual elements are accessed by their position in this sequence.
 Doubly-linked list
-Each element keeps information on how to locate the next and the previous elements, allowing constant time insert and erase operations before or after a specific element (even of entire ranges), but no direct random access.
+Each element keeps information on how to locate the next and the previous elements, allowing constant time insert and erase operations before or
+after a specific element (even of entire ranges), but no direct random access.
 Allocator-aware
 The container uses an allocator object to dynamically handle its storage needs.
 
@@ -4929,7 +4931,7 @@ void write_file( char *filenames,char * filenamed)
 	else{
                 // obtain file size:
                 fseek (fps,0 ,SEEK_END);//Starting from 0 to final end position
-        y        lsize = ftell (fps);
+               lsize = ftell (fps);
                 rewind (fps);
                 result = fread (buff,1,lsize,fps);
 	    }
