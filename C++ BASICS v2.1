@@ -2874,6 +2874,32 @@ memeber:
 Comparator(when PQ needs to compare two elemnts ut calls compare, the compare gives the freedom to PQ to hold any kind of 
 elemtns)
 
+lude <queue>          // std::priority_queue
+
+int main ()
+{
+  std::priority_queue<int> mypq;
+
+  mypq.push(30);
+  mypq.push(100);
+  mypq.push(25);
+  mypq.push(40);
+
+  std::cout << "Popping out elements...";
+  while (!mypq.empty())
+  {
+     std::cout << ' ' << mypq.top();
+     mypq.pop();
+  }
+  std::cout << '\n';
+
+  return 0;
+}
+Output:
+Popping out elements... 100 40 30 25
+
+
+
 insertion in PQ:
 -------------------------
 If we keep ithe prority elements in a Binary sorted tree the insert and the search is going to take  Time = o(logn) which is fixed for any number of elemet
