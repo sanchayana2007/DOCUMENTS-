@@ -619,14 +619,6 @@ print (obj.__dict__)
 Properties:
 =======================
 
-class Parrot(object):
-    def __init__(self):
-        self._voltage = 100000
-
-    @property
-    def voltage(self):
-        """Get the current voltage."""
-        return self._voltage
 
 class Parrot(object):
     def __init__(self):
@@ -636,6 +628,7 @@ class Parrot(object):
     def voltage(self):
         """Get the current voltage."""
         return self._voltage
+        
 A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property with the corresponding accessor function set to the decorated function
 class C(object):
     def __init__(self):
