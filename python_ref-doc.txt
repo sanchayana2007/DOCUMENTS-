@@ -199,24 +199,30 @@ the string into bytes.
 for example a Implementation of comparison for objects of
 the same class
 We'll look at a simple same-class comparison by looking at a more complete
+
 BlackJackCard class:
 class BlackJackCard:
+
 def __init__( self, rank, suit, hard, soft ):
-self.rank= rank
-self.suit= suit
-self.hard= hard
-self.soft= soft
+	self.rank= rank
+	self.suit= suit
+	self.hard= hard
+	self.soft= soft
+	
 def __lt__( self, other ):
-if not isinstance( other, BlackJackCard ): return
-NotImplemented
-return self.rank < other.rank
+	if not isinstance( other, BlackJackCard ): 
+		return NotImplemented
+	return self.rank < other.rank
+	
 def __le__( self, other ):
-try:
-return self.rank <= other.rank
-except AttributeError:
-return NotImplemented
+	try:
+		return self.rank <= other.rank
+	except AttributeError:
+		return NotImplemented
+		
 def __gt__( self, other ):
-for objects
+	for objects
+	
 Now lets try the same thing of mixed classes
 We'll use the BlackJackCard class as an example to see what happens when we
 attempt comparisons where the two operands are from different classes.
@@ -229,7 +235,6 @@ TypeError: unorderable types: Number21Card() < int()
 
 
 **************************************************************************************************
-
 
 For a function dir output gives the same as above 
 The main use is to  inherit the base class for our use suppose the dict is inherited for inheritance 
