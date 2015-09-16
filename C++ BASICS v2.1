@@ -4922,6 +4922,46 @@ the cost of dynamic memory allocations), it might look something like this:
 
 template <typename T, unsigned length>
 class fixedVector { ... };
+
+Lets Jump to some another Unique use cases for the templates 
+
+template < parameter-list > declaration		
+
+Each parameter in parameter-list may be:
+a non-type template parameter;
+a type template parameter;
+a template template parameter.
+
+
+template<typename T> class my_array {};
+ 
+// 2 type template parameter; template parameters and one template template parameter:
+template<typename K, typename V, template<typename> typename C = my_array>
+class Map
+{
+    C<K> key;
+    C<V> value;
+};
+
+Template template arguments;
+====================================================================================
+A template argument for a template template parameter must be an id-expression which names a class template or a template alias.
+When the argument is a class template, only the primary template is considered when matching the parameter. The partial specializations, if any, are only considered when a specialization based on this template template parameter happens to be instantiated.
+template<typename T> class A { int x; } // primary template
+template<class T> class A<T*> { long x; } // partial specialization
+ 
+// class template with a template template parameter V
+template<template<typename> class V> class C
+{
+    V<int> y; // uses the primary template
+    V<int*> z; // uses the partial specialization
+};
+ 
+C<A> c; // c.y.x has type int, c.z.x has type long
+
+
+
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 STREAMS:
 The stream of bytes of data , which is used for I/O .
