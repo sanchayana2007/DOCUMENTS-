@@ -2692,7 +2692,7 @@ std::map<char,int>::key_compare mycomp = mymap.key_comp();
   do {
     std::cout << it->first << " => " << it->second << '\n';
   } while ( mycomp((*it++).first, 'c') );
-
+will print till b value
 
 value_comp
 ------------------
@@ -2752,55 +2752,7 @@ Employees.insert(std::make_pair("Peter Q.",5328));
     // erase the first element using the erase function
     my_map.erase(iter);
 	
-	
-int main()
-{ 
-    
-    map<string,string> m1;
-    m1.insert(make_pair("test1","1stElement"));
-    m1.insert(pair<string,string>("test2","2ndElment"));
-    m1["test3"] = "3rdElement";
-    m1.insert(map<string,string>::value_type("test4","4thElement"));
-    m1["test3"] = "3rdElement";
-    
-    map<string,string>::const_iterator itr = m1.begin();
-     for(;itr != m1.end();itr++)
-        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
-    
-    
-  // cout<< m1.find("yacck")->second;
-   cout<< m1.upper_bound("test2")->second<<endl; // next element
-   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
-    
-    //Count of all elements
-    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
-    itr = m1.find("test3")->second<<endl;
-    
-    int main()
-{ 
-    
-    map<string,string> m1;
-    m1.insert(make_pair("test1","1stElement"));
-    m1.insert(pair<string,string>("test2","2ndElment"));
-    m1["test3"] = "3rdElement";
-    m1.insert(map<string,string>::value_type("test4","4thElement"));
-    m1["test3"] = "3rdElement";
-    
-    map<string,string>::const_iterator itr = m1.begin();
-     for(;itr != m1.end();itr++)
-        cout<<" itr ="<<itr->first<<"2nd elemnt" << itr->second <<endl;
-    
-    
-  // cout<< m1.find("yacck")->second;
-   cout<< m1.upper_bound("test2")->second<<endl; // next element
-   cout<< m1.lower_bound("test2")->second;// lower points towards the same elmnt
-    
-    //Count of all elements
-    cout<<"Count" << m1.count("test3"); // if the elemnt is their then 1
-    itr = m1.find("test3")->second<<endl;
-    int main()
-{ 
-    
+	int main() {
     map<string,string> m1;
     m1.insert(make_pair("test1","1stElement"));
     m1.insert(pair<string,string>("test2","2ndElment"));
