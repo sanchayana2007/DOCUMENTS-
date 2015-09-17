@@ -1702,7 +1702,129 @@ class MyClass(object):
 
 MyClass.the_static_method(2) # outputs 2
 
+Class vs static methods in Python:
+===================================
+class to do so but that will spread the code related to class, to out of the class. This can cause a future code
 
+def get_no_of_instances(cls_obj):
+    return cls_obj.no_inst
+ 
+class Kls(object):
+    no_inst = 0
+ 
+    def __init__(self):
+        Kls.no_inst = Kls.no_inst + 1
+ 
+ik1 = Kls()
+ik2 = Kls()
+ 
+print(get_no_of_instances(Kls))
+Gives us the following output:
+
+1
+2
+
+we can create a method in a class, using @classmethod
+-------------------------------------------------------------------
+
+class Kls(object):
+    no_inst = 0
+ 
+    def __init__(self):
+        Kls.no_inst = Kls.no_inst + 1
+ 
+    @classmethod
+    def get_no_of_instance(cls_obj):
+        return cls_obj.no_inst
+ 
+ik1 = Kls()
+ik2 = Kls()
+ 
+print ik1.get_no_of_instance()
+print Kls.get_no_of_instance()
+We get the following output:
+2
+2
+
+Python @staticmethod
+----------------------------------------------------------------------
+Often there is some functionality that relates to the class, but does not need the class or any instance(s) to do some work.
+ Perhaps something like setting environmental variables, changing an attribute in another class, etc. In these situation we
+ can also use a function, however doing so also spreads the interrelated code .
+ 
+  use a @staticmethod, we can place all code in the relevant place.
+  
+IND = 'ON'
+ 
+class Kls(object):
+    def __init__(self, data):
+        self.data = data
+ 
+    @staticmethod
+    def checkind():
+        return (IND == 'ON')  ## this is a global variable value which is intialised over here 
+ 
+    def do_reset(self):
+        if self.checkind():
+            print('Reset done for:', self.data)
+ 
+    def set_db(self):
+        if self.checkind():
+            self.db = 'New db connection'
+        print('DB connection made for: ', self.data)
+ 
+ik1 = Kls(12)
+ik1.do_reset()
+ik1.set_db()
+
+Reset done for: 12
+DB connection made for: 12
+
+
+
+How @staticmethod and @classmethod are different.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+class Kls(object):
+    def __init__(self, data):
+        self.data = data
+ 
+    def printd(self):
+        print(self.data)
+ 
+    @staticmethod
+        def smethod(*arg):
+            print('Static:', arg)
+ 
+    @classmethod
+        def cmethod(*arg):
+            print('Class:', arg)
+>>> ik = Kls(23)
+>>> ik.printd()
+23
+>>> ik.smethod()
+Static: ()
+>>> ik.cmethod()
+Class: (<class '__main__.Kls'>,)
+>>> Kls.printd()
+TypeError: unbound method printd() must be called with Kls instance as first argument (got nothing instead)
+>>> Kls.smethod()
+Static: ()
+>>> Kls.cmethod()
+ 
+ 
  
 Magical methods :
 ===============================================================================
@@ -1952,45 +2074,6 @@ Combinatoric generators:
 # combinations('ABCD', 2) --> AB AC AD BC BD CD
 # combinations(range(4), 3) --> 012 013 023 123
 
-repr in python :
-==================================================
-Module provides a means for producing object representations with limits on the size of the resulting strings. This is 
-used in the Python debugger and may be useful in other contexts 
-
- x = 'foo'
- x
-'foo'
-So the name x is attached to 'foo' string. When you call for example repr(x) the iterpreter put 'foo' instead of x and
-then calls repr('foo').
-
- repr(x)
-"'foo'"
- x.__repr__()
-"'foo'"
-repr actually calls a magic method __repr__ of x, which gives a string containing the representation of the value 'foo'
-assigned to x. So it returns 'foo' inside the string "" resulting in "'foo'". The idea of repr is to give a string which
-contains a series of symbols which we can type in the interpreter and get the same value which was sent as an argument to repr.
-
- eval("'foo'")
-'foo'
-When we call eval("'foo'"), it's the same as we type 'foo' in the interpreter. It's as we directly type the contents of the outer string "" in the interpreter.
-
- eval('foo')
-
-Traceback (most recent call last):
-  File "<pyshell#5>", line 1, in <module>
-    eval('foo')
-  File "<string>", line 1, in <module>
-NameError: name 'foo' is not defined
-If we call eval('foo'), it's the same as we type foo in the interpreter. But there is no foo variable an the exception is raised.
-
- str(x)
-'foo'
- x.__str__()
-'foo'
- 
-
-
 
 Greedy vs. Non-Greedy:
 ================================
@@ -2054,15 +2137,13 @@ def __getitem__(cls, other):
 Decorators:
 =================================
 Python's functions are objects
-To understand decorators, you must first understand that functions are objects in Python. This has important consequences. Let's see why with a simple example :
+To understand decorators, you must first understand that functions are objects in Python. 
+This has important consequences. 
 
     
 Functions references:
 ===========================
-OK, still here? Now the fun part, you've seen that functions are objects and therefore:
-
-can be assigned to a variable;
-can be defined in another function.
+functions are objects and therefore can be assigned to a variable can be defined in another function.
 Well, that means that a function can return another function :-) Have a look:
 
 def getTalk(type="shout"):
@@ -2419,7 +2500,7 @@ def lazy_function():
     print "zzzzzzzz"
 
 decorated_function = my_decorator(lazy_function)
-#outputs: I am a ordinary function
+#outputs: I am a ordinary function 
 
 # It outputs "I am a ordinary function", because that's just what you do:
 # calling a function. Nothing magic.
@@ -2429,7 +2510,9 @@ def lazy_function():
     print "zzzzzzzz"
 
 #outputs: I am a ordinary function
-It's exactly the same. "my_decorator" is called. So when you @my_decorator, you are telling Python to call the function 'labeled by the variable "my_decorator"'. It's important, because the label you give can point directly to the decorator    or not! Let's start to be evil!
+It's exactly the same. "my_decorator" is called. So when you @my_decorator, you are telling Python to call 
+the function 'labeled by the variable "my_decorator"'. It's important, because the label you give can point directly to the decorator 
+or not! Let's start to be evil!
 
 def decorator_maker():
 
@@ -2519,8 +2602,6 @@ def decorator_maker_with_arguments(decorator_arg1, decorator_arg2):
 
     def my_decorator(func):
         # The ability to pass arguments here is a gift from closures.
-        # If you are not comfortable with closures, you can assume it's ok,
-        # or read: http://stackoverflow.com/questions/13857/can-you-explain-closures-as-they-relate-to-python
         print "I am the decorator. Somehow you passed me arguments:", decorator_arg1, decorator_arg2
 
         # Don't confuse decorator arguments and function arguments!
@@ -2553,30 +2634,8 @@ decorated_function_with_arguments("Rajesh", "Howard")
 #   - from the function call: Rajesh Howard 
 #Then I can pass them to the decorated function
 #I am the decorated function and only knows about my arguments: Rajesh Howard
-Here it is, a decorator with arguments. Arguments can be set as variable:
 
-c1 = "Penny"
-c2 = "Leslie"
-
-@decorator_maker_with_arguments("Leonard", c1)
-def decorated_function_with_arguments(function_arg1, function_arg2):
-    print ("I am the decorated function and only knows about my arguments:"
-           " {0} {1}".format(function_arg1, function_arg2))
-
-decorated_function_with_arguments(c2, "Howard")
-#outputs:
-#I make decorators! And I accept arguments: Leonard Penny
-#I am the decorator. Somehow you passed me arguments: Leonard Penny
-#I am the wrapper around the decorated function. 
-#I can access all the variables 
-#   - from the decorator: Leonard Penny 
-#   - from the function call: Leslie Howard 
-#Then I can pass them to the decorated function
-#I am the decorated function and only knows about my arguments: Leslie Howard
-As you can see, you can pass arguments to the decorator like any function using this trick. You can even use *args, **kwargs if you wish. But remember decorators are called only once. Just when Python imports the script. You can't dynamically set the arguments afterwards. When you do "import x", the function is already decorated, so you can't change anything.
-
-Let's practice: a decorator to decorate a decorator
-OK, as a bonus, I'll give you a snippet to make any decorator accept generically any argument. After all, in order to accept arguments, we created our decorator using another function. We wrapped the decorator. Anything else we saw recently that wrapped function? Oh yes, decorators! Let's have some fun and write a decorator for the decorators:
+A decorator to decorate a decorator OK, as a bonus, 
 
 def decorator_with_args(decorator_to_enhance):
     """ 
@@ -2628,34 +2687,16 @@ decorated_function("Universe and", "everything")
 I know, the last time you had this feeling, it was after listening a guy saying: "before understanding recursion, you must first understand recursion". But now, don't you feel good about mastering this?
 
 Best practices while using decorators
+====================================================================================
 They are new as of Python 2.4, so be sure that's what your code is running on.
 Decorators slow down the function call. Keep that in mind.
-You can not un-decorate a function. There are hacks to create decorators that can be removed but nobody uses them. So once a function is decorated, it's done. For all the code.
+You can not un-decorate a function. There are hacks to create decorators that can be removed but nobody uses them.
+ So once a function is decorated, it's done. For all the code.
 Decorators wrap functions, which can make them hard to debug.
-Python 2.5 solves this last issue by providing the functools module including functools.wraps that copies the name, module and docstring of any wrapped function to it's wrapper. Fun fact, functools.wraps is a decorator :-)
+Python 2.5 solves this last issue by providing the functools module including functools.wraps that copies the name, module and docstring
+ of any wrapped function to it's wrapper. Fun fact, functools.wraps is a decorator :-)
 
-# For debugging, the stacktrace prints you the function __name__
-def foo():
-    print "foo"
-
-print foo.__name__
-#outputs: foo
-
-# With a decorator, it gets messy    
-def bar(func):
-    def wrapper():
-        print "bar"
-        return func()
-    return wrapper
-
-@bar
-def foo():
-    print "foo"
-
-print foo.__name__
-#outputs: wrapper
-
-# "functools" can help for that
+ # "functools" can help for that
 
 import functools
 
@@ -2675,8 +2716,13 @@ def foo():
 print foo.__name__
 #outputs: foo
 How can the decorators be useful?
-Now the big question: what can I use decorators for? Seem cool and powerful, but a practical example would be great. Well, there are 1000 possibilities. Classic uses are extending a function behavior from an external lib (you can't modify it) or for a debug purpose (you don't want to modify it because it's temporary). You can use them to extends several functions with the same code without rewriting it every time, for DRY's sake. E.g.:
+===========================================
+Now the big question: what can I use decorators for? Seem cool and powerful, but a practical example would be great. Well, there are 1000 possibilities.
+Classic uses are extending a function behavior from an external lib (you can't modify it) or for a debug purpose (you don't want to modify it because
+ it's temporary). You can use them to extends several functions with the same code without rewriting it every time, for DRY's sake. E.g.:
 
+ Checking Execution time:
+ ***************************
 def benchmark(func):
     """
     A decorator that prints the time a function takes
