@@ -400,3 +400,149 @@ int main()
 	getch();
 
 }
+
+a simple example of complexity calculation:
+s = 0
+for x in seq:
+for y in seq:
+s += x*y
+for z in seq:
+for w in seq:
+s += x-w
+
+It may not be entirely clear what we’re computing here (I certainly have no idea), but we should still
+be able to find the running time, using our rules. The z-loop is run for a linear number of iterations, and
+it contains a linear loop, so the total complexity there is quadratic, or Θ(n2). The y-loop is clearly Θ(n).
+This means that the code block inside the x-loop is Θ(n + n2). This entire block is executed for each
+round of the x-loop, which is run n times. We use our multiplication rule and get Θ(n(n + n2)) = Θ(n2 + n3)
+= Θ(n3), that is, cubic. We could arrive at this conclusion even more easily by noting that the y-loop is
+dominated by the z-loop and can be ignored, giving the inner block a quadratic running time.
+“Quadratic times linear” gives us cubic.
+
+
+Consider the following two ways of looking for an element in a list:
+>>> from random import randrange
+>>> L = [randrange(10000) for i in range(1000)]
+>>> 42 in L
+False
+>>> S = set(L)
+>>> 42 in S
+False
+They’re both pretty fast, and it might seem pointless to create a set from the list—unnecessary work,
+right? Well, it depends. If you’re going to do many membership checks, it might pay off, because
+membership checks are linear for lists and constant for sets. What if, for example, you were to gradually
+add values to a collection and for each step check whether the value was already added? This is a
+situation you’ll encounter repeatedly throughout the book. Using a list would give you quadratic
+running time, whereas using a set would be linear. A huge difference.
+
+
+The first lesson here is to never compare floats for equality. It generally doesn’t make sense. Still, in
+many applications (such as computational geometry), you’d very much like to do just that. Instead, you
+should check whether they are approximately equal. For example, you could take the approach of
+assertAlmostEqual from the unittest module:
+>>> def almost_equal(x, y, places=7):
+... return round(abs(x-y), places) == 0
+...
+>>> almost_equal(sum(0.1 for i in range(10)), 1.0)
+True
+
+
+
+
+the “obvious” way of gradually building a string:
+>>> s = ""
+>>> for chunk in input():
+... s += chunk
+It works, and because of some really clever optimizations in Python, it actually works pretty well, up
+to a certain size—but then the optimizations break down, and you run smack into quadratic growth. The
+problem is that (without the optimizations) you need to create a new string for every += operation,
+copying the contents of the previous one. You’ll see a detailed discussion of why this sort of thing is
+quadratic in the next chapter, but for now, just be aware that this is risky business. A better solution
+would be the following:
+>>> chunks = []
+>>> for chunk in input():
+... chunks.append(chunk)
+...
+>>> s = ''.join(chunks)
+
+
+For sorting Algos :
+The best case. This is the running time you get when the input is optimally suited
+to your algorithm. For example, if the input sequence to sort_w_check were sorted,
+we would get the best-case running time (which would be linear).
+• The worst case. This is usually the most useful case—the worst possible running
+time. This is useful because we normally want to be able to give some guarantees
+about the efficiency of our algorithm, and this is the best guarantee we can give in
+general.
+• The average case. This is a tricky one, and I’ll avoid it most of the time, but in
+some cases it can be useful. Simply put, it’s the expected value of the running
+time, for random input (with a given probability distribution).
+
+hasing in Python:
+Hashing involves computing some (often seemingly random) integer value from
+an arbitrary object. This value can then be used, for example, as an index into an array (subject to some
+adjustments to make it fit the index range).
+The standard hashing mechanism in Python is available through the hash function:
+>>> hash(42)
+42
+>>> hash("Hello, world!")
+-1886531940
+This is the mechanism that is used in dictionaries, which are implemented using so-called hash tables.
+Sets are implemented using the same mechanism. The important thing is that the hash value can be
+constructed in essentially constant time (it’s constant with respect to the hash table size but linear as a
+function of the size of the object being hashed).
+
+THE BUNCH PATTERN
+When prototyping (or even finalizing) data structures such as trees, it can be useful to have a flexible class
+that will allow you to specify arbitrary attributes in the constructor. In these cases, the “Bunch” pattern
+(named by Alex Martelli in the Python Cookbook) can come in handy. There are many ways of
+implementing it, but the gist of it is the following:
+class Bunch(dict):
+def __init__(self, *args, **kwds):
+super(Bunch, self).__init__(*args, **kwds)
+self.__dict__ = self
+There are several useful aspects to this pattern. First, it lets you create and set arbitrary attributes by
+supplying them as command-line arguments:
+>>> x = Bunch(name="Jayne Cobb", position="Public Relations")
+>>> x.name
+'Jayne Cobb'
+Second, by subclassing dict, you get lots of functionality for free, such as iterating over the keys/attributes
+or easily checking whether an attribute is present. Here’s an example:
+>>> T = Bunch
+>>> t = T(left=T(left="a", right="b"), right=T(left="c"))
+>>> t.left
+{'right': 'b', 'left': 'a'}
+>>> t.left.right
+'b'
+>>> t['left']['right']
+'b'
+>>> "left" in t.right
+True
+>>> "right" in t.right
+False
+This pattern isn’t useful only when building trees, of course.
+
+We have a constant amount of work in each execution of rec_sum, excluding the recursive call, and it’s
+executed once for each item in the sequence, so it’s pretty obvious that the running time is linear. Still,
+let’s look into it:
+def T(seq, i=0):
+if i == len(seq): return 1
+return T(seq, i+1) + 1
+This new T function has virtually the same structure as S, but the values it’s working with are
+different. Instead of returning a solution to a subproblem, like S does, it returns the cost of finding that
+solution. In this case, I’ve just counted the number of times the if statement is executed. (In a more
+mathematical setting, you would count any relevant operations and use Θ(1) instead of 1, for example.)
+Let’s take these two functions out for a spin:
+>>> seq = range(1,101)
+>>> S(seq)
+5050
+What do you know, Gauss was right! Let’s look at the running time:
+>>> T(seq)
+101
+Looks about right. Here, the size n is 100, so this is n+1. It seems like this should hold in general:
+>>> for n in range(100):
+... seq = range(n)
+... assert T(seq) == n+1
+There are no errors, so the hypothesis does seem sort of plausible.
+What we’re going to work on now is how to find nonrecursive versions of functions such as T, giving
+us definite running time complexities for recursive algorithms.
