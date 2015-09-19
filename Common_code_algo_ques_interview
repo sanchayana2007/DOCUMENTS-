@@ -264,6 +264,47 @@ Alright, so what about if we want a negative list?Simple. Here's an example:
 -8
 -9
 
+
+Using various python modules convert the list a to generate the output ‘one, two, three’
+
+a = ['one', 'two', 'three']
+Ans:   ", ".join(a)
+
+What would the following code yield?
+word = 'abcdefghij'
+print word[:3] + word[3:]
+
+Ans: ‘abcdefghij’ will be printed.
+This is called string slicing. Since here the indices of the two slices are colliding, the string slices 
+are ‘abc’ and ‘defghij’. The ‘+’ operator on strings concatenates them. Thus, the two slices formed are concatenated
+to give the answer ‘abcdefghij’.
+
+ exchanging numbers is as easy as:
+a,b = b,a
+
+Iterate over a list of words and use a dictionary to keep track of the frequency(count) of each word. for example
+
+{‘one’:2, ‘two’:2, ‘three’:2}
+
+Ans:
+
+def dic(words):
+  a = {}
+  for i in words:
+    try:
+      a[i] += 1
+    except KeyError: ## the famous pythonic way:
+      a[i] = 1       ## Halt and catch fire
+  return a
+  
+  
+Print the sum of digits of numbers starting from 1 to 100 (inclusive of both)
+
+Ans:
+
+print sum(range(1,101))
+
+
 one more example of even numbers between 100 and 120:
 >>> for i in xrange(100, 120, 2):
 ...     print(i)

@@ -403,7 +403,8 @@ access or change the distance variable (which we would assume is private, even t
     def SetDistance(self, value):
         p_distance = value
 
-From a data hiding point of view, you could rename distance to p_distance (making it appear to be a private variable), and then access it using these two methods. That is, if data hiding is important in your program.
+From a data hiding point of view, you could rename distance to p_distance (making it appear to be a private variable), 
+and then access it using these two methods. That is, if data hiding is important in your program.
 
 Implementing a Private Function (Workaround method)
 -------------------------------------------------------------
@@ -1625,36 +1626,58 @@ virtual clases:
 
 When abstractmethod() is applied in combination with other method descriptors, it should be applied as the innermost decorator, as shown in the following usage examples:
 
-class C(metaclass=ABCMeta):
-    @abstractmethod
-    def my_abstract_method(self, ...):
-           
-    @classmethod
-    @abstractmethod
-    def my_abstract_classmethod(cls, ...):
-           
-    @staticmethod
-    @abstractmethod
-    def my_abstract_staticmethod(...):
-           
+import abc
+
+class Shape(object):
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
+    def method_to_implement(self, input):
+        """Method documentation"""
+        return
 
     @property
-    @abstractmethod
+    @abc.abstractmethod
     def my_abstract_property(self):
            
     @my_abstract_property.setter
-    @abstractmethod
+    @abc.abstractmethod
     def my_abstract_property(self, val):
            
 
-    @abstractmethod
+    @abc.abstractmethod
     def _get_x(self):
            
-    @abstractmethod
+    @abc.abstractmethod
     def _set_x(self, val):
            
     x = property(_get_x, _set_x)
+If your class is already using a metaclass, derive it from ABCMeta rather than type and you can continue to use your own metaclass.
+Alternative of Abstarct methods:
+------------------------------------
+A cheap alternative (and the best practice before the abc module was introduced) would be to have all your abstract methods just
+raise an exception (NotImplementedError is a good one) so that classes derived from it would have to override that method to be useful.
+Before this te duck typing concept was der 
+Accessing members of both sequence type objects and mapping type objects is done by using the __getitem__ method of these objects.
 
+a = [0,1 2, 3]
+print a[0]
+0
+b = {'a': 0, 'b': 1}
+print b['a']
+0
+is exactly the same as :
+
+a =  [0,1 2, 3]
+print list.__getitem__(a, 0)
+0
+b = {'a': 0, 'b': 1}
+print dict._getitem__(b, 'a')
+0
+In the first example we use normal Python syntax. In the second example we do what the first example is doing under the hood. In order to set
+ members we would use the __setitem__ method instead of __getitem__.
+ 
+ 
 
 Python methods are always virtual
 like Ignacio said yet Somehow class inheritance may be a better approach to implement what you want.
@@ -1674,7 +1697,9 @@ class Dog(Animal): # <Dog inherits from Animal here (all methods as well)
 
     def says(self): # <Called instead of Animal says method
         return "I am a dog named {0}".format(self.name)
-
+The principle of duck typing says that you shouldn't care what type of object you have - just whether or not you can do
+ the required action with your object.
+ For this reason the isinstance keyword is frowned upon.
     def somethingOnlyADogCanDo(self):
         return "be loyal"
 
@@ -3959,3 +3984,20 @@ def name_freq(review_str,Names_list ):
  fields
 ['asdf', ' ', 'fjdk', ';', 'afed', ',', 'fjek', ',', 'asdf', ',', 'foo']
 >>>>>>> b54797adae915e70034bfb835fe66a5c02bf182f
+
+Map:
+==============================================================================================
+map executes the function given as the first argument on all the elements of the iterable given as the second argument.
+ If the function given takes in more than 1 arguments, then many iterables are given.  #Follow the link to know more similar functions
+For eg:
+
+1
+2
+3
+4
+5
+>>>a='ayush'
+>>>map(ord,a)
+....  [97, 121, 117, 115, 104]
+>>> print map(lambda x, y: x*y**2, [1, 2, 3], [2, 4, 1])
+....  [4, 32, 3]
