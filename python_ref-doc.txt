@@ -2158,7 +2158,51 @@ def __getitem__(cls, other):
             return cls._enums_by_int[name]
 
 
+ Memory managment in Python:
+ ===================================================================================
+ 
+ private heap
+-----------------------------------------
+| all Python objects and data structures |
+------------------------------------------
+				|
+		(Python memory manager) # this controls the heap`
+				
+				
+Steps for Allocations:
+1. At the lowest Level a raw memory allocator ensures enough room in the private heap 
+for storing all Python-related data by interacting with the memory manager od OS.
+2. several object-specific allocators operate on the same heap and implement distinct memory management(lke for int / dict etc)
+The default raw memory block allocator uses the following functions: malloc(), calloc(), realloc() and free(); call malloc(1)
 
+class Resource:
+    def __init__(self, name):
+        self.handle = allocate_resource(name)
+    def __del__(self):
+        if self.handle:
+            self.close()
+    def close(self):
+        release_resource(self.handle)
+        self.handle = None
+    ...
+
+for name in big_list:
+    x = Resource(name)
+    do something with x
+In current releases of CPython, each new assignment to x inside the loop will release the previously allocated resource. 
+Using GC, this is not guaranteed. If you want to write code that will work with any Python implementation, you should explicitly
+close the resource; this will work regardless of GC:
+
+for name in big_list:
+    x = Resource()
+    do something with x
+    x.close()
+
+
+Python heap is performed by the interpreter itself and that the user has no control over it, even if she regularly manipulates
+object pointers to memory blocks inside that heap.
+			The allocation of heap space for Python objects and other internal buffers is performed on demand by the Python memory manager through
+			
 Decorators:
 =================================
 Python's functions are objects
@@ -3373,7 +3417,29 @@ The directory is composed of a structure of 6 directories:
 $ python2 indexer.py zc.buildout-1.0.6-py2.5.egg 1
 process : 301.83 kstones, 6.821 secondes, 396 bytes
 $ python indexer.py zc.buildout-1.0.6-py2.5.egg 2
+---------------------------------------------------------------------------------------------
+Debugging in python:
+=========================
 
+PDB:
+
+You can use the pdb module, insert pdb.set_trace() anywhere and it will function as a breakpoint.
+
+>>> import pdb
+>>> a="a string"
+>>> pdb.set_trace()
+--Return--
+> <stdin>(1)<module>()->None
+(Pdb) p a
+'a string'
+(Pdb)
+To continue execution use c (or cont or continue).
+It is possible to execute arbitrary Python expressions using pdb. For example, if you find a mistake, you can correct the code, 
+then type a type expression to have the same effect in the running code .
+
+PUDB:
+
+python -m pudb.run my-script.py
 
 Multiprocessing
 ===============
