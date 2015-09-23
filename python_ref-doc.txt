@@ -400,6 +400,33 @@ be transformed with the use of optional parameters like so:
 --------------------------------------------------------------------------------------
 Data Hiding (Encapsulation):
 
+Private Variables:
+class P:
+   def __init__(self, name, alias):
+      self.name = name       # public
+      self.__alias = alias   # private
+
+   def who(self):
+      print('name  : ', self.name)
+      print('alias : ', self.__alias)
+
+>>> x = P()	  
+>>> x.name
+'Alex'
+>>> x.alias
+Traceback (most recent call last):
+  File "", line 1, in 
+AttributeError: P instance has no attribute 'alias'
+	  
+x.__alias
+Traceback (most recent call last):
+  File "", line 1, in 
+AttributeError: P instance has no attribute '__alias'
+
+But here is a magic want. One underscore('_') with the class name will do magic:
+
+>>> x._P__alias
+'amen'
 
 access or change the distance variable (which we would assume is private, even though it isn’t):
 
@@ -3806,7 +3833,9 @@ $	Matches end of line.
 
 
 The Singleton
-Possibly the simplest design pattern is the singleton, which is a way to provide one and only one object of a particular type. To accomplish this, you must take control of object creation out of the hands of the programmer. One convenient way to do this is to delegate to a single instance of a private nested inner class:
+Possibly the simplest design pattern is the singleton, which is a way to provide one and only one object of a particular type. To accomplish this, 
+you must take control
+ of object creation out of the hands of the programmer. One convenient way to do this is to delegate to a single instance of a private nested inner class:
 
 # Singleton/SingletonPattern.py
 
