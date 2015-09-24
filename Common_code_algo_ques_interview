@@ -38,7 +38,7 @@ bool palindrome(string *str)
 vowels = 'aeiou'
 
 # take input from the user
-ip_str = input("Enter a string: ")
+ip_str = input("Enter a string:")
 
 # make it suitable for caseless comparisions
 ip_str = ip_str.casefold()

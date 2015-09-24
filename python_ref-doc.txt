@@ -103,18 +103,19 @@ perhaps even a complete Python expression to rebuild the object.
 use {!r} or {!s} formatting, we're requesting __repr__() or __str__(),
 respectively.
 The following is a simple
+
 collection with both __str__() and __repr__() methods:
 class Hand:
-def __init__( self, dealer_card, *cards ):
-self.dealer_card= dealer_card
-self.cards= list(cards)
-def __str__( self ):
-return ", ".join( map(str, self.cards) )
-def __repr__( self ):
-return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
-format(
-__class__=self.__class__,
-_cards_str=", ".join( map(repr, self.cards) ),
+	def __init__( self, dealer_card, *cards ):
+		self.dealer_card= dealer_card
+		self.cards= list(cards)
+	def __str__( self ):
+	return ", ".join( map(str, self.cards) )
+	def __repr__( self ):
+	return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
+	format(
+	__class__=self.__class__,
+	_cards_str=", ".join( map(repr, self.cards) ),
 **self.__dict__ )
 The __str__() method is a simple recipe, as follows:
 1. Map str() to each item in the collection. This will create an iterator over the
@@ -314,7 +315,7 @@ leads to the following problem:
     print 'my base'
     super(MyClass, self).__init__(arg)
    
- m = MyClass(10)
+m = MyClass(10)
 my base
 Traceback (most recent call last):
 File "<stdin>", line 1, in <module>
@@ -3889,7 +3890,6 @@ first_lst=[ tuple(float(y) for y in x) for x in first_lst ]
 
 Now the other way (x for x in y) where y is a tuple is all allowed over here 
 
-Change@Me1
 
 2. lamdas list and fetching Values 
 ====================================
