@@ -282,15 +282,61 @@ class A:
  mtd m
  
 class B(A):
-pass 
+	pass 
 
 class C(A):
- mtd m
+	mtd m
  
-class DB,C():
+class D(B,C):
 
 d=D  
 d.m # calls the Cmthd
+
+
+Explanation:
+-------------------------------------
+The crucial difference between resolution order for legacy vs new-style classes comes when the same ancestor class occurs more
+than once in the "naive", depth-first approach -- e.g., consider a "diamond inheritance" case:
+
+>>> class A: x = 'a'
+... 
+>>> class B(A): pass
+... 
+>>> class C(A): x = 'c'
+... 
+>>> class D(B, C): pass
+... 
+>>> D.x
+'a'
+here, legacy-style, the resolution order is D - B - A - C - A : so when looking up D.x, A is the first base in resolution order to solve it, 
+thereby hiding the definition in C. 
+
+While:
+
+>>> class A(object): x = 'a'
+... 
+>>> class B(A): pass
+... 
+>>> class C(A): x = 'c'
+... 
+>>> class D(B, C): pass
+... 
+>>> D.x
+'c'
+>>> 
+here, new-style, the order is:
+
+>>> D.__mro__
+(<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>, 
+    <class '__main__.A'>, <type 'object'>)
+
+with A forced to come in resolution order only once and after all of its subclasses, so that overrides
+(i.e., C's override of member x) actually work sensibly.
+
+It's one of the reasons that old-style classes should be avoided: multiple inheritance with "diamond-like" patterns just
+doesn't work sensibly with them, while it does with new-style
+
+
 Heterogeneous Arguments
 Another issue with super usage is argument passing in initialization. How can a
 class call its base class __init__ code if it doesn't have the same signature? This
@@ -829,9 +875,9 @@ Meta-programming
 The new-style classes brought the ability to change classes' and objects' definitions
 on the fly, through two special methods: __new__ and __metaclass__.
 
-> The__new__ Method
+> The  __new__ Method
 ------------------------
-teh new method will be invoked when the class is instantiated 
+the new method will be invoked when the class is instantiated 
 class MyClass(object):
 	def __new__(cls):
 		print '_new_called'
