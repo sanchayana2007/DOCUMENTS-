@@ -1,6 +1,6 @@
 Complexity 	Name 				Examples, Comments
 Θ(1) 		Constant 			Hash table lookup and modification (see black box sidebar on dict).
-Θ(lg n) 	Logarithmic Binary search  	Logarithm base unimportant.
+Θ(lg n) 	Logarithmic 		Binary search  	Logarithm base unimportant.
 Θ(n) 		Linear 				Iterating over a list.
 Θ(n lg n) 	Loglinear 			Optimal sorting of arbitrary values 
 Θ(n2) 		Quadratic 			Comparing n objects to each other 

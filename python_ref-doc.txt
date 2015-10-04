@@ -58,7 +58,8 @@ class MyClass: = new-style class (implicitly inherits from object)
 Python 2.x:
 class MyClass(object): = new-style class
 class MyClass: = OLD-STYLE CLASS
-ew style objects have a different object model to classic objects, and some things won't work properly with old style objects, for instance, super(), @property and descrpnt
+ew style objects have a different object model to classic objects, and some things won't work properly with old style objects, for instance,
+ super(), @property and descrpnt
 Explanation:
 Class :
 -----------------------------
@@ -90,12 +91,12 @@ The dir(class/instance) will list it out , we can seee __call__ , __imfunc__ are
  '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__',
  '__str__', 'func_closure', 'func_code', 'func_defaults', 'func_dict',
  'func_doc', 'func_globals', 'func_name']
+ 
 Lets describe this Methods :
 > __repr__() and __str__() methods
 **************************************************************************************************
- • Generally, the str() method representation of an object is commonly
-expected to be more friendly to humans. This is built by an object's __str__
-() method.
+ • Generally, the str() method representation of an object is commonly 
+expected to be more friendly to humans. This is built by an object's __str__() method.
 • The repr() method representation is often going to be more technical,
 perhaps even a complete Python expression to rebuild the object.
 • The print() function will use str() to prepare an object for printing.
@@ -110,13 +111,10 @@ class Hand:
 		self.dealer_card= dealer_card
 		self.cards= list(cards)
 	def __str__( self ):
-	return ", ".join( map(str, self.cards) )
+		return ", ".join( map(str, self.cards) )
 	def __repr__( self ):
-	return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
-	format(
-	__class__=self.__class__,
-	_cards_str=", ".join( map(repr, self.cards) ),
-**self.__dict__ )
+		return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
+	format(	__class__=self.__class__,	_cards_str=", ".join( map(repr, self.cards) ),**self.__dict__ )
 The __str__() method is a simple recipe, as follows:
 1. Map str() to each item in the collection. This will create an iterator over the
 resulting string values.
@@ -126,14 +124,21 @@ difference between __str__ and __repr__
 log(INFO, "I am in the weird function and a is", a, "and b is", b, "but I got a null C — using default", default_c)
 But you have to do the last step — make sure every object you implement has a useful repr, so code like that can just work.
 This is why the “eval” thing comes up: if you have enough information so eval(repr(c))==c, that means you know everything 
-there is to know about c. If that’s easy enough, at least in a fuzzy way, do it. If not, make sure you have enough information about c anyway. I usually use an eval-like format: "MyClass(this=%r,that=%r)" % (self.this,self.that). It does not mean that you can actually construct MyClass, or that those are the right constructor arguments — but it is a useful form to express “this is everything you need to know about this instance”.
+there is to know about c. If that’s easy enough, at least in a fuzzy way, do it. If not, make sure you have enough information about c
+ anyway. I usually use an eval-like format: "MyClass(this=%r,that=%r)" % (self.this,self.that). It does not mean that you can actually 
+ construct MyClass, or that those are the right constructor arguments — but it is a useful form to express “this is everything you need
+ to know about this instance”.
 
 Note: I used %r above, not %s. You always want to use repr() [or %r formatting character, equivalently] inside __repr__ 
 implementation, or you’re defeating the goal of repr. You want to be able to differentiate MyClass(3) and MyClass("3").
 
 The goal of __str__ is to be readable
 
-Specifically, it is not intended to be unambiguous — notice that str(3)==str("3"). Likewise, if you implement an IP abstraction, having the str of it look like 192.168.1.1 is just fine. When implementing a date/time abstraction, the str can be "2010/4/12 15:35:22", etc. The goal is to represent it in a way that a user, not a programmer, would want to read it. Chop off useless digits, pretend to be some other class — as long is it supports readability, it is an improvement
+Specifically, it is not intended to be unambiguous — notice that str(3)==str("3"). Likewise, if you implement an IP abstraction, having the 
+
+str of it look like 192.168.1.1 is just fine. When implementing a date/time abstraction, the str can be "2010/4/12 15:35:22", etc. 
+The goal is to represent it in a way that a user, not a programmer, would want to read it. Chop off useless digits, pretend to be some other class
+ — as long is it supports readability, it is an improvement
 
 
 > __format__()
@@ -592,12 +597,12 @@ class Book:
     So if the first item doesn’t know how to add itself to 0, Python fails. But before it fails, Python tries to do a revered add with the operators.
     
     def __add__(self, other):
-    return self.pages + other
+    return self.pages + other.pages
     
     We have to override __radd__, or “reverse add”.
 
 def __radd__(self, other):
-    return self.pages + other
+    return self.pages + other.pages
     
     Hash overideing for making a object as dictionary key :
     =================================================================================================================
@@ -616,11 +621,13 @@ def __radd__(self, other):
     
     
 hashable
-An object is hashable if it has a hash value which never changes during its lifetime (it needs a __hash__() method), and can be compared to other objects (it needs an __eq__() method). Hashable objects which compare equal must have the same hash value.
+An object is hashable if it has a hash value which never changes during its lifetime (it needs a __hash__() method), and can be compared to other 
+objects (it needs an __eq__() method). Hashable objects which compare equal must have the same hash value.
 
 Hashability makes an object usable as a dictionary key and a set member, because these data structures use the hash value internally.
 
-All of Python’s immutable built-in objects are hashable, while no mutable containers (such as lists or dictionaries) are. Objects which are instances of user-defined classes are hashable by default; they all compare unequal (except with themselves), and their hash value is derived from their id().
+All of Python’s immutable built-in objects are hashable, while no mutable containers (such as lists or dictionaries) are. Objects which are instances
+of user-defined classes are hashable by default; they all compare unequal (except with themselves), and their hash value is derived from their id().
 
 --------------------------------------------------------------------------------------
 Object declaration :
@@ -662,7 +669,6 @@ A descriptor lets you customize what should be done when you refer to an attribu
 on an object. 
 The descriptor classes are based on three special methods they have to implement:
 1) __set__: This is called whenever the attribute is set
-
 2) __get__: This is called whenever the attribute is read
 3) __delete__: This is called when del is invoked on the attribute.
 
@@ -711,7 +717,8 @@ class Parrot(object):
         """Get the current voltage."""
         return self._voltage
         
-A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property with the corresponding accessor function set to the decorated function
+A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property with the
+ corresponding accessor function set to the decorated function
 class C(object):
     def __init__(self):
         self._x = None
@@ -812,45 +819,61 @@ Introspection Descriptor:
 ==============================
 The introspection Descriptor is needed when a class is doing introspection over tehir atribute 
 A property API class that render a redible documentation over the public methods of 
+__author__ = 'Sanchayan'
 
 class API(object):
-	def _print_values(self,obj):
-	# this function will take key from the dir()
-	
-		def  _print_value(key):
-			if key.startwith('_'):
-				return ' '
-			value = getattr(obj,key)
-			doc = value.__doc__
-		return '%s:%s' %(key,doc)
-		# Lets call this meth to get a mthdname: doctring combination
-		res [_print_value(e1) for e1 in dir(obj)]
-		return '\n'.join([el for el in res if el != ''])
-	
-	def __get__(self, instance, klass):
-	if instance is not None:
-		return self._print_values(instance)
-	else:
-		return self._print_values(klass)
-		
-		
-		class MyClass(object):
-			__doc__ = API()
-			def __init__(self):
-				self.a = 2
-			def meth(self):
-				"""my method"""
-			return 1
-	MyClass.__doc__
-	' meth : my method'
+    def print_values(self,obj):
+        def _print_values(mtdname):
+            # Rejects all the  __XX__  mthds
+            if mtdname.startswith('_'):
+                return ''
+            val = getattr(obj,mtdname)
+            doc = val.__doc__
+         #   print(doc)
+            return '%s:%s'%(mtdname,doc)
+        res = [_print_values(ent) for ent in dir(obj)]
+        #print(res)
+        return '\n'.join([ent for ent in res if ent != ''])
+
+    def __get__(self, instance, owner):
+        #Get gets the call from API
+        if instance is not None:
+            print('instnce')
+            self.print_values(instance)
+        else:
+            print(self.print_values(owner))
+
+
+
+class Myclass(object):
+    # doc set as object of API
+    __doc__ = API()
+
+    def __init__(self):
+        self.a =2
+
+    def addby1(self):
+        """Method is add by 1"""
+        return self.a +1
+    def addby2(self):
+        """Method is add by 2"""
+        return self.a +2
+
+if __name__ == '__main__':
+    #Lets call the Doc of the class
+    Myclass.__doc__
+   
+>>
+   addby1:Method is add by 1
+addby2:Method is add by 2
 	
 	
 Meta descriptor :
 ======================
-perform a task.This can be useful, for example, to lower the quantity of code needed to use a class
+perform a task.This can be useful, To lower the quantity of code needed to use a class
 that provides steps.
 
-Slots :
+Slots:
 ========================
 It allows you to set a static attribute list for a given class with the __slots__ attribute,
 and skip the creation of the __dict__ list in each instance of the class.
@@ -881,7 +904,7 @@ the new method will be invoked when the class is instantiated
 class MyClass(object):
 	def __new__(cls):
 		print '_new_called'
-	return object.__new__(cls)## This _new_ mth will returm a object.new(Classname)
+		return object.__new__(cls)## This _new_ mth will returm a object.new(Classname)
 	##This will asign the memory for the class 
 	
 	
@@ -1004,7 +1027,8 @@ Now the big question. Why would you use some obscure error prone feature?
 
 Well, usually you don't:
 
-Metaclasses are deeper magic than 99% of users should ever worry about. If you wonder whether you need them, you don't (the people who actually need them know with certainty that they need them, and don't need an explanation about why).
+Metaclasses are deeper magic than 99% of users should ever worry about. If you wonder whether you need them, you don't
+ (the people who actually need them know with certainty that they need them, and don't need an explanation about why).
 It allows you to define something like this:
 
   class Person(models.Model):
@@ -1265,7 +1289,8 @@ Single Lone Underscore (_)
 ==================================================
 This is typically used in 3 cases:
 
-In the interpreter: The _ name points to the result of the last executed statement in an interactive interpreter session. This was first done by the standard CPython interpreter, and others have followed too.
+In the interpreter: The _ name points to the result of the last executed statement in an interactive interpreter session.
+ This was first done by the standard CPython interpreter, and others have followed too.
 
  _
 Traceback (most recent call last):
@@ -1287,7 +1312,9 @@ for _ in range(n):
 
 So overe here we dont care what number the loop is currently at we ajuts need to do something for 42 times and this saves 
 n extra variable 
-i18n: One may also see _ being used as a function. In that case, it is often the name used for the function that does internationalisation and localisation string translation lookups. This seems to have originated from and follow the corresponding C convention. For instance, as seen in the Django documentation for translation, you may have:
+i18n: One may also see _ being used as a function. In that case, it is often the name used for the function that does internationalisation and 
+localisation string translation lookups. This seems to have originated from and follow the corresponding C convention. For instance, as seen in
+ the Django documentation for translation, you may have:
 
 from django.utils.translation import ugettext as _
 from django.http import HttpResponse
@@ -1298,7 +1325,8 @@ def my_view(request):
 The second and third purposes can conflict, so one should avoid using _ as a throw-away name in any code block that also uses it for i18n lookup and translation.
 Difference between _, __ and __xx__ in Python
 ==================================================
-When learning Python many people don't really understand why so much underlines in the beginning of the methods, sometimes even in the end like __this__! I've already had to explain it so many times, it's time to document it.
+When learning Python many people don't really understand why so much underlines in the beginning of the methods, sometimes even in the end like __this__! 
+I've already had to explain it so many times, it's time to document it.
 
 One underline in the beginning
 Python doesn't have real private methods, so one underline in the beginning of a method or attribute means you shouldn't access this method, because it's not part of the API. It's very common when using properties:
@@ -1343,7 +1371,8 @@ and now the output is
 
 $ python example.py
 I'm a method in A
-as you can see, A.method() didn't call B.__method() as we could expect. Actually this is the correct behavior for __. So when you create a method starting with __ you're saying that you don't want anybody to override it, it will be accessible just from inside the own class.
+as you can see, A.method() didn't call B.__method() as we could expect. Actually this is the correct behavior for __.
+ So when you create a method starting with __ you're saying that you don't want anybody to override it, it will be accessible just from inside the own class.
 
 How python does it? Simple, it just renames the method. Take a look:
 
@@ -1380,10 +1409,10 @@ class CrazyNumber(object):
         self.n = n
     
     def __add__(self, other):
-        return self.n - other
+        return self.n - other.n
     
     def __sub__(self, other):
-        return self.n + other
+        return self.n + other.n
     
     def __str__(self):
         return str(self.n)
@@ -1614,7 +1643,9 @@ Global Variables:
 Global vs. Local variables:
 Variables that are defined inside a function body have a local scope, and those defined outside have a global scope.
 
-This means that local variables can be accessed only inside the function in which they are declared, whereas global variables can be accessed throughout the program body by all functions. When you call a function, the variables declared inside it are brought into scope. Following is a simple example:
+This means that local variables can be accessed only inside the function in which they are declared, whereas global variables can be accessed 
+throughout the program body by all functions. When you call a function, the variables declared inside it are brought into scope.
+ Following is a simple example:
 
 #!/usr/bin/python
 
@@ -1678,7 +1709,6 @@ new way of class declaration in Python
 class a(object):
 // calling the instance of the python
 x = a()
-
 now if we print the object 
 
 print a
@@ -1688,7 +1718,6 @@ Classes are objects too.As soon as you use the keyword class, Python executes it
 This object (the class) is itself capable of creating objects (the instances), and this is why it's a class.
 
 But still, it's an object, and therefore:
-
 i)you can assign it to a variable
 	b =a 
 ii)you can copy it
@@ -1705,7 +1734,8 @@ OOSP pythonic Way :
 virtual clases:
 ---------------------
 
-When abstractmethod() is applied in combination with other method descriptors, it should be applied as the innermost decorator, as shown in the following usage examples:
+When abstractmethod() is applied in combination with other method descriptors, it should be applied as the innermost decorator,
+ as shown in the following usage examples:
 
 import abc
 
@@ -1735,13 +1765,13 @@ class Shape(object):
     x = property(_get_x, _set_x)
 If your class is already using a metaclass, derive it from ABCMeta rather than type and you can continue to use your own metaclass.
 Alternative of Abstarct methods:
-------------------------------------
+--------------------------------
 A cheap alternative (and the best practice before the abc module was introduced) would be to have all your abstract methods just
 raise an exception (NotImplementedError is a good one) so that classes derived from it would have to override that method to be useful.
 Before this te duck typing concept was der 
 Accessing members of both sequence type objects and mapping type objects is done by using the __getitem__ method of these objects.
 
-a = [0,1 2, 3]
+a = [0,1 2,3]
 print a[0]
 0
 b = {'a': 0, 'b': 1}
@@ -1889,20 +1919,6 @@ DB connection made for: 12
 
 
 How @staticmethod and @classmethod are different.
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
 class Kls(object):
     def __init__(self, data):
         self.data = data
@@ -1957,11 +1973,14 @@ Mylist is an iterable. When you use a list comprehension, you create a list, and
 0
 1
 4
-Everything you can use "for    in..." on is an iterable: lists, strings, files    These iterables are handy because you can read them as much as you wish, but you store all the values in memory and it's not always what you want when you have a lot of values.
+Everything you can use "for    in..." on is an iterable: lists, strings, files   
+ These iterables are handy because you can read them as much as you wish, but you store all the values in memory and 
+ it's not always what you want when you have a lot of values.
 
 Generators
 
-Generators are iterators, but you can only iterate over them once. It's because they do not store all the values in memory, they generate the values on the fly:
+Generators are iterators, but you can only iterate over them once. It's because they do not store all the values in memory,
+they generate the values on the fly:
 
  mygenerator = (x*x for x in range(3))
  for i in mygenerator:
@@ -1969,8 +1988,13 @@ Generators are iterators, but you can only iterate over them once. It's because 
 0
 1
 4
-It is just the same except you used () instead of []. BUT, you can not perform for i in mygenerator a second time since generators can only be used once: they calculate 0, then forget about it and calculate 1, and end calculating 4, one by one.
+It is just the same except you used () instead of []. BUT, you can not perform for i in mygenerator a second time since generators can only
+be used once: they calculate 0, then forget about it and calculate 1, and end calculating 4, one by one.
 
+for i in mygenerator:
+       print(i)
+Actually this outputs nothing	   
+	   
 Yield
 =============
 Yield is a keyword that is used like return, except the function will return a generator.
@@ -2079,11 +2103,11 @@ StopIteration.
 Therefore, a typical template for a generator would look like the following:
  def my_generator():
     try:
-    yield 'something'
-    except ValueError:
-    yield 'dealing with the exception'
+		yield 'something'
+		except ValueError:
+		yield 'dealing with the exception'
     finally:
-    print "ok let's clean"
+		print "ok let's clean"
    
  gen = my_generator()
  gen.next()
@@ -2202,16 +2226,21 @@ Traceback (most recent call last):
 TypeError: cannot concatenate 'str' and 'int' objects
 
 How the for statement works?
-Any time you use for to iterate over an iterable (basically, all sequence types and anything that defines __iter__() or __getitem__()), it needs to know when to stop iterating. Take a look at the code below:
+Any time you use for to iterate over an iterable (basically, all sequence types and anything that defines __iter__() or __getitem__()),
+ it needs to know when to stop iterating. Take a look at the code below:
 
 words = ['exceptions', 'are', 'useful']
 for word in words:
     print(word)
-How does for know when it's reached the last element in words and should stop trying to get more items? The answer may surprise you: the list raises a StopIteration exception.
+How does for know when it's reached the last element in words and should stop trying to get more items? The answer may surprise you:
+ the list raises a StopIteration exception.
+In fact, all iterables follow this pattern. When a for statement is first evaluated, it calls iter() on the object being iterated over.\
+ This creates an iterator for the object, capable of returning the contents of the object in sequence. For the call to iter() to succeed,
+ the object must either support the iteration protocol (by defining __iter__()) or the sequence protocol (by defining __getitem__()).
 
-In fact, all iterables follow this pattern. When a for statement is first evaluated, it calls iter() on the object being iterated over. This creates an iterator for the object, capable of returning the contents of the object in sequence. For the call to iter() to succeed, the object must either support the iteration protocol (by defining __iter__()) or the sequence protocol (by defining __getitem__()).
-
-As it happens, both the __iter__() and __getitem__() functions are required to raise an exception when the items to iterate over are exhausted. __iter__() raises the StopIteration exception, as discussed earlier, and __getitem__() raises the IndexError exception. This is how for knows when to stop
+As it happens, both the __iter__() and __getitem__() functions are required to raise an exception when the items to iterate over are exhausted.
+ __iter__() raises the StopIteration exception, as discussed earlier, and __getitem__() raises the IndexError exception. This is how for knows when to stop
+ __iter__() raises the StopIteration exception, as discussed earlier, and __getitem__() raises the IndexError exception. This is how for knows when to stop
 
 
 
@@ -3999,6 +4028,7 @@ $	Matches end of line.
 
 
 The Singleton
+==================================
 Possibly the simplest design pattern is the singleton, which is a way to provide one and only one object of a particular type. To accomplish this, 
 you must take control
  of object creation out of the hands of the programmer. One convenient way to do this is to delegate to a single instance of a private nested inner class:
