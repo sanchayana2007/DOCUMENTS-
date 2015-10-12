@@ -69,6 +69,36 @@ The classes and the derived thing
 > Slots 
 > Meta-programing
 
+
+The __prepare__ method
+======================================
+This method is called before the class body is executed and it must return a dictionary-like object that's used as the local namespace for all the code from the class body. It was added in Python 3.0, see PEP-3115.
+
+If your __prepare__ returns an object x then this:
+
+class Class(metaclass=Meta):
+    a = 1
+    b = 2
+    c = 3
+Will make the following changes to x:
+
+x['a'] = 1
+x['b'] = 2
+x['c'] = 3
+This x object needs to look like a dictionary. Note that this x object will end up as an argument to Metaclass.__new__ and if it's not an instance of dict you need to convert it before calling super().__new__. [21]
+
+So basically when an object is created 
+
+1. Metaclass {__Call__} is called off (__call__ will call Class.__new__.)
+2. __new__ (and if it returned an instance of Class it will also call Class.__init__ on it)
+3. __init__
+
+
+Creating a class
+1. Metaclass.__prepare__ just returns the namespace object (a dictionary-like object
+2. Metaclass.__new__ returns the Class object.
+
+
 >subclasing the built in types :
 ======================================
 And allowed programmers to subclass the built-in types such as list, tuple, or dict. So every time a class
@@ -413,6 +443,84 @@ along all the parameters even if they do not use them:
    
  class Base1(BaseBase):
     def
+
+getattr function :
++++++++++++++++++++++++++++++++++++++=+++++++
+>>> class Person():
+    	name = 'Victor'
+    	def say(self, what):
+       		print(self.name, what)
+
+>>> getattr(Person, 'name')
+'Victor'
+>>> attr_name = 'name'
+>>> person = Person()
+>>> getattr(person, attr_name)
+'Victor'
+>>> getattr(person, 'say')('Hello')
+Victor Hello
+
+difference between __getattr__ and __getattribute__ 
+----------------------------------------------------------
+A key difference between __getattr__ and __getattribute__ is that __getattr__ is only invoked if the attribute wasn't found the usual ways. It's good for implementing a fallback for missing attributes, and is probably the one of two you want.
+
+__getattribute__ is invoked before looking at the actual attributes on the object, and so can be tricky to implement correctly. You can end up in infinite recursions very easily.
+class Foo(object):
+    def __getattr__(self, attr):
+        print "looking up", attr
+        value = 42
+        self.__dict__[attr] = value
+        return value
+
+f = Foo()
+print f.x 
+#output >>> looking up x 42
+
+f.x = 3
+print f.x 
+#output >>> 3
+---------------------------------------------------------
+Order of referring the methods :
+
+There are many ways to access/change the value of self.foo:
+
+1) direct access a.foo
+2) inner dict a.__dict__['foo']
+3) get and set a.__get__ and a.__set__,of course there two are pre-defined methods.
+4) getattribute a.__getattribute__
+5) __getattr__ and __setattr__
+
+Class attribute lookup:
+---------------------------------------------
+
+class Test(object):
+	self.foo
+	
+	
+The match will happen in the following order 
+   		(Metaclass:__getatribute__('foo'))
+                           |
+            (yes)  ---  <foo in metaclass dict>  ---  (no)
+              |                         		 |
+              |			   <foo in class dict>		
+        metaclass dict        (no)			(yes)
+        has set n get           |                        |
+              |              
+              |                 |                        |
+              |              <foo in metaclass dict>     foo in class dict has get
+              |			|			yes			no
+              |		Raise exception			|		 	|
+	return metaclas					
+	dict foo bar				return dict_foo_get		return Metaclass:__dict_foo
+
+Magic method lookup
+---------------------------------------------
+For magic methods the lookup is done on the class, directly in the big struct with the slots: [12]
+
+Does the object's class have a slot for that magic method (roughly object->ob_type->tp_<magicmethod> in C code)? If yes, use it. If it's NULL then the operation is not supported.
+
+
+
 
 
 OOPS in python :
