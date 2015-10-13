@@ -3794,42 +3794,6 @@ PUDB:
 
 python -m pudb.run my-script.py
 
-Multiprocessing
-===============
-The GIL limitation makes it impossible to speed up programs that make heavy use
-of pure Python that is CPU bound. The only way to achieve it is to use separate
-processes. This is usually done by forking the program at some point. A fork is a
-system call available through os.fork, which will create a new child process. The
-two processes then continue the program in their own right after the forking:
- import os
- a = []
- def some_work():
-    a.append(2)
-    child_pid = os.fork()
-    if child_pid == 0:
-    a.append(3)
-    print "hey, I am the child process"
-    print "my pid is %d" % os.getpid()
-    print str(a)
-    else:
-    a.append(4)
-    print "hey, I am the parent"
-    print "the child is pid %d" % child_pid
-    print "I am the pid %d " % os.getpid()
-    print str(a)
-   
- some_work()
-hey, I am the parent
-the child is pid 25513
-I am the pid 25411
-[2, 4]
-hey, I am the child process
-my pid is
-
-The memory context is also copied at the fork and then each process deals with its
-own address space. To communicate, processes need to work with system-wide
-resources or use low-level tools like signals.
-
 Pyprocessing
 =============
 pyprocessing provides a portable way to work with processes as if they
@@ -3888,7 +3852,8 @@ The standard workflow is:
 2. Then you fill it with functions that start with ‘test_’.
 3. You run the tests by placing unittest.main() in your file, usually at the bottom.
 
-One of the many benifits of unittest, that you’ll use when your tests get bigger than the toy examples I’m showing on this blog, is the use of ‘setUp’ and ‘tearDown’ functions to get your system ready for the tests.
+One of the many benifits of unittest, that you’ll use when your tests get bigger than the toy examples I’m showing on this blog,
+ is the use of ‘setUp’ and ‘tearDown’ functions to get your system ready for the tests.
 
 Like the doctest introduction, I’ll run through a simple example first, then show how I’m using unittest for testing markdown.py.
 
@@ -3917,42 +3882,14 @@ class TestUM(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-import unittest
-from unnecessary_math import multiply
- 
-class TestUM(unittest.TestCase):
- 
-    def setUp(self):
-        pass
- 
-    def test_numbers_3_4(self):
-        self.assertEqual( multiply(3,4), 12)
- 
-    def test_strings_a_3(self):
-        self.assertEqual( multiply('a',3), 'aaa')
- 
-if __name__ == '__main__':
-    unittest.main()
 
-In this example, I’ve used assertEqual(). The unittest framework has a whole bunch of assertBlah() style functions like assertEqual(). Once you have a reasonable reference for all of the assert functions bookmarked, working with unnittest is pretty powerful and easy.
 
-Aside from the tests you write, most of what you need to do can be accomplished with the test fixture methods such as setUp, tearDown, setUpClass, tearDownClass, etc.
+
+In this example, I’ve used assertEqual(). The unittest framework has a whole bunch of assertBlah() style functions like assertEqual().
+ Once you have a reasonable reference for all of the assert functions bookmarked, working with unnittest is pretty powerful and easy.
+
+Aside from the tests you write, most of what you need to do can be accomplished with the test fixture methods such as setUp, tearDown,
+ setUpClass, tearDownClass, etc.
 
 Running unittests
 
@@ -3962,11 +3899,6 @@ At the bottom of the test file, we have this code:
  
 if __name__ == '__main__':
     unittest.main()
-1
-2
-if __name__ == '__main__':
-    unittest.main()
-
 This allows us to run all of the test code just by running the file.
 Running it with no options is the most terse, and running with a ‘-v’ is more verbose, showing which tests
 ran.
@@ -3986,21 +3918,6 @@ test_strings_a_3 (__main__.TestUM) ... ok
 ----------------------------------------------------------------------
 Ran 2 tests in 0.000s
 OK
-> python test_um_unittest.py
-..
-----------------------------------------------------------------------
-Ran 2 tests in 0.000s
- 
-OK
-> python test_um_unittest.py -v
-test_numbers_3_4 (__main__.TestUM) ... ok
-test_strings_a_3 (__main__.TestUM) ... ok
- 
-----------------------------------------------------------------------
-Ran 2 tests in 0.000s
- 
-OK
- 
 
 OPTIMISATION OF APPLICATION S
 	
@@ -4134,12 +4051,7 @@ For any digits use the \d symbol
 
 
 2) Match a symbol at the end ^/start $ of a word
-
-
-
 re.search('Shankar[^a-zA-Z0-9_][^a-zA-Z0-9_]',a).group()
-
-
 >> ShankarDD
 
 
@@ -4149,8 +4061,6 @@ re.search('Shankar[^a-zA-Z0-9_][^a-zA-Z0-9_]',a).group()
 4) Finding a email ID :
 
 str = abc@google.com
-
-
 	match = re.search('([\w.-]+)@([\w.-]+)', str)
 
 
@@ -4206,7 +4116,8 @@ most maxsplit splits occur, and the remainder of the string is returned as the f
 
 Matching Versus Searching
 --------------------------------------------------
-Python offers two different primitive operations based on regular expressions: match checks for a match only at the beginning of the string, while search checks for a match anywhere in the string (this is what Perl does by default).
+Python offers two different primitive operations based on regular expressions: match checks for a match only at the beginning of the string,
+ while search checks for a match anywhere in the string (this is what Perl does by default).
 
 Example
 #!/usr/bin/python
@@ -4284,7 +4195,7 @@ you must take control
 
 class OnlyOne:
     class __OnlyOne:
-        def __init__(self, arg):
+         def __init__(self, arg):
             self.val = arg
         def __str__(self):
             return repr(self) + self.val
@@ -4347,8 +4258,11 @@ Sol:
 The important thing to be understood here is, the functions are created during the evaluation of the list 
 comprehension, but the value of i will be evaluated only during the execution of the functions.
 
-So, in your case, you have created three functions and all of them refer i. When those functions are
- invoked at runtime, i will have the value 2, because that was the last value bound to i in the last
+So, in your case, you have created three functions and all of them refer
+ i. When those functions are
+ invoked at runtime, i will have the value ..
+ 
+ 2, because that was the last value bound to i in the last
  iteration of the for loop.
  
   lambdas = [lambda i=i: i for i in range(3)]
@@ -4415,7 +4329,8 @@ for _ in (myClass().Function(things) for things in biggerThing):
 Soln:
 
 d = {key: value for (key, value) in iterable}
-Of course, you can use the iterable in any way you want (tuples and lists literals, generator comprehensions, list comprehensions, generator functions, functional composition    feel creative) as long as each element is an iterable itself of two elements:
+Of course, you can use the iterable in any way you want (tuples and lists literals, generator comprehensions, list comprehensions, 
+generator functions, functional composition    feel creative) as long as each element is an iterable itself of two elements:
 
 d = {value: foo(value) for value in sequence if bar(value)}
 
