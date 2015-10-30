@@ -181,17 +181,8 @@ my_generator.next() WILL RESULT in error
 Parsing user inputs via input()
 ==============================================
 [back to top]
-Fortunately, the input() function was fixed in Python 3 so that it always stores the user inputs as str objects. In order to avoid the dangerous behavior in Python 2 to read in other types than strings, we have to use raw_input() instead.
-
-
-
-
-
-
-
-
-
-
+Fortunately, the input() function was fixed in Python 3 so that it always stores the user inputs as str objects.
+ In order to avoid the dangerous behavior in Python 2 to read in other types than strings, we have to use raw_input() instead.
 
 New style objects have a different object model to classic objects, and some things won't work properly with old style objects, for instance,
  super(), @property and descrpnt
@@ -207,7 +198,8 @@ The classes and the derived thing
 
 The __prepare__ method
 ======================================
-This method is called before the class body is executed and it must return a dictionary-like object that's used as the local namespace for all the code from the class body. It was added in Python 3.0, see PEP-3115.
+This method is called before the class body is executed and it must return a dictionary-like object that's used as the local namespace
+ for all the code from the class body. It was added in Python 3.0, see PEP-3115.
 
 If your __prepare__ returns an object x then this:
 
@@ -220,7 +212,8 @@ Will make the following changes to x:
 x['a'] = 1
 x['b'] = 2
 x['c'] = 3
-This x object needs to look like a dictionary. Note that this x object will end up as an argument to Metaclass.__new__ and if it's not an instance of dict you need to convert it before calling super().__new__. [21]
+This x object needs to look like a dictionary. Note that this x object will end up as an argument to Metaclass.__new__ and 
+if it's not an instance of dict you need to convert it before calling super().__new__. [21]
 
 So basically when an object is created 
 
@@ -539,46 +532,6 @@ File "<stdin>", line 4, in __init__
 TypeError: __init__() takes exactly 1 argument (2 given)
 
 
-Heterogeneous Arguments
-Another issue with super usage is argument passing in initialization. How can a
-class call its base class __init__ code if it doesn't have the same signature? This
-leads to the following problem:
- class BaseBase(object):
- def __init__(self):
-	 print 'basebase'
-	super(BaseBase, self).__init__()
-
- class Base1(BaseBase):
- def __init__(self):
-	 print 'base1'
-	super(Base1, self).__init__()
-
- class Base2(BaseBase):
- def __init__(self, arg):
- 	print 'base2'
- 	super(Base2, self).__init__()
-
- class MyClass(Base1 , Base2):
-def __init__(self, arg):
- 	print 'my base'
- 	super(MyClass, self).__init__(arg)
-.
- m = MyClass(10)
-my base
-Traceback (most recent call last):
-File "<stdin>", line 1, in <module>
-File "<stdin>", line 4, in __init__
-TypeError: __init__() takes exactly 1 argument (2 given)
-One solution would be to use *args and **kw magic, so that all constructors pass
-along all the parameters even if they do not use them:
- class BaseBase(object):
-    def __init__(self, *args, **kw):
-    print 'basebase'
-    super(BaseBase, self).__init__(*args, **kw)
-   
- class Base1(BaseBase):
-    def
-
 getattr function :
 +++++++++++++++++++++++++++++++++++++=+++++++
 >>> class Person():
@@ -597,9 +550,11 @@ Victor Hello
 
 difference between __getattr__ and __getattribute__ 
 ----------------------------------------------------------
-A key difference between __getattr__ and __getattribute__ is that __getattr__ is only invoked if the attribute wasn't found the usual ways. It's good for implementing a fallback for missing attributes, and is probably the one of two you want.
+A key difference between __getattr__ and __getattribute__ is that __getattr__ is only invoked if the attribute wasn't found the usual ways. 
+It's good for implementing a fallback for missing attributes, and is probably the one of two you want.
 
-__getattribute__ is invoked before looking at the actual attributes on the object, and so can be tricky to implement correctly. You can end up in infinite recursions very easily.
+__getattribute__ is invoked before looking at the actual attributes on the object, and so can be tricky to implement correctly.
+ You can end up in infinite recursions very easily.
 class Foo(object):
     def __getattr__(self, attr):
         print "looking up", attr
@@ -652,10 +607,8 @@ Magic method lookup
 ---------------------------------------------
 For magic methods the lookup is done on the class, directly in the big struct with the slots: [12]
 
-Does the object's class have a slot for that magic method (roughly object->ob_type->tp_<magicmethod> in C code)? If yes, use it. If it's NULL then the operation is not supported.
-
-
-
+Does the object's class have a slot for that magic method (roughly object->ob_type->tp_<magicmethod> in C code)? 
+If yes, use it. If it's NULL then the operation is not supported.
 
 
 OOPS in python :
@@ -872,6 +825,31 @@ Hashability makes an object usable as a dictionary key and a set member, because
 All of Python’s immutable built-in objects are hashable, while no mutable containers (such as lists or dictionaries) are. Objects which are instances
 of user-defined classes are hashable by default; they all compare unequal (except with themselves), and their hash value is derived from their id().
 
+****
+Python often wonder why, while the language includes both a tuple and a list type, tuples are usable as a dictionary keys, while lists are not.
+ This was a deliberate design decision, and can best be explained by first understanding how Python dictionaries work.
+
+ 
+Lists  not as Dictionary Keys
+============================
+That said, the simple answer to why lists cannot be used as dictionary keys is that lists do not provide a valid __hash__ method. Of course, 
+the obvious question is, "Why not?"
+
+Consider what kinds of hash functions could be provided for lists.
+
+If lists hashed by id, this would certainly be valid given Python's definition of a hash function -- lists with different hash values 
+would have different ids. But lists are containers, and most other operations on them deal with them as such. So hashing lists by their id 
+instead would produce unexpected behavior such as:
+
+Looking up different lists with the same contents would produce different results, even though comparing lists with the same contents would indicate them as equivalent.
+Using a list literal in a dictionary lookup would be pointless -- it would always produce a KeyError.
+
+
+Tuples   as Dictionary Keys
+============================
+
+Note that since tuples are immutable, they do not run into the troubles of lists - they can be hashed by their contents without worries about modification. Thus,
+ in Python, they provide a valid __hash__ method, and are thus usable as dictionary keys.
 --------------------------------------------------------------------------------------
 Object declaration :
 
@@ -1185,7 +1163,6 @@ type is the built-in base factory.
 Creating classes dynamically
 ***********************************************************
 Since classes are objects, you can create them on the fly, like any object.
-
 First, you can create a class in a function using class:
 
    def choose_class(name):
@@ -1546,7 +1523,8 @@ NameError: name '_' is not defined
 'alright!'
  _
 'alright!'
-As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the next person reading your code to know that, by convention, a certain name is assigned but not intended to be used. 
+As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the next person reading your code to know that,
+ by convention, a certain name is assigned but not intended to be used. 
 For instance, you may not be interested in the actual value of a loop counter:
 
 n = 42
@@ -1572,7 +1550,8 @@ When learning Python many people don't really understand why so much underlines 
 I've already had to explain it so many times, it's time to document it.
 
 One underline in the beginning
-Python doesn't have real private methods, so one underline in the beginning of a method or attribute means you shouldn't access this method, because it's not part of the API. It's very common when using properties:
+Python doesn't have real private methods, so one underline in the beginning of a method or attribute means you shouldn't access this method, because
+ it's not part of the API. It's very common when using properties:
 
 class BaseForm(StrAndUnicode):
        
@@ -1584,10 +1563,12 @@ class BaseForm(StrAndUnicode):
         return self._errors
     
     errors = property(_get_errors)
-This snippet was taken from django source code (django/forms/forms.py). This means errors is a property, and it's part of the API, but the method this property calls, _get_errors, is "private", so you shouldn't access it.
+This snippet was taken from django source code (django/forms/forms.py). This means errors is a property, and it's part of the API,
+ but the method this property calls, _get_errors, is "private", so you shouldn't access it.
 
 Two underlines in the beginning
-This one causes a lot of confusion. It should not be used to mark a method as private, the goal here is to avoid your method to be overridden by a subclass. Let's see an example:
+This one causes a lot of confusion. It should not be used to mark a method as private, the goal here is to avoid your method to be 
+overridden by a subclass. Let's see an example:
 
 class A(object):
     def __method(self):
@@ -4460,3 +4441,7 @@ For eg:
 ....  [97, 121, 117, 115, 104]
 >>> print map(lambda x, y: x*y**2, [1, 2, 3], [2, 4, 1])
 ....  [4, 32, 3]
+12. Tuples of Lists:
+==================================================================================================
+actual_clients_emails, actual_client_names = zip(
+    *[(partner.email, partner.name) for partner in op_client])
