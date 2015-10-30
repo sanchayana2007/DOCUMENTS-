@@ -250,6 +250,122 @@ Combinatoric generators:
 # combinations('ABCD', 2) --> AB AC AD BC BD CD
 # combinations(range(4), 3) --> 012 013 023 123
 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Debugging Modules                                                	  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Debugging in python:
+=========================
+
+PDB:
+
+You can use the pdb module, insert pdb.set_trace() anywhere and it will function as a breakpoint.
+
+>>> import pdb
+>>> a="a string"
+>>> pdb.set_trace()
+--Return--
+> <stdin>(1)<module>()->None
+(Pdb) p a
+'a string'
+(Pdb)
+To continue execution use c (or cont or continue).
+It is possible to execute arbitrary Python expressions using pdb. For example, if you find a mistake, you can correct the code, 
+then type a type expression to have the same effect in the running code .
+
+PUDB:
+
+python -m pudb.run my-script.py
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Unit test Modules                                                	  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Testing the Python Modules :
+------------------------------------------
+The standard workflow is:
+1. You define your own class derived from unittest.TestCase.
+2. Then you fill it with functions that start with ‘test_’.
+3. You run the tests by placing unittest.main() in your file, usually at the bottom.
+
+One of the many benifits of unittest, that you’ll use when your tests get bigger than the toy examples I’m showing on this blog,
+ is the use of ‘setUp’ and ‘tearDown’ functions to get your system ready for the tests.
+
+Like the doctest introduction, I’ll run through a simple example first, then show how I’m using unittest for testing markdown.py.
+
+unittest example
+
+Using the same unnecessary_math.py module that I wrote in the
+doctest intro, here’s some example test
+code to test my ‘multiply’ function.
+
+test_um_unittest.py:
+
+ 
+import unittest
+from unnecessary_math import multiply
+
+class TestUM(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_numbers_3_4(self):
+        self.assertEqual( multiply(3,4), 12)
+
+    def test_strings_a_3(self):
+        self.assertEqual( multiply('a',3), 'aaa')
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+In this example, I’ve used assertEqual(). The unittest framework has a whole bunch of assertBlah() style functions like assertEqual().
+ Once you have a reasonable reference for all of the assert functions bookmarked, working with unnittest is pretty powerful and easy.
+
+Aside from the tests you write, most of what you need to do can be accomplished with the test fixture methods such as setUp, tearDown,
+ setUpClass, tearDownClass, etc.
+
+Running unittests
+
+At the bottom of the test file, we have this code:
+
+
+ 
+if __name__ == '__main__':
+    unittest.main()
+This allows us to run all of the test code just by running the file.
+Running it with no options is the most terse, and running with a ‘-v’ is more verbose, showing which tests
+ran.
+
+
+
+> python test_um_unittest.py
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+> python test_um_unittest.py -v
+test_numbers_3_4 (__main__.TestUM) ... ok
+test_strings_a_3 (__main__.TestUM) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+OK
+
+
+
+
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           File parsing Modules                                                  +                
@@ -260,6 +376,13 @@ Combinatoric generators:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           Database Modules                                                      +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          Automation Modules                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
