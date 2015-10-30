@@ -3292,6 +3292,118 @@ class Myprojcts():
 4. Context Provider
 ------------------------------------
 
+Context Manager :
+=======================================================================
+the context manager is used to provide the Threading module in python 
+Now to know more about the context manager the lets know the 'with'
+
+Python "with" Statement by Example
+ The classic example is opening a file, manipulating the file, then closing it:
+
+with open('output.txt', 'w') as f:
+    f.write('Hi there!')
+The above with statement will automatically close the file after the nested block of code.
+The advantage of using a with statement is that it is guaranteed to close the file no matter
+ how the nested block exits. If an exception occurs before the end of the block, it will close
+ the file before the exception is caught by an outer exception handler. If the nested block
+ were to contain a return statement, or a continue or break statement, the with statement would
+ automatically close the file in those cases, too.
+ 
+ 
+ lets go for an example 
+ to send multiple number of udp packets suppose 6 paqckets 
+ 
+ send_udp.buffer()
+ for i in xrange(6)
+	send_udp.open()
+	send_udp.connect()
+	send_udp.write()
+	send_udp.close()
+	
+	
+now this will become problematic to update if the open and the close is not mapped properlly 
+for more number of the sockets 
+So this bahaviour can be ensued by writing the Context manager and there are Two ways to do that 
+1. Implementing the Context Manager as a Class
+***************************************************
+Here’s the first approach. To implement a context manager, we define a class containing an
+ __enter__ and __exit__ method. The class below accepts a send_udp context, cr, in its constructor:
+
+class Socket():
+    def __init__(self, send_udp):
+        self.send_udp = send_udp
+    def __enter__(self):
+        self.send_udp.open()
+        return self.send_udp
+    def __exit__(self, type, value, traceback):
+        self.send_udp.close()
+		
+Thanks to those two methods, it’s valid to instantiate a Socket object and use it in a with statement.
+ The Socket object is considered to be the context manager.
+
+send_udp.translate(68, 68)
+for i in xrange(6):
+    with Socket(send_udp):
+		send_udp.connect()
+		send_udp.write()
+        
+Here are the exact steps taken by the Python interpreter when it reaches the with statement:
+--------------------------------------------------------------------------------------------
+1. The with statement stores the Socket object in a temporary, hidden variable, since it’ll be needed later.
+ (Actually, it only stores the bound __exit__ method, but that’s a detail.)
+2. The with statement calls __enter__ on the Socket object, giving the context manager a chance to do its job.
+	The __enter__ method calls open on the send_udp context.
+	The __enter__ method returns the send_udp context, but as you can see, we have not specified the optional "as" 
+	target part of the with statement. Therefore, the return value is not Socket anywhere. We don’t need it; we
+	know it’s the same send_udp context that we passed in.
+
+3. The nested block of code is executed. connect and write
+4. At the end of the nested block, the with statement calls the Socket object’s __exit__ method, passing the arguments 
+	(None, None, None) to indicate that no exception occured.
+5. The __exit__ method calls close on the send_udp context.
+Once we understand what the Python interpreter is doing, we can make better sense of the example at the beginning
+ of this blog post, where we opened a file in the with statement: File objects expose their own __enter__ and __exit__
+ methods, and can therefore act as their own context managers. 
+ 
+ Steps when an Exception is occured during send_udp.connect()/send_udp.write()
+ --------------------------------------------------------------------------------------------
+1.  The connect method raises a TypeError exception: “Context.connect() takes exactly 4 arguments.”
+2. The with statement catches this exception.
+3. The with statement calls __exit__ on the Socket object. It passes information about the exception 
+ in three arguments: (type, value, traceback) – the same values you’d get by calling sys.exc_info.
+ This tells the __exit__ method everything it could possibly need to know about the exception that occurred.
+ 
+4.In this case, our __exit__ method doesn’t particularly care. It calls restore on the  context anyway,
+ and returns None. (In Python, when no return statement is specified, the function actually returns None.)
+5.The with statement checks to see whether this return value is true. Since it isn’t, the with statement 
+ re-raises the TypeError exception to be handled by someone else.
+In this manner, we can guarantee that restore will always be called on the  context, whether an exception occurs or not.
+ 
+2. Implementing the Context Manager as a Generator
+***************************************************
+ we can write a generator function. Here’s a simplified example of such a generator function. 
+ 
+from contextlib import contextmanager
+@contextmanager
+def Socket(send_udp):
+    send_udp.open()
+    yield send_udp
+    send_udp.close()
+
+To make this generator work, two entities from contextlib, a standard Python module, are required: the contextmanager 
+function, and an internal class named GeneratorContextManager. The source code, contextlib.py, is a bit hairy, but at
+ least it’s short. I’ll simply describe what happens, and you are free to refer to the source code, and any other
+ supplementary materials, as needed.
+ 
+ 
+1. The Python interpreter recognizes the yield statement in the middle of the function definition.
+ As a result, the def statement does not create a normal function; it creates a generator function.
+2. Because of the presence of the @contextmanager decorator, contextmanager is called with the generator function as its argument.
+3. The contextmanager function returns a “factory” function, which creates GeneratorContextManager objects wrapped around the provided generator. 
+
+Finally, the factory function is assigned to Socket. From this point on, when we call Socket, we’ll actually be calling the factory function.
+
+
 What is Multithreading?
 =============================================================================
 A thread is short for a thread of execution. A programmer can split his or her work
