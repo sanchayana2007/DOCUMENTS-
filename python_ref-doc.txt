@@ -239,8 +239,260 @@ Creating a class
 1. Metaclass.__prepare__ just returns the namespace object (a dictionary-like object
 2. Metaclass.__new__ returns the Class object.
 
+Data Types: 
+=====================================
+Python also provides some built-in data types,here are the 6 built in types 
 
->subclasing the built in types :
+1. dict:(association)
+*********
+A dictionary is mutable and is another container type that can store any number of Python objects,
+including other container types. Dictionaries consist of pairs (called items) of keys and their
+corresponding values.
+
+Python dictionaries are also known as associative arrays or hash tables. The general syntax of a
+dictionary is as follows:
+
+dict = {'Alice': '2341', 'Beth': '9102', 'Cecil': '3258'}
+You can create dictionary in the following way as well:
+
+dict1 = { 'abc': 456 };
+dict2 = { 'abc': 123, 98.6: 37 };
+dict['Age'] = 8; # update existing entry
+dict['School'] = "DPS School"; # Add new ent
+Each key is separated from its value by a colon (:), the items are separated by commas, and the whole
+thing is enclosed in curly braces. An empty dictionary without any items is written with just two 
+curly braces, like this: {}.
+
+Accessing Values in Dictionary:
+---------------------------------
+print "dict['Name']: ", dict['Name'];
+print "dict['Age']: ", dict['Age'];
+
+Delete Dictionary Elements:
+------------------------------
+del dict['Name']; # remove entry with key 'Name'
+dict.clear();     # remove all entries in dict
+del dict ;        # delete entire dictionary
+
+Key properties :
+------------------
+a) More than one entry per key not allowed. Which means no duplicate key is allowed. When duplicate keys 
+encountered during assignment, the last assignment wins. Following is a simple example:
+b) Tuples can be used as Dict keys but not Lists 
+
+2. list:(collection)
+*********
+The list is a most versatile datatype available in Python  Good thing about a list is that items in a list need not all have the same type.
+Creating a list is putting different comma-separated values between squere brackets. For example:
+
+list1 = ['physics', 'chemistry', 1997, 2000];
+Basic List Operations:
+Lists respond to the + and * operators much like strings; they mean concatenation and repetition here too, except that the result is a new list, not a string.
+
+In fact, lists respond to all of the general sequence operations we used on strings in the prior chapter.
+
+Python Expression	Results	 Description
+----------------------------------------------
+len([1, 2, 3])	3	Length
+[1, 2, 3] + [4, 5, 6]	[1, 2, 3, 4, 5, 6]	Concatenation
+['Hi!'] * 4	['Hi!', 'Hi!', 'Hi!', 'Hi!']	Repetition
+3 in [1, 2, 3]	True	Membership
+for x in [1, 2, 3]: print x,	1 2 3	Iteration
+
+list[:-1]  Gives the list except the last one element Splicing
+
+
+Unique Python use of list:
+--------------------------
+
+1. Filter a number range
+[x for x in range(1,1000) if x % 3 == 0 or x % 5 == 0]
+
+
+2. square up a list 
+a = [1,2,3]
+b= [ i **2 for  i in a]
+
+2. Reverse a list 
+g = "abcd"
+g[::-1]
+>> dcba
+
+It starts from the end and prints every element 
+g[::-2]
+>> db
+It starts from the end and prints every next element  element
+
+Use of enumerate
+-------------------------------------
+refactored in a list comprehension like this:
+ def _treatment(pos, element):
+    return '%d: %s' % (pos, element)
+   
+ seq = ["one", "two", "three"]
+ [_treatment(i, el) for i, el in enumerate(seq)]
+['0: one', '1: two', '2: three']
+
+
+3. set:(unordered collection of distinct hashable objects and Mutable):
+************************************
+Addition :
+-----------
+s = {'jack', 'sjoerd'}##in addition to the set constructor.
+
+
+
+Properties:
+-----------------
+1. Like other collections, sets support x in set, len(set), and for x in set. Being an unordered collection,
+sets do not record element position or order of insertion. Accordingly, sets do not support indexing, slicing, 
+or other sequence-like behavior.
+
+2. The set type is mutable — the contents can be changed using methods like add() and remove(). Since it is mutable,
+ it has no hash value and cannot be used as either a dictionary key or as an element of another set.
+
+ 3. Instances of set are compared to instances of frozenset based on their members.
+ For example, set('abc') == frozenset('abc') returns True and so does set('abc') in set([frozenset('abc')]).
+
+ 4 . sets has but not frozen sets 
+ 
+ The following table lists operations available for set that do not apply to immutable instances of frozenset:
+------------------------------------------------------------------------------
+update(other, ...)															 |
+set |= other | ...															 |
+Update the set, adding elements from all others.							 |
+------------------------------------------------------------------------------
+intersection_update(other, ...)												 |
+set &= other & ...															 |
+Update the set, keeping only elements found in it and all others.			 |
+-----------------------------------------------------------------------------
+difference_update(other, ...)												 |
+set -= other | ...															 |
+Update the set, removing elements found in others.
+-----------------------------------------------------------------------------|
+symmetric_difference_update(other)
+set ^= other
+Update the set, keeping only elements found in either set, but not in both.	 |
+-----------------------------------------------------------------------------|
+add(elem)
+Add element elem to the set.												 |
+-----------------------------------------------------------------------------|
+remove(elem)
+Remove element elem from the set. Raises KeyError if elem is not contained in|
+the set.																	 |
+-----------------------------------------------------------------------------|
+discard(elem)
+Remove element elem from the set if it is present.
+-----------------------------------------------------------------------------|
+pop()
+Remove and return an arbitrary element from the set. Raises KeyError if the set|
+ is empty.
+-----------------------------------------------------------------------------
+clear()																		 |
+Remove all elements from the set.											 |
+-----------------------------------------------------------------------------|
+ 
+ 
+ 
+The sets  provides classes for constructing and manipulating unordered collections of unique elements.
+Common uses include membership testing, removing duplicates from a sequence, and computing standard math
+operations on sets such as intersection, union, difference, and symmetric difference
+
+ from sets import Set
+ engineers = Set(['John', 'Jane', 'Jack', 'Janice'])
+ programmers = Set(['Jack', 'Sam', 'Susan', 'Janice'])
+ managers = Set(['Jane', 'Jack', 'Susan', 'Zack'])
+ employees = engineers | programmers | managers           # union
+ engineering_management = engineers & managers            # intersection
+ fulltime_management = managers - engineers - programmers # difference
+ engineers.add('Marvin')                                  # add element
+
+Spatialnet use of set 
+# scan for referenced poles (strip off the 'ST' from start of ID as not present in test db)
+		referenced_pole_ids = set([staging_ent.attributes["POLE_ID"][2:]
+								for staging_ent in layer_entities_map.get("Drops",[]) 
+								if staging_ent.attributes.get("POLE_ID")])
+here a set of unique pole ids referenced from a Drops can be drawn up 
+
+
+
+3.frozenset:(ordered Collection Immutable)
+******************************************
+ The frozenset type is immutable and hashable — its contents cannot be altered after it is created;
+ it can therefore be used as a dictionary key or as an element of another set.
+
+Supports all set properties except add n remove
+
+
+
+4. tuple:
+***********
+It is a Immutable List and its fast in retriving and all it can be termed as an array
+ A tuple is a sequence of immutable Python objects. Tuples are sequences, just like lists. The only difference is that 
+ 
+ 1) tuples can't be changed i.e., tuples are immutable 
+ 2) tuples use parentheses and lists use square brackets.
+
+ tup1 = ('physics', 'chemistry', 1997, 2000);
+ del tup; // delete tuples
+	Empty and single tuples :
+============================
+	empty tuple is written as two parentheses containing nothing:
+	tup1 = ();
+
+To write a tuple containing a single value you have to include a comma, even though there is only one value:
+	tup1 = (50,);
+Like string indices, tuple indices start at 0, and tuples can be sliced, concatenated and so o
+ 
+ 
+Updating Tuples: 
+****************
+# So let's create a new tuple as follows if you wana add something to tup1 make tup2 and concatenate in tup3
+	tup3 = tup1 + tup2;
+		print tup3;
+ 
+Because tuples are sequences, indexing and slicing work the same way for tuples as they do for strings. Assuming following input:
+
+	L = ('spam', 'Spam', 'SPAM!')
+ 
+
+Python Expression	Results	 Description
+	L[2]	'SPAM!'	Offsets start at zero
+	L[-2]	'Spam'	Negative: count from the right
+	L[1:]	['Spam', 'SPAM!']	Slicing fetches sections
+
+
+
+5. str class (Used to hold Unicode strings):
+*****************************************
+6. bytes class (Used to hold binary data):
+*****************************************
+
+Specialized data types:
+------------------------------------
+1. datetime — Basic date and time types:
+*****************************************
+2. collections — Container datatypes:
+*****************************************
+3. collections.abc — Abstract Base Classes for Containers
+*****************************************
+4. heapq — Heap queue algorithm
+*****************************************
+5. bisect — Array bisection algorithm
+*****************************************
+6. array — Efficient arrays of numeric values
+*****************************************
+7. weakref — Weak references
+*****************************************
+8. types — Dynamic type creation and names for built-in types
+*****************************************
+9. copy — Shallow and deep copy operations
+******************************************
+10. pprint — Data pretty printer
+*****************************************
+11. enum — Support for enumerations
+*****************************************
+Subclasing the built in types :
 ======================================
 And allowed programmers to subclass the built-in types such as list, tuple, or dict. So every time a class
 that behaves almost like one of the built-in types needs to be implemented, the best
@@ -1334,159 +1586,6 @@ So this willl refelect on self.variable also
 Python Associations:
 =================================================================================================================
 
-The associations for python are 
-1) tuple :
-------------------
- It is a Immutable List and its fast in retriving and all it can be termed as an array
- A tuple is a sequence of immutable Python objects. Tuples are sequences, just like lists. The only difference is that 
- 
- 1) tuples can't be changed i.e., tuples are immutable 
- 2) tuples use parentheses and lists use square brackets.
-
- tup1 = ('physics', 'chemistry', 1997, 2000);
- del tup; // delete tuples
-	Empty and single tuples :
-============================
-	empty tuple is written as two parentheses containing nothing:
-	tup1 = ();
-
-To write a tuple containing a single value you have to include a comma, even though there is only one value:
-	tup1 = (50,);
-Like string indices, tuple indices start at 0, and tuples can be sliced, concatenated and so o
- 
- 
-Updating Tuples: 
-****************
-# So let's create a new tuple as follows if you wana add something to tup1 make tup2 and concatenate in tup3
-	tup3 = tup1 + tup2;
-		print tup3;
- 
-Because tuples are sequences, indexing and slicing work the same way for tuples as they do for strings. Assuming following input:
-
-	L = ('spam', 'Spam', 'SPAM!')
- 
-
-Python Expression	Results	 Description
-	L[2]	'SPAM!'	Offsets start at zero
-	L[-2]	'Spam'	Negative: count from the right
-	L[1:]	['Spam', 'SPAM!']	Slicing fetches sections
-
- 
-2)List : Comprehension
-
----------------
-The list is a most versatile datatype available in Python  Good thing about a list is that items in a list need not all have the same type.
-Creating a list is putting different comma-separated values between squere brackets. For example:
-
-list1 = ['physics', 'chemistry', 1997, 2000];
-Basic List Operations:
-Lists respond to the + and * operators much like strings; they mean concatenation and repetition here too, except that the result is a new list, not a string.
-
-In fact, lists respond to all of the general sequence operations we used on strings in the prior chapter.
-
-Python Expression	Results	 Description
-----------------------------------------------
-len([1, 2, 3])	3	Length
-[1, 2, 3] + [4, 5, 6]	[1, 2, 3, 4, 5, 6]	Concatenation
-['Hi!'] * 4	['Hi!', 'Hi!', 'Hi!', 'Hi!']	Repetition
-3 in [1, 2, 3]	True	Membership
-for x in [1, 2, 3]: print x,	1 2 3	Iteration
-
-list[:-1]  Gives the list except the last one element Splicing
-
-
-Unique Python use of list:
---------------------------
-
-1. Filter a number range
-[x for x in range(1,1000) if x % 3 == 0 or x % 5 == 0]
-
-
-2. square up a list 
-a = [1,2,3]
-b= [ i **2 for  i in a]
-
-2. Reverse a list 
-g = "abcd"
-g[::-1]
->> dcba
-
-It starts from the end and prints every element 
-g[::-2]
->> db
-It starts from the end and prints every next element  element
-
-Use of enumerate
--------------------------------------
-refactored in a list comprehension like this:
- def _treatment(pos, element):
-    return '%d: %s' % (pos, element)
-   
- seq = ["one", "two", "three"]
- [_treatment(i, el) for i, el in enumerate(seq)]
-['0: one', '1: two', '2: three']
-
-
- 
-3) Dictionaries :
--------------------
-A dictionary is mutable and is another container type that can store any number of Python objects,
-including other container types. Dictionaries consist of pairs (called items) of keys and their
-corresponding values.
-
-Python dictionaries are also known as associative arrays or hash tables. The general syntax of a
-dictionary is as follows:
-
-dict = {'Alice': '2341', 'Beth': '9102', 'Cecil': '3258'}
-You can create dictionary in the following way as well:
-
-dict1 = { 'abc': 456 };
-dict2 = { 'abc': 123, 98.6: 37 };
-dict['Age'] = 8; # update existing entry
-dict['School'] = "DPS School"; # Add new ent
-Each key is separated from its value by a colon (:), the items are separated by commas, and the whole
-thing is enclosed in curly braces. An empty dictionary without any items is written with just two 
-curly braces, like this: {}.
-
-Accessing Values in Dictionary:
-*****************************8**
-print "dict['Name']: ", dict['Name'];
-print "dict['Age']: ", dict['Age'];
-
-Delete Dictionary Elements:
-*******************************
-del dict['Name']; # remove entry with key 'Name'
-dict.clear();     # remove all entries in dict
-del dict ;        # delete entire dictionary
-
-Key properties :
-***************************
-a) More than one entry per key not allowed. Which means no duplicate key is allowed. When duplicate keys 
-encountered during assignment, the last assignment wins. Following is a simple example:
-
-
-
-4) Sets :
-The sets module provides classes for constructing and manipulating unordered collections of unique elements.
-Common uses include membership testing, removing duplicates from a sequence, and computing standard math
-operations on sets such as intersection, union, difference, and symmetric difference
-
- from sets import Set
- engineers = Set(['John', 'Jane', 'Jack', 'Janice'])
- programmers = Set(['Jack', 'Sam', 'Susan', 'Janice'])
- managers = Set(['Jane', 'Jack', 'Susan', 'Zack'])
- employees = engineers | programmers | managers           # union
- engineering_management = engineers & managers            # intersection
- fulltime_management = managers - engineers - programmers # difference
- engineers.add('Marvin')                                  # add element
-
-Spatialnet use of set 
-# scan for referenced poles (strip off the 'ST' from start of ID as not present in test db)
-		referenced_pole_ids = set([staging_ent.attributes["POLE_ID"][2:]
-								for staging_ent in layer_entities_map.get("Drops",[]) 
-								if staging_ent.attributes.get("POLE_ID")])
-here a set of unique pole ids referenced from a Drops can be drawn up 
-
 
 Functions:
 ===================================================================================================
@@ -1681,11 +1780,6 @@ Conclusion
 Use _one_underline to mark you methods as not part of the API. Use __two_underlines__ when you're creating 
 objects to look like native python objects or you wan't to customize behavior in specific situations. And 
 don't use __just_to_underlines, unless you really know what you're doing!
-
-
-
-
-
 
 	
 Magic functions:
@@ -4238,7 +4332,6 @@ For eg:
 ==================================================================================================
 actual_clients_emails, actual_client_names = zip(
     *[(partner.email, partner.name) for partner in op_client])
-=======
 
 13 . generator Comprehensions
 ==============================================================================================
