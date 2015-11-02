@@ -314,6 +314,30 @@ dishes = {'eggs': 2, 'sausage': 1, 'bacon': 1, 'spam': 500}
 >>> list(keys)
 ['spam', 'bacon']
 
+Lists  not as Dictionary Keys
+----------------------------
+That said, the simple answer to why lists cannot be used as dictionary keys is that lists do not provide a valid __hash__ method. Of course, 
+the obvious question is, "Why not?"
+
+Consider what kinds of hash functions could be provided for lists.
+
+If lists hashed by id, this would certainly be valid given Python's definition of a hash function -- lists with different hash values 
+would have different ids. But lists are containers, and most other operations on them deal with them as such. So hashing lists by their id 
+instead would produce unexpected behavior such as:
+
+Looking up different lists with the same contents would produce different results, even though comparing lists with the same contents would indicate them as equivalent.
+Using a list literal in a dictionary lookup would be pointless -- it would always produce a KeyError.
+
+
+Tuples   as Dictionary Keys
+----------------------------
+
+Note that since tuples are immutable, they do not run into the troubles of lists - they can be hashed by their contents without worries about modification. Thus,
+ in Python, they provide a valid __hash__ method, and are thus usable as dictionary keys.
+--------------------------------------------------------------------------------------
+
+
+
 2. list:(collection)
 *********
 The list is a most versatile datatype available in Python  Good thing about a list is that items in a list need not all have the same type.
@@ -369,7 +393,7 @@ refactored in a list comprehension like this:
 
 
 3. set:(unordered collection of distinct hashable objects and Mutable):
-************************************
+************************************************************************
 Addition :
 -----------
 s = {'jack', 'sjoerd'}##in addition to the set constructor.
@@ -1727,29 +1751,9 @@ Python often wonder why, while the language includes both a tuple and a list typ
  This was a deliberate design decision, and can best be explained by first understanding how Python dictionaries work.
 
  
-Lists  not as Dictionary Keys
-============================
-That said, the simple answer to why lists cannot be used as dictionary keys is that lists do not provide a valid __hash__ method. Of course, 
-the obvious question is, "Why not?"
 
-Consider what kinds of hash functions could be provided for lists.
-
-If lists hashed by id, this would certainly be valid given Python's definition of a hash function -- lists with different hash values 
-would have different ids. But lists are containers, and most other operations on them deal with them as such. So hashing lists by their id 
-instead would produce unexpected behavior such as:
-
-Looking up different lists with the same contents would produce different results, even though comparing lists with the same contents would indicate them as equivalent.
-Using a list literal in a dictionary lookup would be pointless -- it would always produce a KeyError.
-
-
-Tuples   as Dictionary Keys
-============================
-
-Note that since tuples are immutable, they do not run into the troubles of lists - they can be hashed by their contents without worries about modification. Thus,
- in Python, they provide a valid __hash__ method, and are thus usable as dictionary keys.
---------------------------------------------------------------------------------------
 Object declaration :
-
+*****************************
 A = Classname(22,22)
 
 Calling the function is same as C++ 
@@ -2236,7 +2240,31 @@ Variable-length arguments:
 		for var in vartuple:
       print var
 	return;
-	
+More on Defining Function:
+---------------------------
+1> Default argumnents :
+-----------------------------
+def fun(i,k=5):
+	print k
+this function can be called from the following ways 
+fun(3) # 5 
+fun(5) # 5 
+So the default argument is evaluated only onece that is for the 1st call
+Now for a function which is taking a mutable object he default argument is evaluated everytime
+def fun(i,L=[]):
+	L.append(i)
+	return L
+fun(1) #[1]
+fun(2) #[1,2]
+
+2> Arbitary Arg List
+. Arbitrary Argument Lists
+Finally, the least frequently used option is to specify that a function can be called with an arbitrary number
+of arguments. These arguments will be wrapped up in a tuple
+def write_multiple_items(file, separator, *args):
+    file.write(separator.join(args))
+
+
 multiple argument 
 ***************************************************************************************************
 def manyArgs(*arg):
@@ -2248,6 +2276,10 @@ I was called with 1 arguments: (1,)
 I was called with 3 arguments: (1, 2, 3)	
 
 j_txt = _("jobs: ") 
+
+
+
+
 
 Single Lone Underscore (_)
 ==================================================
