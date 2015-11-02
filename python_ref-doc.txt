@@ -248,9 +248,12 @@ Python also provides some built-in data types,here are the 6 built in types
 A dictionary is mutable and is another container type that can store any number of Python objects,
 including other container types. Dictionaries consist of pairs (called items) of keys and their
 corresponding values.
+<<<<<<< HEAD
 
 Python dictionaries are also known as associative arrays or hash tables. The general syntax of a
 dictionary is as follows:
+=======
+>>>>>>> origin/master
 he following examples all return a dictionary equal to {"one": 1, "two": 2, "three": 3}:
 
 >>> a = dict(one=1, two=2, three=3)
@@ -282,6 +285,34 @@ Key properties :
 a) More than one entry per key not allowed. Which means no duplicate key is allowed. When duplicate keys 
 encountered during assignment, the last assignment wins. Following is a simple example:
 b) Tuples can be used as Dict keys but not Lists 
+
+ Dictionary view objects:
+ ----------------------------
+The objects returned by dict.keys(), dict.values() and dict.items() are view objects. They provide a dynamic view
+on the dictionary’s entries, which means that when the dictionary changes, the view reflects these changes.
+
+dishes = {'eggs': 2, 'sausage': 1, 'bacon': 1, 'spam': 500}
+>>> keys = dishes.keys()
+>>> values = dishes.values()
+
+>>> # iteration
+>>> n = 0
+>>> for val in values:
+...     n += val
+>>> print(n)
+504
+
+>>> # keys and values are iterated over in the same order
+>>> list(keys)
+['eggs', 'bacon', 'sausage', 'spam']
+>>> list(values)
+[2, 1, 1, 500]
+
+>>> # view objects are dynamic and reflect dict changes
+>>> del dishes['eggs']
+>>> del dishes['sausage']
+>>> list(keys)
+['spam', 'bacon']
 
 2. list:(collection)
 *********
@@ -470,6 +501,7 @@ Python Expression	Results	 Description
 *********************************************
 
 6. bytes class (Used to hold binary data):
+<<<<<<< HEAD
 ****************************	*************
 Bytes objects are immutable sequences of single bytes. 
 bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects, instead they are always created by calling the constructor:
@@ -478,6 +510,58 @@ Creating an empty instance: bytearray()
 Creating a zero-filled instance with a given length: bytearray(10)
 From an iterable of integers: bytearray(range(20))
 Copying existing binary data via the buffer protocol: bytearray(b'Hi!')
+=======
+****************************************
+Bytes objects are immutable sequences of single bytes. Since many major binary protocols are based on the ASCII text encoding, bytes objects offer several methods that are only valid when working with ASCII compatible data and are closely related to string objects in a variety of other ways.
+ b'1,2,3'
+ 
+ 
+bytes.fromhex('2Ef0 F1f2  ')
+b'.\xf0\xf1\xf2'
+
+bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects, instead they are always created by calling the constructor:
+>>> bytearray.fromhex('2Ef0 F1f2  ')
+bytearray(b'.\xf0\xf1\xf2')
+
+Memory Views
+memoryview objects allow Python code to access the internal data of an object that supports the buffer protocol without copying.
+data = bytearray(b'abcefg')
+>>> v = memoryview(data)
+>>> v.readonly
+False
+>>> v[0] = ord(b'z')
+>>> data
+bytearray(b'zbcefg')
+
+7. files :
+****************************************
+Reading file contents 
+
+fobj = open("ad_lesbiam.txt")
+for line in fobj:
+    print line.rstrip()
+fobj.close()
+
+Writing file contents
+-------------------------------------
+fobj_in = open("ad_lesbiam.txt")
+fobj_out = open("ad_lesbiam2.txt","w")
+i = 1
+for line in fobj_in:
+    print line.rstrip()
+    fobj_out.write(str(i) + ": " + line)
+    i = i + 1
+fobj_in.close()
+fobj_out.close()
+
+o/p:
+1: V. ad Lesbiam 
+2: 
+3: VIVAMUS mea Lesbia, atque amemus,
+4: rumoresque senum seueriorum
+5: omnes unius aestimemus assis! 
+
+>>>>>>> origin/master
 
 7. Numeric Types(int,float,complex)
 Specialized data types:
@@ -984,6 +1068,55 @@ class ExtendedRef(weakref.ref):
 *****************************************
 9. copy — Shallow and deep copy operations
 ******************************************
+Assignment statements in Python do not copy objects, they create bindings between a target and an object. 
+>>> x = 3
+>>> y = x
+Now if we change y=z the memory is changed to some other Location
+For collections that are mutable or contain mutable items, a copy is sometimes needed so one can change 
+one copy without changing the other.
+
+The difference between shallow and deep copying is only relevant for compound objects 
+(objects that contain other objects, like lists or class instances):
+Shallow copy:
+--------------------
+A shallow copy constructs a new compound object and then (to the extent possible) inserts references into 
+it to the objects found in the original.
+Deep copy :
+--------------------
+A deep copy constructs a new compound object and then, recursively, inserts copies into it of the objects 
+found in the original.
+Two problems often exist with deep copy operations that don’t exist with shallow copy operations:
+
+Recursive objects (compound objects that, directly or indirectly, contain a reference to themselves) may
+cause a recursive loop.
+Because deep copy copies everything it may copy too much, e.g., administrative data structures that should 
+be shared even between copies.
+>>> x = 3
+>>> y = x
+Example :
+you assign a new value to the 0th Element of one of the two lists, there will be no side effect. Problems arise, if you change one of the elements of the sublist.
+>>> lst1 = ['a','b',['ab','ba']]
+>>> lst2 = lst1[]
+>>> lst2[0] = 'c'
+>>> lst2[2][1] = 'd'
+>>> print(lst1)
+['a', 'b', ['ab', 'd']]
+As the sublist memomry location is directly assigned to lst2 so the change in 1 will update 
+the next one , So the deepcopy can be used to make a seperate memory for the sublist .
+
+from copy import deepcopy
+
+lst1 = ['a','b',['ab','ba']]
+
+lst2 = deepcopy(lst1)
+
+lst2[2][1] = "d"
+lst2[0] = "c"
+lsr2
+['c', 'b', ['ab', 'd']]
+lst1
+['a', 'b', ['ab', 'ba']]
+
 
 10. pprint — Data pretty printer
 *****************************************
