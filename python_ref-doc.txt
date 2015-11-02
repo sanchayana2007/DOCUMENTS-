@@ -251,12 +251,15 @@ corresponding values.
 
 Python dictionaries are also known as associative arrays or hash tables. The general syntax of a
 dictionary is as follows:
+he following examples all return a dictionary equal to {"one": 1, "two": 2, "three": 3}:
 
-dict = {'Alice': '2341', 'Beth': '9102', 'Cecil': '3258'}
-You can create dictionary in the following way as well:
-
-dict1 = { 'abc': 456 };
-dict2 = { 'abc': 123, 98.6: 37 };
+>>> a = dict(one=1, two=2, three=3)
+>>> b = {'one': 1, 'two': 2, 'three': 3}
+>>> c = dict(zip(['one', 'two', 'three'], [1, 2, 3]))
+>>> d = dict([('two', 2), ('one', 1), ('three', 3)])
+>>> e = dict({'three': 3, 'one': 1, 'two': 2})
+>>> a == b == c == d == e
+True
 dict['Age'] = 8; # update existing entry
 dict['School'] = "DPS School"; # Add new ent
 Each key is separated from its value by a colon (:), the items are separated by commas, and the whole
@@ -468,7 +471,15 @@ Python Expression	Results	 Description
 
 6. bytes class (Used to hold binary data):
 ****************************	*************
+Bytes objects are immutable sequences of single bytes. 
+bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects, instead they are always created by calling the constructor:
 
+Creating an empty instance: bytearray()
+Creating a zero-filled instance with a given length: bytearray(10)
+From an iterable of integers: bytearray(range(20))
+Copying existing binary data via the buffer protocol: bytearray(b'Hi!')
+
+7. Numeric Types(int,float,complex)
 Specialized data types:
 ------------------------------------
 1. datetime — Basic date and time types:
