@@ -919,14 +919,61 @@ array('i', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
 
 7. weakref — Weak references
 *****************************************
+A weak reference to an object is not enough to keep the object alive: when the only remaining references to a referent are 
+weak references, garbage collection is free to destroy the referent and reuse its memory for something else. A primary use
+for weak references is to implement caches or mappings holding large objects. 
+The weakref module allows the Python programmer to create weak references to objects.
+Creating a weak reference
+import weakref
+class test(object):
+	pass
+o = test()
+#wekref object creation 
+r = weakref.ref(o)
+wekref_obj = r()
+if weak_ref is None:
+    # referent has been garbage collected
+    print "Object has been deallocated; can't frobnicate."
+else:
+    print "Object is still live!"
+    wekref_obj.do_something_useful()
+	
 
+WeakKeyDictionary and WeakValueDictionary use weak references in their implementation, setting up callback functions on the
+weak references that notify the weak dictionaries when a key or value has been reclaimed by garbage collection. Most programs
+should find that using one of these weak dictionary types is all they need – it’s not usually necessary to create your own weak
+references dire
+obj_dict = weakref.WeakValueDictionary()
+obj_dict[key] = value
+This example shows how a subclass of ref can be used to store additional information about an object and affect the value that’s
+returned when the referent is accessed:
 
+import weakref
 
+class ExtendedRef(weakref.ref):
+    def __init__(self, ob, callback=None, **annotations):
+        super(ExtendedRef, self).__init__(ob, callback)
+        self.__counter = 0
+        for k, v in annotations.iteritems():
+            setattr(self, k, v)
+
+    def __call__(self):
+        """Return a pair containing the referent and the number of
+        times the reference has been called.
+        """
+        ob = super(ExtendedRef, self).__call__()
+        if ob is not None:
+            self.__counter += 1
+            ob = (ob, self.__counter)
+        return ob
+		
+		
 
 8. types — Dynamic type creation and names for built-in types
 *****************************************
 9. copy — Shallow and deep copy operations
 ******************************************
+
 10. pprint — Data pretty printer
 *****************************************
 11. enum — Support for enumerations
@@ -1054,7 +1101,9 @@ following code:
  x = object()
  bool(x)
 True
-
+__del__() method.
+*************************************************************************************************
+Exception handling in the del method
 
 __bytes__()
 **************************************************************************************************
