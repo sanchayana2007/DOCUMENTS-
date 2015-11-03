@@ -4773,16 +4773,22 @@ Here is a short script to tests which is run as a suite and then suite is been r
 class Tests(unittest.TestCase):
     def setUp(self):
         print('Gonna Run the test cases')
+	def tearDown(self):
+        print('Over test cases')
     def runTest3(self):
         print('test1')
         self.assertEqual({'acad'},lcs('academy', 'abracadabra'))
     def runTest2(self):
         print('test2')
         self.assertEqual({'abc','aba'},lcs('ababc', 'abcdaba'))
+	
+	
+    @unittest.skipUnless(sys.platform.startswith("win"), "requires Windows")
+    def test_windows_support(self):
+        # windows specific testing code
+        pass
 
-
-    def tearDown(self):
-        print('Over test cases')
+ 
 
 
 
@@ -4790,6 +4796,7 @@ def suite():
     test_suite = unittest.TestSuite()
     test_suite.addTest(Tests('runTest2'))
     test_suite.addTest(Tests('runTest3'))
+	test_suite.addTest(Tests('test_windows_support'))
     return test_suite
 
 
@@ -4802,15 +4809,18 @@ Gonna Run the test cases
 runTest2 (__main__.Tests) ... ok
 test2
 runTest3 (__main__.Tests) ... ok
-Over test cases
+test_windows_support (__main__.Tests) ... skipped 'requires Windows'
 
-Gonna Run the test cases
 ----------------------------------------------------------------------
-test1
-Ran 2 tests in 0.000s
-Over test cases
+Ran 3 tests in 0.000s
 
-OK
+OK (skipped=1)
+Gonna Run the test cases
+test2
+Over test cases
+Gonna Run the test cases
+test1
+Over test cases
 
 xml handling :
 =================================
