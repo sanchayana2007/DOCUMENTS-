@@ -4768,27 +4768,49 @@ The unittest module provides a rich set of tools for constructing and running te
 that a small subset of the tools suffice to meet the needs of most users.The unittest.Testcase is inherited 
 and the new class is written with the test case
 
+Here is a short script to tests which is run as a suite and then suite is been run 
 
-Here is a short script to test three string methods:
+class Tests(unittest.TestCase):
+    def setUp(self):
+        print('Gonna Run the test cases')
+    def runTest3(self):
+        print('test1')
+        self.assertEqual({'acad'},lcs('academy', 'abracadabra'))
+    def runTest2(self):
+        print('test2')
+        self.assertEqual({'abc','aba'},lcs('ababc', 'abcdaba'))
 
-import unittest
 
-class TestStringMethods(unittest.TestCase):
+    def tearDown(self):
+        print('Over test cases')
 
-  def test_upper(self):
-      self.assertEqual('foo'.upper(), 'FOO')
 
-  def test_isupper(self):
-      self.assertTrue('FOO'.isupper())
-      self.assertFalse('Foo'.isupper())
 
-  def test_split(self):
-      s = 'hello world'
-      self.assertEqual(s.split(), ['hello', 'world'])
-      # check that s.split fails when the separator is not a string
-      with self.assertRaises(TypeError):
-          s.split(2)
+def suite():
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(Tests('runTest2'))
+    test_suite.addTest(Tests('runTest3'))
+    return test_suite
 
+
+
+if __name__ == "__main__":
+
+   unittest.TextTestRunner(verbosity=2).run(suite())
+The output of the above is 
+Gonna Run the test cases
+runTest2 (__main__.Tests) ... ok
+test2
+runTest3 (__main__.Tests) ... ok
+Over test cases
+
+Gonna Run the test cases
+----------------------------------------------------------------------
+test1
+Ran 2 tests in 0.000s
+Over test cases
+
+OK
 
 xml handling :
 =================================
