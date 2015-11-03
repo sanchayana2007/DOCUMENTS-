@@ -2258,13 +2258,14 @@ fun(1) #[1]
 fun(2) #[1,2]
 
 2> Arbitary Arg List
+-----------------------------
 . Arbitrary Argument Lists
 Finally, the least frequently used option is to specify that a function can be called with an arbitrary number
 of arguments. These arguments will be wrapped up in a tuple
 def write_multiple_items(file, separator, *args):
     file.write(separator.join(args))
 
-
+3) 
 multiple argument 
 ***************************************************************************************************
 def manyArgs(*arg):
@@ -4761,6 +4762,33 @@ as a database or an LDAP server can be slowed down when those applications are
 slow. This can be tracked with a regular code profiling method on the application
 side. But if the third-party software works fine on its own, the culprit is probably
 the network.
+Unit testing in python 
+===============================
+The unittest module provides a rich set of tools for constructing and running tests. This section demonstrates 
+that a small subset of the tools suffice to meet the needs of most users.The unittest.Testcase is inherited 
+and the new class is written with the test case
+
+
+Here is a short script to test three string methods:
+
+import unittest
+
+class TestStringMethods(unittest.TestCase):
+
+  def test_upper(self):
+      self.assertEqual('foo'.upper(), 'FOO')
+
+  def test_isupper(self):
+      self.assertTrue('FOO'.isupper())
+      self.assertFalse('Foo'.isupper())
+
+  def test_split(self):
+      s = 'hello world'
+      self.assertEqual(s.split(), ['hello', 'world'])
+      # check that s.split fails when the separator is not a string
+      with self.assertRaises(TypeError):
+          s.split(2)
+
 
 xml handling :
 =================================
