@@ -35,11 +35,16 @@ Finally, the interpreter takes each code object executes the code it represents.
 
 Python is dynamically but strongly typed:
 +++++++++++++++++++++++++++++++++++++++++
-The fact that the two halves of that statement fit together can confuse those who come from a static language type background. In Python it is perfectly legal to do this :
+The fact that the two halves of that statement fit together can confuse those who come from a static language type background.
+ In Python it is perfectly legal to do this :
 
 variable = 3
 variable = 'hello'
-So hasn't variable just changed type ? The answer is a resounding no. variable isn't an object at all - it's a name. In the first statement we create an integer object with the value 3 and bind the name 'variable' to it. In the second statement we create a new string object with the value hello, and rebind the name 'variable' to it. If there are no other names bound to the first object (or more properly no references to the object - not all references are names) then it's reference count will drop to zero and it will be garbage collected
+So hasn't variable just changed type ? The answer is a resounding no. variable isn't an object at all - it's a name. In the first
+ statement we create an integer object with the value 3 and bind the name 'variable' to it. In the second statement we create a
+ new string object with the value hello, and rebind the name 'variable' to it. If there are no other names bound to the first object
+ (or more properly no references to the object - not all references are names) then it's reference count will drop to zero and it 
+ will be garbage collected
 
 Only Called is compiled:
 ++++++++++++++++++++++++++++++++++
