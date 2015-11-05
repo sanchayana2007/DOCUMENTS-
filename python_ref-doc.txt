@@ -137,7 +137,8 @@ Python 3.4.1 has <class 'bytes'>
 
 4. xrange
 ================================================================
-The usage of xrange() is very popular in Python 2.x for creating an iterable object, e.g., in a for-loop or list/set-dictionary-comprehension.\ The behavior was quite similar to a generator (i.e., "lazy evaluation"), but here the xrange-iterable is not exhaustible - meaning, you could iterate over it infinitely.
+The usage of xrange() is very popular in Python 2.x for creating an iterable object, e.g., in a for-loop or list/set-dictionary-comprehension.
+The behaviour was quite similar to a generator (i.e., "lazy evaluation"), but here the xrange-iterable is not exhaustible - meaning, you could iterate over it infinitely.
 
 Thanks to its "lazy-evaluation", the advantage of the regular range() is that xrange() is generally faster if you have to iterate over it only once (e.g., in a for-loop). However, in contrast to 1-time iterations, it is not recommended if you repeat the iteration multiple times, since the generation happens every time from scratch!
 
@@ -163,9 +164,6 @@ AttributeError                            Traceback (most recent call last)
 ----> 2 range.__contains__
 
 AttributeError: 'builtin_function_or_method' object has no attribute '__contains__'
-
-
-
 
 Raising exceptions
 --------------------------
@@ -193,14 +191,11 @@ my_generator.next() WILL RESULT in error
 
 Parsing user inputs via input()
 ==============================================
-<<<<<<< HEAD
-[back to top]
+
 Fortunately, the input() function was fixed in Python 3 so that it always stores the user inputs as str objects.
  In order to avoid the dangerous behavior in Python 2 to read in other types than strings, we have to use raw_input() instead.
 =======
-Fortunately, the input() function was fixed in Python 3 so that it always stores the user inputs as str objects. In order to avoid the dangerous behavior in Python 2 to read in other types than strings, we have to use raw_input() instead.
 
->>>>>>> origin/master
 
 New style objects have a different object model to classic objects, and some things won't work properly with old style objects, for instance,
  super(), @property and descrpnt
@@ -208,7 +203,7 @@ Explanation:
 Class :
 -----------------------------
 The classes and the derived thing 
-> subclasing the built iin types
+> subclasing the built in types
 > Acessing methods from the super class
 > Slots 
 > Meta-programing
@@ -217,7 +212,7 @@ The classes and the derived thing
 The __prepare__ method
 ======================================
 This method is called before the class body is executed and it must return a dictionary-like object that's used as the local namespace
- for all the code from the class body. It was added in Python 3.0, see PEP-3115.
+for all the code from the class body. It was added in Python 3.0, see PEP-3115.
 
 If your __prepare__ returns an object x then this:
 
@@ -278,6 +273,27 @@ Accessing Values in Dictionary:
 ---------------------------------
 print "dict['Name']: ", dict['Name'];
 print "dict['Age']: ", dict['Age'];
+for k in {"x":1,"y":3}:
+    print(k)
+
+	x 
+	y  or Y
+		  x
+Virtually all Python implementations use hash maps to allow extremely fast access to the dictionary's values by key
+But the order they're stored in has nothing to do with the order that they're added. They are stored in the order
+that makes it easiest to look them up. Python dictionaries work the same way 
+
+ 
+Now methods to dictionaries that return different kinds of iterators explicitly:
+for key in dict.iterkeys(): or keys for 3.x
+
+for value in dict.itervalues():or values for 3.x
+
+for key, value in dict.iteritems() or items
+
+
+
+
 
 Delete Dictionary Elements:
 ------------------------------
@@ -291,34 +307,20 @@ a) More than one entry per key not allowed. Which means no duplicate key is allo
 encountered during assignment, the last assignment wins. Following is a simple example:
 b) Tuples can be used as Dict keys but not Lists 
 
- Dictionary view objects:
- ----------------------------
-The objects returned by dict.keys(), dict.values() and dict.items() are view objects. They provide a dynamic view
-on the dictionary’s entries, which means that when the dictionary changes, the view reflects these changes.
+Dictionary Update :
+----------------------------
+dict = {'Name': 'Zara', 'Age': 7}
+dict2 = {'Sex': 'female' }
 
-dishes = {'eggs': 2, 'sausage': 1, 'bacon': 1, 'spam': 500}
->>> keys = dishes.keys()
->>> values = dishes.values()
+dict.update(dict2)
+print "Value : %s" %  dict
 
->>> # iteration
->>> n = 0
->>> for val in values:
-...     n += val
->>> print(n)
-504
+----------------------------
+dict[new_key] = dict[old_key]
+del dict[old_key]
+Or in 1 step:
 
->>> # keys and values are iterated over in the same order
->>> list(keys)
-['eggs', 'bacon', 'sausage', 'spam']
->>> list(values)
-[2, 1, 1, 500]
-
->>> # view objects are dynamic and reflect dict changes
->>> del dishes['eggs']
->>> del dishes['sausage']
->>> list(keys)
-['spam', 'bacon']
-
+dict[new_key] = dict.pop(old_key)
 Lists  not as Dictionary Keys
 ----------------------------
 That said, the simple answer to why lists cannot be used as dictionary keys is that lists do not provide a valid __hash__ method. Of course, 
@@ -344,7 +346,7 @@ Note that since tuples are immutable, they do not run into the troubles of lists
 
 
 2. list:(collection)
-*********
+*********************
 The list is a most versatile datatype available in Python  Good thing about a list is that items in a list need not all have the same type.
 Creating a list is putting different comma-separated values between squere brackets. For example:
 
