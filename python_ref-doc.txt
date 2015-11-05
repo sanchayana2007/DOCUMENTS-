@@ -532,33 +532,30 @@ Python Expression	Results	 Description
 *********************************************
 
 6. bytes class (Used to hold binary data):
-<<<<<<< HEAD
+
 ****************************	*************
 Bytes objects are immutable sequences of single bytes. 
-bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray 
-objects, instead they are always created by calling the constructor:
+bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects, instead they are always created by calling the constructor:
 
 Creating an empty instance: bytearray()
 Creating a zero-filled instance with a given length: bytearray(10)
 From an iterable of integers: bytearray(range(20))
 Copying existing binary data via the buffer protocol: bytearray(b'Hi!')
+=======
 ****************************************
-Bytes objects are immutable sequences of single bytes. Since many major binary protocols are based on the ASCII text
-encoding, bytes objects offer several methods that are only valid when working with ASCII compatible data and are
-closely related to string objects in a variety of other ways.
+Bytes objects are immutable sequences of single bytes. Since many major binary protocols are based on the ASCII text encoding, bytes objects offer several methods that are only valid when working with ASCII compatible data and are closely related to string objects in a variety of other ways.
  b'1,2,3'
-
+ 
+ 
 bytes.fromhex('2Ef0 F1f2  ')
 b'.\xf0\xf1\xf2'
 
-bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects,
-instead they are always created by calling the constructor:
->>> bytearray.fromhex('2Ef0 F1f2 ')
+bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects, instead they are always created by calling the constructor:
+>>> bytearray.fromhex('2Ef0 F1f2  ')
 bytearray(b'.\xf0\xf1\xf2')
 
-Memory Views:
-memoryview objects allow Python code to access the internal data of an object that supports the buffer protocol without 
-copying.
+Memory Views
+memoryview objects allow Python code to access the internal data of an object that supports the buffer protocol without copying.
 data = bytearray(b'abcefg')
 >>> v = memoryview(data)
 >>> v.readonly
@@ -680,8 +677,7 @@ cursor = conn.cursor()
 cursor.execute('SELECT name, age, title, department, paygrade FROM employees')
 for emp in map(EmployeeRecord._make, cursor.fetchall()):
     print(emp.name, emp.title)
-In addition to the methods inherited from tuples, named tuples support three additional methods and two attributes.
- To prevent conflicts with field names, the method and attribute names start with an underscore.
+In addition to the methods inherited from tuples, named tuples support three additional methods and two attributes. To prevent conflicts with field names, the method and attribute names start with an underscore.
 
 classmethod somenamedtuple._make(iterable)
 Class method that makes a new instance from an existing sequence or iterable.
@@ -710,8 +706,7 @@ Point(x=33, y=22)
 >>> for partnum, record in inventory.items():
 ...     inventory[partnum] = record._replace(price=newprices[partnum], timestamp=time.now())
 somenamedtuple._source
-A string with the pure Python source code used to create the named tuple class. The source makes the named tuple self-documenting.
-It can be printed, executed using exec(), or saved to a file and imported.
+A string with the pure Python source code used to create the named tuple class. The source makes the named tuple self-documenting. It can be printed, executed using exec(), or saved to a file and imported.
 
 New in version 3.3.
 
@@ -752,29 +747,23 @@ Since a named tuple is a regular Python class, it is easy to add or change funct
     print(p)
 Point: x= 3.000  y= 4.000  hypot= 5.000
 Point: x=14.000  y= 0.714  hypot=14.018
-The subclass shown above sets __slots__ to an empty tuple. This helps keep memory requirements low by preventing the creation of
- instance dictionaries.
+The subclass shown above sets __slots__ to an empty tuple. This helps keep memory requirements low by preventing the creation of instance dictionaries.
 
 Subclassing is not useful for adding new, stored fields. Instead, simply create a new named tuple type from the _fields attribute:
 -------------------------------------------------------------------------------------------------
 OrderedDict objects
-Ordered dictionaries are just like regular dictionaries but they remember the order that items were inserted. When iterating over an
- ordered dictionary, the items are returned in the order their keys were first added.
+Ordered dictionaries are just like regular dictionaries but they remember the order that items were inserted. When iterating over an ordered dictionary, the items are returned in the order their keys were first added.
 
 class collections.OrderedDict([items])
-Return an instance of a dict subclass, supporting the usual dict methods. An OrderedDict is a dict that remembers the order that
-keys were first inserted. If a new entry overwrites an existing entry, the original insertion position is left unchanged. Deleting
-an entry and reinserting it will move it to the end.
+Return an instance of a dict subclass, supporting the usual dict methods. An OrderedDict is a dict that remembers the order that keys were first inserted. If a new entry overwrites an existing entry, the original insertion position is left unchanged. Deleting an entry and reinserting it will move it to the end.
 
 New in version 3.1.
 
 popitem(last=True)
-The popitem() method for ordered dictionaries returns and removes a (key, value) pair. The pairs are returned in LIFO order if last
- is true or FIFO order if false.
+The popitem() method for ordered dictionaries returns and removes a (key, value) pair. The pairs are returned in LIFO order if last is true or FIFO order if false.
 
 move_to_end(key, last=True)
-Move an existing key to either end of an ordered dictionary. The item is moved to the right end if last is true (the default) or to 
-the beginning if last is false. Raises KeyError if the key does not exist:
+Move an existing key to either end of an ordered dictionary. The item is moved to the right end if last is true (the default) or to the beginning if last is false. Raises KeyError if the key does not exist:
 
 >>>
 >>> d = OrderedDict.fromkeys('abcde')
@@ -790,8 +779,7 @@ In addition to the usual mapping methods, ordered dictionaries also support reve
 
 Equality tests between OrderedDict objects are order-sensitive and are implemented as list(od1.items())==list(od2.items()). Equality tests between OrderedDict objects and other Mapping objects are order-insensitive like regular dictionaries. This allows OrderedDict objects to be substituted anywhere a regular dictionary is used.
 
-The OrderedDict constructor and update() method both accept keyword arguments, but their order is lost because Python’s 
-function call semantics pass in keyword arguments using a regular unordered dictionary.
+The OrderedDict constructor and update() method both accept keyword arguments, but their order is lost because Python’s function call semantics pass in keyword arguments using a regular unordered dictionary.
 
 8.3.6.1. OrderedDict Examples and Recipes
 Since an ordered dictionary remembers its insertion order, it can be used in conjunction with sorting to make a sorted dictionary:
@@ -811,11 +799,9 @@ OrderedDict([('pear', 1), ('orange', 2), ('banana', 3), ('apple', 4)])
 >>> # dictionary sorted by length of the key string
 >>> OrderedDict(sorted(d.items(), key=lambda t: len(t[0])))
 OrderedDict([('pear', 1), ('apple', 4), ('orange', 2), ('banana', 3)])
-The new sorted dictionaries maintain their sort order when entries are deleted. But when new keys are added, the keys are appended to the
-end and the sort is not maintained.
+The new sorted dictionaries maintain their sort order when entries are deleted. But when new keys are added, the keys are appended to the end and the sort is not maintained.
 
-It is also straight-forward to create an ordered dictionary variant that remembers the order the keys were last inserted.
-If a new entry overwrites an existing entry, the original insertion position is changed and moved to the end:
+It is also straight-forward to create an ordered dictionary variant that remembers the order the keys were last inserted. If a new entry overwrites an existing entry, the original insertion position is changed and moved to the end:
 
 class LastUpdatedOrderedDict(OrderedDict):
     'Store items in the order the keys were last added'
@@ -837,7 +823,8 @@ class OrderedCounter(Counter, OrderedDict):
 
 -------------------------------------------------------------------------------------------------
 A ChainMap class is provided for quickly linking a number of mappings so they can be treated as a single unit. 
-It is often much faster than creating a new dictionary and running multiple update() calls.
+It is often much faster than
+ creating a new dictionary and running multiple update() calls.
  
  import os, argparse
 
@@ -869,7 +856,6 @@ k in d                # Check all nested values
 len(d)                # Number of nested values
 d.items()             # All nested items
 dict(d)               # Flatten into a regular dictionary
-
 The ChainMap class only makes updates (writes and deletions) to the first mapping in the chain while lookups 
 will search the full chain. However, if deep writes and deletions are desired, it is easy to make a subclass 
 that updates keys found deeper in the chain:
@@ -897,18 +883,14 @@ class DeepChainMap(ChainMap):
 >>> del d['elephant']            # remove an existing key one level down
 DeepChainMap({'zebra': 'black', 'snake': 'red'}, {}, {'lion': 'orange'})
 -------------------------------------------------------------------------------------------------
-Deques are a generalization of stacks and queues (the name is pronounced “deck” and is short for “double-ended queue”).
- Deques support thread-safe, memory efficient appends and pops from either side of the deque with approximately the same
- O(1) performance in either direction.
+Deques are a generalization of stacks and queues (the name is pronounced “deck” and is short for “double-ended queue”). Deques support thread-safe,
+ memory efficient appends and pops from either side of the deque with approximately the same O(1) performance in either direction.
 
-Though list objects support similar operations, they are optimized for fast fixed-length operations and incur O(n)
- memory movement costs for pop(0)
+Though list objects support similar operations, they are optimized for fast fixed-length operations and incur O(n) memory movement costs for pop(0)
  and insert(0, v) operations which change both the size and position of the underlying data representation.
 
-If maxlen is not specified or is None, deques may grow to an arbitrary length. Otherwise, the deque is bounded to the
- specified maximum length.
- Once a bounded length deque is full, when new items are added, a corresponding number of items are discarded from the
- opposite end. Bounded length
+If maxlen is not specified or is None, deques may grow to an arbitrary length. Otherwise, the deque is bounded to the specified maximum length.
+ Once a bounded length deque is full, when new items are added, a corresponding number of items are discarded from the opposite end. Bounded length
  deques provide functionality similar to the tail filter in Unix.
 They are also useful for tracking transactions and other pools of data where only the most recent activity is of interest.
 
@@ -976,30 +958,31 @@ def moving_average(iterable, n=3):
         s += elem - d.popleft()
         d.append(elem)
         yield s / n
-The rotate() method provides a way to implement deque slicing and deletion. For example,
-a pure Python implementation of del d[n] relies on the rotate() method to position elements to be popped:
+The rotate() method provides a way to implement deque slicing and deletion. For example, a pure Python implementation of del d[n] relies on the rotate() method to position elements to be popped:
 
 def delete_nth(d, n):
     d.rotate(-n)
     d.popleft()
     d.rotate(n)
 -------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+
 
 -------------------------------------------------------------------------------------------------
 3. collections.abc — Abstract Base Classes for Containers
 *****************************************
-This provides a bunch of containers which has already implemented methods and Abstarct methods that
-needs to be veriddesn this are basically usewd as mixins() The collections module offers the following
-ABCs:
---------------------------------------------------------------------------------------------------
-| ABC	| Inherits from   |	Abstract Methods (Needs to overidde)|	Mixin Methods(methods 
-|		|				  |										| already provided)						|
---------------------------------------------------------------------------------------------------
-| Set  |  Sized, Iterable,| __contains__,__iter__,__len__		| __le__, __lt__, __eq__, __ne__,
-|	   |				  |										| __gt__
-|	   |Container		  |										| __ge__, __and__, __or__, 
-|	   |				  |										| isdisjoint
------------------------------------------------------------------------------------------------
+This provides a bunch of containers which has already implemented methods and Abstarct methods nthat needs to 
+be veriddesn this are basically usewd as mixins() 
+The collections module offers the following ABCs:
+------------------------------------------------------------------------------------------------------------
+| ABC	| Inherits from   |	Abstract Methods (Needs to overidde)|	Mixin Methods(methods already provided)	|
+------------------------------------------------------------------------------------------------------------
+| Set  |  Sized, Iterable,| __contains__,__iter__,__len__		| __le__, __lt__, __eq__, __ne__, __gt__
+|	   |Container		  |										| __ge__, __and__, __or__, isdisjoint
+------------------------------------------------------------------------------------------------------------
 class ListBasedSet(collections.abc.Set):
      ''' Alternate set implementation favoring space over speed
          and not requiring the set elements to be hashable. '''
@@ -1018,17 +1001,13 @@ class ListBasedSet(collections.abc.Set):
 s1 = ListBasedSet('abcdef')
 s2 = ListBasedSet('defghi')
 overlap = s1 & s2            # The __and__() method is supported automatically
-For using mutable Sets(Sets where Append,remove)
-
-1> Since some set opertions create new sets, the default mixin methods need a way to create new instances
- from an iterable.
- The class constructor is assumed to have a signature in the form ClassName(iterable). That assumption is 
- factored-out to an
+For using mutable Sets(Sets where Append,remove )
+1> Since some set operations create new sets, the default mixin methods need a way to create new instances from an iterable.
+ The class constructor is assumed to have a signature in the form ClassName(iterable). That assumption is factored-out to an
  internal classmethod called _from_iterable() which calls cls(iterable) to produce a new set.
 2> To override the comparisons (presumably for speed, as the semantics are fixed), redefine __le__() and __ge__(),
 3> The Set mixin provides a _hash() method to compute a hash value for the set; however, __hash__() is not defined 
-because not all sets are hashable or immutable. To add set hashability using mixins, inherit from both Set()
-and Hashable(),
+because not all sets are hashable or immutable. To add set hashability using mixins, inherit from both Set() and Hashable(),
 then define __hash__ = Set._hash
 
 Now similar to this Mapping,MutableMapping,Sequence,MutableSequence,
@@ -1039,14 +1018,13 @@ Now similar to this Mapping,MutableMapping,Sequence,MutableSequence,
 *****************************************
 6. array — Efficient arrays of numeric values
 *****************************************
-This module defines an object type which can compactly represent an array of basic values:
- characters, integers, floating point
+This module defines an object type which can compactly represent an array of basic values: characters, integers, floating point
  numbers.
 Differnce with the list:
 > the  type of objects stored in them is constrained (Same type)
 > the type is mentioned at the time of creation of the object
 > Any other type Appending wil result in a type Error
-> If the type code  are not Natching eith the Values then Value error
+> If the type code  are not Natching eith the Values  then Value error
 typecode (must be b, B, u, h, H, i, I, l, L, q, Q, f or d)
 
 from array import *
@@ -1137,8 +1115,8 @@ it to the objects found in the original.
 Deep copy :
 --------------------
 A deep copy constructs a new compound object and then, recursively, inserts copies into it of the objects 
-found in the original.Two problems often exist with deep copy operations that don’t exist with shallow 
-copy operations:
+found in the original.
+Two problems often exist with deep copy operations that don’t exist with shallow copy operations:
 
 Recursive objects (compound objects that, directly or indirectly, contain a reference to themselves) may
 cause a recursive loop.
@@ -1146,10 +1124,8 @@ Because deep copy copies everything it may copy too much, e.g., administrative d
 be shared even between copies.
 >>> x = 3
 >>> y = x
-
 Example :
-you assign a new value to the 0th Element of one of the two lists, there will be no side effect.
-Problems arise, if you change one of the elements of the sublist.
+you assign a new value to the 0th Element of one of the two lists, there will be no side effect. Problems arise, if you change one of the elements of the sublist.
 >>> lst1 = ['a','b',['ab','ba']]
 >>> lst2 = lst1[]
 >>> lst2[0] = 'c'
@@ -1193,14 +1169,13 @@ How to get the methods in a class :
  ('add_options', <unbound method OptionParser.add_options>),
  
 All classes have built in methods and user defined functions
-The dir(class/instance) will list it out , we can seee __call__ , __imfunc__ are
-auto written for amy class
+The dir(class/instance) will list it out , we can seee __call__ , __imfunc__ are auto written fpr amy class
 '__call__', '__class__', '__delattr__', '__dict__', '__doc__', '__get__',
  '__getattribute__', '__hash__', '__init__', '__module__', '__name__',
  '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__',
  '__str__', 'func_closure', 'func_code', 'func_defaults', 'func_dict',
  'func_doc', 'func_globals', 'func_name']
-
+ 
 Lets describe this Methods :
 > __repr__() and __str__() methods
 **************************************************************************************************
@@ -1223,24 +1198,20 @@ class Hand:
 		return ", ".join( map(str, self.cards) )
 	def __repr__( self ):
 		return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
-	format(	__class__=self.__class__,	_cards_str=", ".join( map(repr, self.cards) ),**self.__dict__)
+	format(	__class__=self.__class__,	_cards_str=", ".join( map(repr, self.cards) ),**self.__dict__ )
 The __str__() method is a simple recipe, as follows:
 1. Map str() to each item in the collection. This will create an iterator over the
 resulting string values.
 2. Use ", ".join() to merge all the item strings into a single, long string.
 difference between __str__ and __repr__ 
 -----------------------------------------:
-log(INFO, "I am in the weird function and a is", a, "and b is", b, "but I got a null
- C — using default", default_c)
-But you have to do the last step — make sure every object you implement has a useful repr, so code like 
-that can just work.
-This is why the “eval” thing comes up: if you have enough information so eval(repr(c))==c, that means 
-you know everything there is to know about c. If that’s easy enough, at least in a fuzzy way, do it.
-If not, make sure you have enough information about c anyway. I usually use an eval-like format:
-"MyClass(this=%r,that=%r)" % (self.this,self.that).
-It does not mean that you can actually construct MyClass, or that those are the right constructor
-arguments — but it is a useful form to express “this is everything you need
-to know about this instance”.
+log(INFO, "I am in the weird function and a is", a, "and b is", b, "but I got a null C — using default", default_c)
+But you have to do the last step — make sure every object you implement has a useful repr, so code like that can just work.
+This is why the “eval” thing comes up: if you have enough information so eval(repr(c))==c, that means you know everything 
+there is to know about c. If that’s easy enough, at least in a fuzzy way, do it. If not, make sure you have enough information about c
+ anyway. I usually use an eval-like format: "MyClass(this=%r,that=%r)" % (self.this,self.that). It does not mean that you can actually 
+ construct MyClass, or that those are the right constructor arguments — but it is a useful form to express “this is everything you need
+ to know about this instance”.
 
 Note: I used %r above, not %s. You always want to use repr() [or %r formatting character, equivalently] inside __repr__ 
 implementation, or you’re defeating the goal of repr. You want to be able to differentiate MyClass(3) and MyClass("3").
@@ -1678,6 +1649,34 @@ class MyClass :
         self.private_function()
 
 ### End ###
+Implementing a reference like in C++ Style
+----------------------------------------------------------------------------------------
+in order to do this, you'll need to keep a reference to the parent object around.
+class PropertyRef:
+    def __init__(self, obj, prop_name):
+        klass = obj.__class__
+        prop = getattr(klass, prop_name)
+        if not hasattr(prop, 'fget'):
+            raise TypeError('%s is not a property of %r' % (prop_name, klass))
+        self.get = lambda: prop.fget(obj)
+        if getattr(prop, 'fset'):
+            self.set = lambda value: prop.fset(obj, value))
+
+class Foo(object):
+    @property
+    def bar(self):
+        return some_calculated_value
+
+>>> foo_instance = Foo()
+>>> ref = PropertyRef(foo_instance, 'bar')
+>>> ref.get()  # Returns some_calculated_value
+>>> ref.set(some_other_value)
+>>> ref.get()  # Returns some_other_value
+BTW, in the example you gave, the property is read-only (doesn't have a setter), so you wouldn't be able to set it anyway.
+
+If this feels like an unnecessary amount of code, it probably is -- I'm almost certain you can find a better solution to your use case, whatever it is.
+
+
 --------------------------------------------------------------------------------------
 Inheritance:
 
@@ -4992,7 +4991,7 @@ We explicitly pass a value to data and another keyword argument.
 We explicitly pass a value to data, positional parameter and a keyword argument.
 This will throw an error because no positional parameter should occur after a keyword argument. Order is very important
 
-4. generator(tuple) vs lsit comprehension
+4. generator(tuple) vs list comprehension
 ==================================================
 [myClass().Function(things) for things in biggerThing]
 Function is a method, and it builds a list. The method itself doesn't return anything, but lists get manipulated within.
