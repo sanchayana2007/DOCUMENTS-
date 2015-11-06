@@ -531,30 +531,70 @@ Python Expression	Results	 Description
 5. str class (Used to hold Unicode strings):
 *********************************************
 
-6. bytes class (Used to hold binary data):
+6. bytes class (holding data in  binary data buffer ):
 
-****************************	*************
+********************************************
 Bytes objects are immutable sequences of single bytes. 
-bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects, instead they are always created by calling the constructor:
+bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects,
+instead they are always created by calling the constructor:
 
-Creating an empty instance: bytearray()
-Creating a zero-filled instance with a given length: bytearray(10)
-From an iterable of integers: bytearray(range(20))
-Copying existing binary data via the buffer protocol: bytearray(b'Hi!')
-=======
+Creation :
+------------
+	1. Creating an empty instance: bytearray()
+	2. Creating a zero-filled instance with a given length: bytearray(10)
+		# Create bytearray and append integers as bytes.
+		values = bytearray()
+		values.append(0)
+		values.append(1)
+		values.append(2)
+		print(values)
+
+# Delete the first element.
+del values[0:1]
+print(values)
+	3. From an iterable of integers: bytearray(range(20))
+	
+	1. As bytes are immutable so they have to be created only at the constructor level
+		data = bytes([10, 20, 30, 40])
+	2. Python that converts string, bytearray
+	----------------------------------------------------------
+	# Create a bytearray from a string with ASCII encoding.
+	arr = bytearray("abc", "ascii")
+	print(arr)
+	
+	# Convert bytearray back into a string.
+	result = arr.decode("ascii")
+	print(result)
+	
+	Output
+	
+	bytearray(b'abc')
+	abc
+	
+Copying existing binary data via the buffer protocol: 
+----------------------------------------------------
+bytearray(b'Hi!')
+> The string inside the byte Array always should be ascii 
+> The number in the array should be from 0-255 inclusive of that 
+
+
 ****************************************
-Bytes objects are immutable sequences of single bytes. Since many major binary protocols are based on the ASCII text encoding, bytes objects offer several methods that are only valid when working with ASCII compatible data and are closely related to string objects in a variety of other ways.
+Bytes objects are immutable sequences of single bytes. Since many major binary protocols are based on the ASCII text encoding,
+ bytes objects offer several methods that are only valid when working with ASCII compatible data
+ and are closely related to string objects in a variety of other ways.
  b'1,2,3'
- 
+
  
 bytes.fromhex('2Ef0 F1f2  ')
 b'.\xf0\xf1\xf2'
 
-bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects, instead they are always created by calling the constructor:
+bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects,
+ instead they are always created by calling the constructor:
 >>> bytearray.fromhex('2Ef0 F1f2  ')
 bytearray(b'.\xf0\xf1\xf2')
 
 Memory Views
+-------------------------
 memoryview objects allow Python code to access the internal data of an object that supports the buffer protocol without copying.
 data = bytearray(b'abcefg')
 >>> v = memoryview(data)
@@ -563,6 +603,31 @@ False
 >>> v[0] = ord(b'z')
 >>> data
 bytearray(b'zbcefg')
+view = memoryview(b"abc")
+
+# Print the first element.
+print(view[0])
+
+# Print the element count.
+print(len(view))
+
+# Convert to a list.
+print(view.tolist())
+
+Output
+
+b'a'
+3
+[97, 98, 99]
+
+Performance. Suppose we want to append 256 values to a list. Bytearray here is faster.
+ So we both improve memory size and reduce time required with bytearray over list.
+So:
+Bytearray is more complex to handle. It does not support non-ASCII characters or large numeric values.
+But:
+In many programs where these are not required, bytearray can be used to improve speed. This benchmark 
+supports this idea.
+
 
 7. files :
 ****************************************
@@ -595,6 +660,19 @@ o/p:
 >>>>>>> origin/master
 
 7. Numeric Types(int,float,complex)
+never compare floats for equality. It generally doesn’t make sense. Still, in
+many applications (such as computational geometry), you’d very much like to do just that. Instead, you
+should check whether they are approximately equal. For example, you could take the approach of
+assertAlmostEqual from the unittest module:
+>>> def almost_equal(x, y, places=7):
+... return round(abs(x-y), places) == 0
+...
+>>> almost_equal(sum(0.1 for i in range(10)), 1.0)
+True
+
+
+
+
 Specialized data types:
 ------------------------------------
 1. datetime — Basic date and time types:
