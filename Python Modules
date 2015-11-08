@@ -170,7 +170,40 @@ $	Matches end of line.
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
 
+os.environ['saikat'] = '/local/saikatsa/python'] <---this creates an environment variable named as saikat
+Print os.environ['saikat'] <--- this gives environment variable printed
+os.getenv('env name') <---this gives given environment variable value 
+os.putenv('env name', 'value') <---this actually sets env value
+os.environ.pop('env variable name') <---this deletes env variable
+
+os.getlogin() <--- this gives login name
+os.getcwd() <--- this gives current working directory
+Os.chdir('..') <--- this changes the directory e.g. here it goes one level up
+os.uname() <--- gives OS/Processor information
+
+os.access('filename', os.R_OK) <--- this returns True if Read access is available else False
+os.access('filename', os.F_OK) <---this returns true if filename/path is correct/exists otherwise False
+os.access('filename', os.W_OK) <---this returns True if write access persists otherwise false
+os.access('filename', os.X_OK) <---this returns true if filename is executable otherwise false
+
+os.listdir('/local/saikatsa')  <---this gives filename, directory name as a list in the given path
+os.walk() <--- it returns a generator which shall give same as listdir while doing next operator
+
+os.rename('temp.cc','temp1.cc') <--- this renames file temp.cc to temp1.cc. Also it renames the directory
+os.renames('directory_names', 'new name') <--- this renames directory name
+os.remove('filename') <--- it removes a file
+os.removedirs('directory') <--- it removes empty directory
+
+os.abort() <--- closes the program
+os.system('linux command') <--- it executes linux commands
+
+os.path.abspath('.') <--- this gives absolute path of current directory e.g. /local/saikatsa/python
+os.path.exists('/home/saikatsa') <--- this returns true if path exist otherwise false same as os.access('path', os.F_OK)
+os.path.isfile('name') <--- returns true if name is a file
+os.path.isdir('name') <--- returns true if name is a directory
+os.path.isabs('path name')  <---- returns true if given path is absolute one.
 
 
 
