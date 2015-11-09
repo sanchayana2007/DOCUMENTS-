@@ -301,6 +301,174 @@ Combinatoric generators:
 # combinations(range(4), 3) --> 012 013 023 123
 
 
+functools Module
+================================================================================
+How do you make a higher order function in Python?
+Functions and methods are first-class objects in Python, so if you want to pass a function to another function,
+ you can just treat it as any other object.
+
+To bind a function object to a specific context, you can use either nested scopes or callable objects.
+For example, suppose you wanted to define linear(a,b) which returns a function f(x) that computes the value a*x+b.
+Using nested scopes:
+
+def linear(a, b):
+    def result(x):
+        return a*x + b
+    return result
+Or using a callable object:
+
+class linear:
+   def __init__(self, a, b):
+       self.a, self.b = a,b
+   def __call__(self, x):
+       return self.a * x + self.b
+In both cases:
+
+taxes = linear(0.3, 2)
+gives a callable object where taxes(10e6) == 0.3 * 10e6 + 2.
+
+The callable object approach has the disadvantage that it is a bit slower and results in slightly longer code.
+ It can be a bit easier to understand, though, especially if you’re used to OO design. 
+The functools module 
+The functools module is for higher-order functions: functions that act on or return other functions. In general,
+any callable object can be treated as a function for the purposes of this module.
+
+The functools module is for higher-order functions: functions that act on or return other functions. 
+In general, any callable object can be treated as a function for the purposes of this module.
+1> functools.cmp_to_key(func)
+old-style comparison function to a key function 
+Example:
+
+sorted(iterable,key=functools.cmp_to_key(mycomp))
+ def mycmp(a, b):
+...     print("In Mycmp for", a, ' ', b)
+...     if a < b:
+...         return -1
+...     elif a > b:
+...         return 1
+...     return 0
+uses:
+
+Used with tools that accept key functions (such as sorted(), min(), max(), heapq.nlargest(), heapq.nsmallest(), 
+itertools.groupby()). This function is primarily used as a transition tool for programs being converted from Python 2 
+which supported the use of comparison functions.
+
+2> @functools.lru_cache(maxsize=128, typed=False)
+
+A decorator memoizing callable that saves up to the maxsize most recent calls. It can save time when an expensive 
+or I/O bound function is periodically called with the same arguments.
+
+Since a dictionary is used to cache results, the positional and keyword arguments to the function must be hashable.
+
+So it will directly list you the output if the key is called before once this is done 
+@lru_cache(maxsize=32)
+def get_pep(num):
+    'Retrieve text of a Python Enhancement Proposal'
+    resource = 'http://www.python.org/dev/peps/pep-%04d/' % num
+    try:
+        with urllib.request.urlopen(resource) as s:
+            return s.read()
+    except urllib.error.HTTPError:
+        return 'Not Found'
+
+>>> for n in 8, 290, 308, 320, 8, 218, 320, 279, 289, 320, 9991:
+...     pep = get_pep(n)
+...     print(n, len(pep))
+
+>>> get_pep.cache_info()
+CacheInfo(hits=3, misses=8, maxsize=32, currsize=8)
+Here the cache is used for 3 hits i,e 3 times a previous key is been called in the 
+list and 8 times it has been missed 
+
+3) Wraps
+---------------
+Basic decorator:
+
+from functools import wraps
+
+def my_decorator(view_func):
+    def _decorator(request, *args, **kwargs):
+        # maybe do something before the view_func call
+        response = view_func(request, *args, **kwargs)
+        # maybe do something after the view_func call
+        return response
+    return wraps(view_func)(_decorator)
+
+# how to use it...
+def foo(request): return HttpResponse('...')
+foo = my_decorator(foo)
+
+# or...
+@my_decorator
+def foo(request): return HttpResponse('...')
+(the wraps function is explained below)
+
+Parameterized decorator:
+
+This one allows you to pass arguments into the decorator for some additional customization. It needs to wrap everything in an additional function (creating a closure) in order to make this possible.
+
+from functools import wraps
+
+def my_decorator(extra_value=None):
+    def _my_decorator(view_func):
+        def _decorator(request, *args, **kwargs):
+            # maybe do something before the view_func call
+            # that uses `extra_value` and the `request` object
+            response = view_func(request, *args, **kwargs)
+            # maybe do something after the view_func call
+            return response
+        return wraps(view_func)(_decorator)
+    return _my_decorator
+
+# how to use it...
+def foo(request): return HttpResponse('...')
+foo = my_decorator('some-custom-value')(foo)
+
+# or...
+@my_decorator('some-custom-value')
+def foo(request): return HttpResponse('...')
+A class decorator:
+
+from functools import wraps
+
+class my_decorator(object):
+
+    def __init__(self, view_func):
+        self.view_func = view_func
+        wraps(view_func)(self)
+
+    def __call__(self, request, *args, **kwargs):
+        # maybe do something before the view_func call
+        response = self.view_func(request, *args, **kwargs)
+        # maybe do something after the view_func call
+        return response
+
+# how to use it...
+def foo(request): return HttpResponse('...')
+foo = my_decorator(foo)
+
+# or...
+@my_decorator
+def foo(request): return HttpResponse('...')
+
+5) partial:
+Partial Function Application:
+
+If you read through the source code for wraps in functools, then you saw that it uses the partial function.
+ Partial is awesome—it’s sort of like currying. It lets you create a new function from an existing function 
+ with some of the arguments predefined. Here’s a relatively trivial example that makes a new min function 
+ by setting its “key” argument to be absolute value:
+
+from functools import partial
+min_abs_val = functools.partial(min, key=abs)
+min_abs_val(-5, -1, 2) == -1
+You can see it in action in the functools source code, but if you’d prefer a convoluted explanation of how
+ it’s used… you can see that the wraps function is a decorator that is cleverly using the partial function 
+ to return a partial function of the update_wrapper function, which now only needs the wrapper function argument,
+ and that argument will be the function that is decorated inside of a decorator function that will eventually wrap
+ other functions… INCEPTION
+
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           Debugging Modules                                                	  +                
