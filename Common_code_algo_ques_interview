@@ -583,15 +583,7 @@ situation you’ll encounter repeatedly throughout the book. Using a list would 
 running time, whereas using a set would be linear. A huge difference.
 
 
-The first lesson here is to never compare floats for equality. It generally doesn’t make sense. Still, in
-many applications (such as computational geometry), you’d very much like to do just that. Instead, you
-should check whether they are approximately equal. For example, you could take the approach of
-assertAlmostEqual from the unittest module:
->>> def almost_equal(x, y, places=7):
-... return round(abs(x-y), places) == 0
-...
->>> almost_equal(sum(0.1 for i in range(10)), 1.0)
-True
+
 
 
 
@@ -614,6 +606,7 @@ would be the following:
 
 
 For sorting Algos :
+==========================
 The best case. This is the running time you get when the input is optimally suited
 to your algorithm. For example, if the input sequence to sort_w_check were sorted,
 we would get the best-case running time (which would be linear).
@@ -626,6 +619,7 @@ some cases it can be useful. Simply put, it’s the expected value of the runnin
 time, for random input (with a given probability distribution).
 
 hasing in Python:
+========================
 Hashing involves computing some (often seemingly random) integer value from
 an arbitrary object. This value can then be used, for example, as an index into an array (subject to some
 adjustments to make it fit the index range).
