@@ -2195,23 +2195,6 @@ First, you can create a class in a function using class:
    print(MyClass()) # you can create an object from this class
   <__main__.Foo object at 0x89c6d4c>
 
-Use of type in class:
-****************************************
- print(type(ObjectCreator))
-<type 'type'>
- print(type(ObjectCreator()))
-<class '__main__.ObjectCreator'>
-
-type works this way:
-
-  type(name of the class, 
-       tuple of the parent class (for inheritance, can be empty), 
-       dictionary containing attributes names and values)
-
-	   
-	   
-	   MyShinyClass = type('MyShinyClass', (), {}) # returns a class object
-	  
 
 What are metaclasses?
 ************************
@@ -2221,10 +2204,56 @@ metaclasses are what create these objects. They are the classes' classes, you ca
   MyClass = MetaClass()
   MyObject = MyClass()
 You've seen that type lets you do something like this:
+Without the metaclass use 
+def extra(self, arg): ...
 
+class Client1: ... # Client augments: too distributed
+	if required():
+		Client1.extra = extra
+		
+class Client2: ...
+	if required():
+		Client2.extra = extra 
+
+
+ 
+With the metaclass use 
+This is exactly what metaclasses do—by declaring a metaclass, we tell Python to route
+the creation of the class object to another class we provide:
+def extra(self, arg): ...
+class Extras(type):
+	def __init__(Class, classname, superclasses, attributedict):
+		if required():
+			Class.extra = extra
+			
+class Client1(metaclass=Extras): ... # Metaclass declaration only (3.X form)
+class Client2(metaclass=Extras): ... # Client class is instance of meta
+class Client3(metaclass=Extras): ...
+X = Client1() # X is instance of Client1
+X.extra()
+
+
+Because Python invokes the metaclass automatically at the end of the class statement
+when the new class is created, it can augment, register, or otherwise manage the class
+as needed.
+ 
+ 
+
+
+
+
+Metaclasses Are Subclasses of Type
+-------------------------------------
   MyClass = type('MyClass', (), {})
 It's because the function type is in fact a metaclass. type is the metaclass Python uses to create all classes behind the scenes.
+metaclasses can even be used to implement alternative
+coding patterns such as aspect-oriented programming, object/relational mappers
 
+It turns out that classes are instances of something, too:
+• In Python 3.X, user-defined class objects are instances of the object named type,
+which is itself a class.
+• In Python 2.X, new-style classes inherit from object, which is a subclass of type;
+classic classes are instances of type and are not created from a class.ORMs) for databases, and more.
 __class___ Atribute :
 **************************
 Class gives the class name of the type is followed up with 
@@ -2240,47 +2269,107 @@ c.__class__
 now what is __class__.__class__ ie class of class which is metaclass
 c.__class__.__class__
 >><type 'type'>
-  
+type is a class that generates user-defined classes.
+• Metaclasses are subclasses of the type class.
+• Class objects are instances of the type class, or a subclass thereof.
+• Instance objects are generated from a class.
+In other words, to control the way classes are created and augment their behavior, all
+we need to do is specify that a user-defined class be created from a user-defined metaclass
+instead of the normal type class.
+
+Class Statement Protocol (what python interpreter does wen it gets a class in code)
+------------------------------------------------------------------------------------
+when Python reaches a class statement, 
+> it runs its nestedblock of code to create its attributes—all the names assigned at the top level 
+of the nested code block generate attributes in the resulting class object. 
+> These names are usually method functions created by nested defs, but they can also be 
+arbitrary attributes assigned to create class data shared by all instances.
+Python follows a standard protocol to make this happen: at the
+end of a class statement, and after running all its nested code in a namespace dictionary
+corresponding to the class’s local scope, Python calls the type object to create the
+class object like this:
+class = type(classname, superclasses, attributedict)
+
+
+type object in turn defines a __call__ operator overloading method that runs two
+def __call__():
+	type.__new__(typeclass, classname, superclasses, attributedict)##Creates new obj
+	type.__init__(class, classname, superclasses, attributedict) ## Intialises it
+	
+Example:
+For example, given a class definition like the following for Spam:
+class Eggs: ... # Inherited names here
+class Spam(Eggs): # Inherits from Eggs
+data = 1 # Class data attribute
+def meth(self, arg): # Class method attribute
+return self.data + arg
+Python will internally run the nested code block to create two attributes of the class
+(data and meth), and then call the type object to generate the class object at the end of
+the class statement:
+Spam = type('Spam', (Eggs,), {'data': 1, 'meth': meth, '__module__': '__main__'})
+
+
 The __metaclass__ attribute:
 ***************************************
-You can add a __metaclass__ attribute when you write a class:
+Declaration in 3.X
+	class Spam(metaclass=Meta): # 3.X version (only)
+	class Spam(Eggs, metaclass=Meta): # Normal supers OK: must list first
+Declaration in 2.X
+	class Spam(object): # 2.X version (only), object optional?
+		__metaclass__ = Meta
+	class Spam(Eggs, object): # Normal supers OK: object suggested
+		__metaclass__ = Meta
+	
+Metaclass Dispatch in Both 3.X and 2.X
+---------------------------------------------
+When a specific metaclass is declared per the prior sections’ syntax, the call to create
+the class object run at the end of the class statement is modified to invoke the metaclass
+instead of the type default:
+class = Meta(classname, superclasses, attributedict)
+And because the metaclass is a subclass of type, the type class’s __call__ delegates the
+calls to create and initialize the new class object to the metaclass, if it defines custom
+versions of these methods:
+	Meta.__new__(Meta, classname, superclasses, attributedict)
+	Meta.__init__(class, classname, superclasses, attributedict)
+To demonstrate, here’s the prior section’s example again, augmented with a 3.X metaclass
+specification:
+	class Spam(Eggs, metaclass=Meta): # Inherits from Eggs, instance of Meta
+		data = 1 # Class data attribute
+		def meth(self, arg): # Class method attribute
+			return self.data + arg
+At the end of this class statement, Python internally runs the following to create the
+class object—again, a call you could make manually too, but automatically run by
+Python’s class machinery:
+	Spam = Meta('Spam', (Eggs,), {'data': 1, 'meth': meth, '__module__': '__main__'})
+If the metaclass defines its own versions of __new__ or __init__, they will be invoked
+in turn during this call by the inherited type class’s __call__ method, to create and
+initialize the new class. The net effect is to automatically run methods the metaclass
+provides, as part of the class construction process.
 
-class Foo(object):
-  __metaclass__ = something   
-  [...]
-If you do so, Python will use the metaclass to create the class Foo.
 
-Careful, it's tricky.
 
-You write class Foo(object) first, but the class object Foo is not created in memory yet.
-Python will look for __metaclass__ in the class definition. If it finds it, it will use it 
-to create the object class Foo. If it doesn't, it will use type to create the class.
-
-Why the hell would you use metaclasses?
-Now the big question. Why would you use some obscure error prone feature?
-
-Well, usually you don't:
-
-Metaclasses are deeper magic than 99% of users should ever worry about. If you wonder whether you need them, you don't
- (the people who actually need them know with certainty that they need them, and don't need an explanation about why).
-It allows you to define something like this:
-
-  class Person(models.Model):
-    name = models.CharField(max_length=30)
-    age = models.IntegerField()
-But if you do this:
-
-  guy = Person(name='bob', age='35')
-  print(guy.age)
-It won't return an IntegerField object. It will return an int, and can even take it directly from the database.
-
-This is possible because models.Model defines __metaclass__ and it uses some magic that will turn the Person you 
-just defined with simple statements into a complex hook to a database field.
-
-Django makes something complex look simple by exposing a simple API and using metaclasses, recreating code from
- this API to do the real job behind the scenes.
- 
-
+ Differnce between class decorators and metaClass 
+ ==================================================
+ 1) class decorators run after the decorated class has already been created. Thus, they are often used to 
+	add logic to be run at instance creation time. When they do provide behavior for a class, it is typically
+	through changes or proxies, instead of a more direct relationship.
+	metaclasses, by contrast, run during class creation to make and return
+	the new client class. Therefore, they are often used for managing or augmenting
+	classes themselves, and can even provide methods to process the classes that are created
+	from them, via a direct instance relationship
+2) metaclasses also have a __new__ method used to create a class, which has
+	no analogy in decorators; making a new class in a decorator would incur an extra step.
+	Moreover, metaclasses may also provide behavior acquired by classes in the form of
+	methods, which have no direct counterpart in decorators either; decorators must provide
+	class behavior is less direct ways.
+	
+	
+	Uses of Metaclass:
+-----------------------
+1) metaclasses can be used to add decoration to all methods of classes automatically,
+2) register all classes in use to an API, 
+3) add user-interface logic to classes automatically,
+4) create or extend classes from simplified specifications in text files,
 
 variables and values are REFERENCES
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
