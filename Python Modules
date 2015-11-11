@@ -12,6 +12,66 @@ Strings:
 
 Reg Expresions:
 ======================================
+A reg ex consist of literals and metacharacters
+Literals : Actual text viz san
+---------
+Metachar : re matching chars (? * /w )
+----------
+We can use metacharacters as if they were literals. There are three mechanisms
+to do so:
+• Escape the metacharacters by preceding them with a backslash.
+• In python, use the re.escape method to escape non-alphanumeric
+characters that may appear in the expression. 
+
+twelve metacharacters that should be escaped:
+---------------------------------------------
+Backslash \
+• Caret ^
+• Dollar sign $
+• Dot .
+• Pipe symbol |
+• Question mark ?
+• Asterisk *
+• Plus sign +
+• Opening parenthesis (
+• Closing parenthesis )
+• Opening square bracket [
+• The opening curly brace {
+
+Character classes
+--------------------
+Element Description
+[ Matches the following set of characters
+0-9 Matches anything between 0 and 9 (0, 1, 2, 3, 4, 5, 6, 7, 8, 9).
+Or
+a-z Matches anything between a and z (a, b, c, d, ..., z)
+Or
+A-Z Matches anything between A and Z (A, B, C, D, ..., Z)
+] End of character set
+
+We can invert the meaning
+of a character set by placing a caret (^) symbol right after the opening square
+bracket metacharacter ([).
+
+ [^0-9] will match anything that is not a digit.
+as well-known shortcuts for typical character sets, but also have different meanings in different contexts
+
+Element Description (for regex with default flags)
+. This element matches any character except newline \n
+\d This matches any decimal digit; this is equivalent to the class [0-9]
+\D This matches any non-digit character; this is equivalent to the class [^0-9]
+\s This matches any whitespace character; this is equivalent to the class
+[⇢\t\n\r\f\v]
+\S This matches any non-whitespace character; this is equivalent to the class
+[^ \t\n\r\f\v]
+\w This matches any alphanumeric character; this is equivalent to the class
+[a-zA-Z0-9_]
+\W This matches any non-alphanumeric character; this is equivalent to the
+class [^a-zA-Z0-9_]
+
+
+
+
 import re
 
 The \w = [a-zA-Z0-9_] // All alpha neumeric stuffs and Underline
@@ -95,7 +155,8 @@ most maxsplit splits occur, and the remainder of the string is returned as the f
 
 Matching Versus Searching
 --------------------------------------------------
-Python offers two different primitive operations based on regular expressions: match checks for a match only at the beginning of the string,
+Python offers two different primitive operations based on regular expressions: match checks for a
+ match only at the beginning of the string,
  while search checks for a match anywhere in the string (this is what Perl does by default).
 
 Example
@@ -127,7 +188,7 @@ import re
 
 phone = "2004-959-559 # This is Phone Number"
 
-# Delete Python-styleWhen the above code is executed, it produces the following result −
+# Delete Python-style When the above code is executed, it produces the following result −
 
 Phone Num :  2004-959-559
 Phone Num :  2004959559
