@@ -2347,6 +2347,202 @@ initialize the new class. The net effect is to automatically run methods the met
 provides, as part of the class construction process.
 
 
+A basic metaclass:
+
+class MetaOne(type):
+	def __new__(meta,classname,supers,classdict):
+		print(meta,classname,supers,classdict,sep=\n)
+		return type.__new__(meta,classname,supers,classdict)
+	def __init__(Class, classname, supers, classdict):
+		#print('In MetaOne.init:', classname, supers, classdict, sep='\n...')
+		print('...init class object:', list(Class.__dict__.keys()))
+
+print('making class')
+class Spam(Eggs,metaclass=MetaOne):
+	data =1
+	def meth(self,arg):
+		retun self.data + arg
+		
+print('making instance')
+X = Spam()
+print('data:', X.data, X.meth(3))
+
+output:
+---------		
+making class
+In MetaOne.new:
+<class '__main__.MetaOne'>## meta name
+	Spam	`##name of the classname
+	(<class '__main__.Eggs'>,) ##supers 
+	{'data': 1, 'meth': <function Spam.meth at 0x02A191E0>, '__module__': '__main__'}#classdict	
+	
+In Init.new:	
+	
+init class object: ['__qualname__', 'data', '__module__', 'meth', '__doc__']
+making instance
+data: 1 3
+
+Metaclass creation Using simple factory functions
+------------------------------------------------------
+def MetaFunc(classname, supers, classdict):
+	print('In MetaFunc: ', classname, supers, classdict, sep='\n...')
+	return type(classname, supers, classdict)
+class Eggs:
+	pass
+	print('making class')
+class Spam(Eggs, metaclass=MetaFunc): # Run simple function at end
+	data = 1 # Function returns class
+def meth(self, arg):
+	return self.data + arg
+	
+print('making instance')
+X = Spam()
+print('data:', X.data, X.meth(2))	
+When run, the function is called at the end of the declaring class statement, and it
+returns the expected new class object.
+
+# A normal class instance can serve as a metaclass too
+-----------------------------------------------------------
+class MetaObj:
+	def __call__(self, classname, supers, classdict):
+		print('In MetaObj.call: ', classname, supers, classdict, sep='\n...')
+		Class = self.__New__(classname, supers, classdict)
+		self.__Init__(Class, classname, supers, classdict)
+		return Class
+
+		def __New__(self, classname, supers, classdict):
+			print('In MetaObj.new: ', classname, supers, classdict, sep='\n...')
+			return type(classname, supers, classdict)
+			
+		def __Init__(self, Class, classname, supers, classdict):
+			print('In MetaObj.init:', classname, supers, classdict, sep='\n...')
+			print('...init class object:', list(Class.__dict__.keys()))
+class Eggs:
+	pass
+	print('making class')
+	
+class Spam(Eggs, metaclass=MetaObj()): # MetaObj is normal class instance
+	data = 1 # Called at end of statement
+	def meth(self, arg):
+	return self.data + arg
+	
+	
+adding more twiste we can use normal superclass inheritance to acquire the call interceptor in this
+coding model—	
+class MetaObjSuper:
+	def __call__(self, classname, supers, classdict):
+		print('In MetaObj.call: ', classname, supers, classdict, sep='\n...')
+		Class = self.__New__(classname, supers, classdict)
+		self.__Init__(Class, classname, supers, classdict)
+		return Class
+
+class SubMetaObj(SuperMetaObj):
+	def __new__ / 
+	__Init__
+All r same
+	
+Inheritance and Instance:
+------------------------------------------------------
+(class using Metaclass are basically instance of Metaclass)
+1. Metaclasses inherit from the type class (usually)
+2. Metaclass declarations are inherited by subclasses
+	So any subclass of Spam wil be having the MetaObj as metaclass
+3. Metaclass attributes are not inherited by class instances
+4. Metaclass attributes are acquired by classes.
+	
+def newmthd():
+	pass
+	
+class MetaOne(type):
+	def __new__(meta, classname, supers, classdict): # Redefine type method
+		print('In MetaOne.new:', classname)
+		classdict[mewmthd]= newmthd
+		return type.__new__(meta, classname, supers, classdict)
+	def toast(self):
+		return 'toast'
+	#Overding 
+	def overd_me(self):
+		return 'Meta'
+		
+	#OPerator Overloading 
+	def __getitem__(cls, i): # Meta method for processing classes:
+		return cls.data[i] # Built-ins skip class, use meta
+						   # Explicit names search class + meta
+		
+class Super(metaclass=MetaOne): # Metaclass inherited by subs too
+	data = 'Spam'
+	
+	def spam(self): # MetaOne run twice for two classes
+		return 'spam'
+	def overd_me(self):
+		return 'Super' # Meta mthod is overidden
+	
+
+class Sub(Super): # Superclass: inheritance versus instance
+	def eggs(self): # Classes inherit from superclasses
+		return 'eggs' # But not from metaclasses
+		
+When this code is run (as a script or module), the metaclass handles construction of
+both client classes, and instances inherit class attributes but not metaclass attributes:
+>>>  # Runs class statements: metaclass run twice
+	In MetaOne.new: Super
+	In MetaOne.new: Sub
+>>> X = Sub() # Normal instance of user-defined class
+>>> X.eggs() # Inherited from Sub
+	'eggs'
+>>> X.spam() # Inherited from Super
+	'spam'
+>>> X.toast() # Not inherited from metaclass
+	AttributeError: 'Sub' object has no attribute 'toast'
+>>> Super.overd_me()
+	Super
+>>>Super.data[0]
+	S
+>>>>X.newmthd()
+
+By contrast, classes both inherit names from their superclasses, and acquire names from
+their metaclass (which in this example is itself inherited from a superclass):
+>>> Sub.eggs(X) # Own method
+	'eggs'
+>>> Sub.spam(X) # Inherited from Super
+	'spam'
+>>> Sub.toast() # Acquired from metaclass
+	'toast'
+>>> Sub.toast(X) # Not a normal class method
+	TypeError: toast() takes 1 positional argument but 2 were given
+
+Metaclass Versus Superclass :
+------------------------------
+Metaclass:
+		class A(type): attr = 1
+
+		class B(metaclass=A): pass # B is meta instance and acquires meta attr
+		I = B() # I inherits from class but not meta!
+		B.attr
+		>> 1
+>>> I.attr
+AttributeError: 'B' object has no attribute 'attr'
+>>> 'attr' in B.__dict__, 'attr' in A.__dict__
+(False, True)
+Superclass:
+class A: attr = 1
+class B(A): pass # I inherits from class and supers
+I = B()
+>>> B.attr
+1
+>>> I.attr
+1
+>>> 'attr' in B.__dict__, 'attr' in A.__dict__
+(False, True)
+Superclass:
+class M(type): attr = 1
+>>> class A: attr = 2
+>>> class B(A, metaclass=M): pass # Supers have precedence over metas
+>>> I = B()
+>>> B.attr, I.attr
+(2, 2)
+>>> 'attr' in B.__dict__, 'attr' in A.__dict__, 'attr' in M.__dict__
+(False, True, True)
 
  Differnce between class decorators and metaClass 
  ==================================================
@@ -2364,12 +2560,18 @@ provides, as part of the class construction process.
 	class behavior is less direct ways.
 	
 	
-	Uses of Metaclass:
+Uses of Metaclass:
 -----------------------
 1) metaclasses can be used to add decoration to all methods of classes automatically,
 2) register all classes in use to an API, 
 3) add user-interface logic to classes automatically,
 4) create or extend classes from simplified specifications in text files,
+
+
+
+
+
+
 
 variables and values are REFERENCES
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
