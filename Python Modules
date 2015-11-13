@@ -214,8 +214,207 @@ regular expression
 >>> pattern.match("<HTML>")
 <_sre.SRE_Match at 0x108076578>
 
+if we want to know if a string starts with <HTML>, we can use the following code:
+There are two ways two get that 
+1> Compile a pattern, which gives us a RegexObject,
+2> we can use the module operations
+1> Compile a pattern, which gives us a RegexObject:
+----------------------------------------------------
+1>  re-use the regular expression, we can use the following code:
 
+>>> pattern = re.compile(r'<HTML>')
+>>> pattern.match("<HTML>")
+2> we can directly perform the operation on the module using the:
+----------------------------------------------------
+>>> re.match(r'<HTML>', "<HTML>")
 
+Advantages with Compiled RegexObject:
+---------------------------------------
+When you're using module operations, you don't control the cache,
+and so you can end up with a lot of memory usage. You can always 
+use re.purge to clear the cache but this is a tradeoff with performance. 
+Using compiled patterns allows you to have a fine-grained control of
+the memory consumption because you can decide when to purge them
+
+Searching( to look for patterns in strings)
+------------------------------------------------
+Two operations  match and search;
+1> match :match the compiled pattern only at the beginning of the string.
+---------------------------------------------------------
+Ex:
+optional pos parameter specifies where to start searching
+pattern.match("--<HTML>", 2)
+<_sre.SRE_Match at 0x1043bc850>
+The second argument, endpos, sets how far the pattern will try to match in the
+string
+>>> pattern = re.compile(r'<HTML>$')
+>>> pattern.match("<HTML>⇢", 0,6)
+<_sre.SRE_Match object at 0x1007033d8>
+>>> pattern.match("<HTML>⇢"[:6])
+<_sre.SRE_Match object at 0x100703370>
+2> search :tries to match the pattern at any location of the string and not 
+---------------------------------------------------------
+Ex:
+>>> pattern.search("->HTML>")
+<_sre.SRE_Match at 0x108076578>
+
+Multiline there will be a single match in each line 
+find <HTML> right after new line, thanks to re.MULTILINE.
+>>> pattern = re.compile(r'^<HTML>', re.MULTILINE)
+>>> pattern.search("<HTML>")
+	<_sre.SRE_Match at 0x1043d3100>
+>>> pattern.search("-<HTML>")
+	None
+>>> pattern.search("--\n<HTML>")
+	<_sre.SRE_Match at 0x1043bce68>
+
+3> findall : it returns a list with all the non-overlapping occurrences of a pattern
+--------------------------------------------------------------
+>>> pattern = re.compile(r"\w+")
+>>> pattern.findall("hello world")
+['hello', 'world]
+4> finditer: it returns an iterator in which each element is a MatchObject
+--------------------------------------------------------------
+Match every two words and capture them:
+>>> pattern = re.compile(r"(\w+) (\w+)")
+>>> it = pattern.finditer("Hello⇢world⇢hola⇢mundo")
+>>> match = it.next()
+>>> match.groups()
+	('Hello', 'world')
+>>> match.span()
+	(0, 11)
+
+For every element in the iterator, we get a MatchObject, so we can see the captured
+groups  also get the position of the match.
+>>> match = it.next()
+>>> match.groups()
+	('hola', 'mundo')
+>>> match.span()
+	(12, 22)
+5> split: In this case, the string is split based on the matches of the pattern.
+--------------------------------------------------------------
+>>> pattern = re.compile(r"\W")
+>>> pattern.split("hello⇢world")
+['Hello', 'world']
+In the preceding example, we've defined a pattern to match any non-alphanumeric
+character. 
+
+The maxsplit parameter specifies how many splits can be done at maximum and
+returns the remaining part in the result:
+>>> pattern = re.compile(r"\W")
+>>> pattern.split("Beautiful is better than ugly", 2)
+['Beautiful', 'is', 'better than ugly']
+
+6. sub(repl, string, count=0):returns the resulting string after replacing the matched pattern
+------------------------------------------------------------------
+>>> pattern = re.compile(r"[0-9]+")
+>>> pattern.sub("-", "order0⇢order1⇢order13")
+'order-⇢order-⇢order-'
+Basically, the regex matches 1 and more digits and replaces the pattern matched, 0, 1,
+and 13 here, with - (dash).
+
+Now replace two types in a statement 
+Ex: the ones starting with a dash should start with an A and the rest should start with a B.
+>>>def normalize_orders(matchobj):
+	if matchobj.group(1) == '-': 
+		return "A"
+	else: 
+		return "B"
+>>> re.sub('([-|A-Z])', normalize_orders, '-1234⇢A193⇢ B123')
+'A1234⇢B193⇢B123'
+
+Ex  :
+>>> pattern = re.compile(r'\*(.*?)\*')
+>>> pattern.sub(r"<b>\g<1>1<\\b>", text)
+'imagine⇢a⇢new⇢<b>world1<\\b>,⇢a⇢magic⇢<b>world1<\\b>'
+
+group :group operation gives you the subgroups of the match
+---------------------------------------------------------------
+>>> pattern = re.compile(r"(\w+) (\w+)")
+>>> match = pattern.search("Hello⇢world")
+
+With group1 bigger than 0, it returns the corresponding group.
+>>> match.group(1)
+	'Hello'
+>>> match.group(2)
+	'world'
+the pattern has named groups, they can be accessed using the
+names or the index:
+>>> pattern = re.compile(r"(?P<first>\w+) (?P<second>\w+)")
+
+groups: 
+---------------------------------------------------------------
+
+>>> pattern = re.compile("(\w+) (\w+)?")
+>>> match = pattern.search("Hello⇢")
+>>> match.groups("mundo")
+('Hello', 'mundo')
+>>> match.groups()
+('Hello', None)
+The pattern in the preceding example is trying to match two groups made of one or
+more alphanumeric characters.
+
+escape()
+---------------------------------------------------------------
+It escapes the literals that may appear in the expressions.
+>>> re.findall(re.escape("^"), "^like^")
+['^', '^']
+purge()
+It purges the regular expressions cache.
+
+Unicode:
+----------------------
+When you're using Python 2.x and you want to match Unicode, the regex has to be
+Unicode escape. For example:
+>>> re.findall(r"\u03a9", u"adeΩa")
+[]
+>>> re.findall(ur"\u03a9", u"adeΩa")
+[u'\u03a9']
+Note that if you use Unicode characters but the type of the string you're using
+is not Unicode, python automatically encodes it using the default encoding.
+For example, in my case I have UTF-8:
+>>> u"Ω".encode("utf-8")
+'\xce\xa9'
+>>> "Ω"
+'\xce\xa9'
+So, you have to be careful while mixing types:
+>>> re.findall(r'Ω', "adeΩa")
+['\xce\xa9']
+-----------------------------------------------------------------------------------------
+Type Prefixed Description
+String They are string literals. They're Unicode. The backslash is
+necessary to escape meaningful characters.
+>>>"España \n"
+'España \n'
+Raw
+string
+r or R They're equal to literal strings with the exception of the
+backslashes, which are treated as normal characters.
+>>>r"España \n"
+'España \\n'
+Byte
+strings
+b or B Strings represented as bytes. They can only contain ASCII
+characters; if the byte is greater than 128, it must be escaped.
+>>> b"Espa\xc3\xb1a \n"
+b'Espa\xc3\xb1a \n'
+We can convert to Unicode in this way:
+>>> str(b"Espa\xc3\xb1a \n", "utf-8")
+'España \n'
+The backslash is necessary to escape meaningful characters.
+Byte raw
+string
+r or R They are like byte strings, but the backslashes are escaped.
+>>> br"Espa\xc3\xb1a \n"
+b'Espa\\xc3\\xb1a \\n'
+So, the backslash used to escape bytes are escaped again,
+which complicates their conversion to Unicode:
+>>> str(br"Espa\xc3\xb1a \n", "utf-8")
+'Espa\\xc3\\xb1a \\n'
+Unicode r or U The u prefix was removed in the early versions of Python
+3, and recovered in version 3.3 the syntax is accepted again.
+They're equal to strings.
+------------------------------------------------------------------------------------
 import re
 
 The \w = [a-zA-Z0-9_] // All alpha neumeric stuffs and Underline
