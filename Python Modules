@@ -1,3 +1,36 @@
+											Contents:
+											---------
+									1. Expertising OOPs
+										
+									2. String Parsing Modules 
+											String 
+											Regex
+									3. Utility Modules 
+											 Itertools Module
+											  Functools Module
+									4. Debugging Modules
+											Pdb
+									5. Unit test Modules 
+									6. Database Modules 
+									7. Automation Modules
+									8. Protocol Modules
+									
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Expertising OOPs                                                +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           String parsing Modules                                                +                
@@ -40,35 +73,146 @@ Backslash \
 
 Character classes
 --------------------
-Element Description
-[ Matches the following set of characters
-0-9 Matches anything between 0 and 9 (0, 1, 2, 3, 4, 5, 6, 7, 8, 9).
+Element 		Description
+[ 			Matches the following set of characters
+0-9 		Matches anything between 0 and 9 (0, 1, 2, 3, 4, 5, 6, 7, 8, 9).
 Or
-a-z Matches anything between a and z (a, b, c, d, ..., z)
+a-z 		Matches anything between a and z (a, b, c, d, ..., z)
 Or
-A-Z Matches anything between A and Z (A, B, C, D, ..., Z)
-] End of character set
+A-Z 		Matches anything between A and Z (A, B, C, D, ..., Z)
+] 			End of character set
 
 We can invert the meaning
 of a character set by placing a caret (^) symbol right after the opening square
 bracket metacharacter ([).
 
  [^0-9] will match anything that is not a digit.
-as well-known shortcuts for typical character sets, but also have different meanings in different contexts
+ Well-known shortcuts for typical character sets
+---------------------------------------------------
+Element 	Description (for regex with default flags)
+-----------------------------------------------------------------------\\\\\
+.  			any character except newline \n
+\d  		any decimal digit; this is equivalent to the class [0-9]
+\D 			any non-digit character; this is equivalent to the class [^0-9]
+\s 			any whitespace character equivalent to [⇢\t\n\r\f\v]
+\S 			any non-whitespace character equivalent to [^ \t\n\r\f\v]
+\w  		any alphanumeric character; equivalent to [a-zA-Z0-9_]
+\W 			any non-alphanumeric character;  equivalent to [^a-zA-Z0-9_]
 
-Element Description (for regex with default flags)
-. This element matches any character except newline \n
-\d This matches any decimal digit; this is equivalent to the class [0-9]
-\D This matches any non-digit character; this is equivalent to the class [^0-9]
-\s This matches any whitespace character; this is equivalent to the class
-[⇢\t\n\r\f\v]
-\S This matches any non-whitespace character; this is equivalent to the class
-[^ \t\n\r\f\v]
-\w This matches any alphanumeric character; this is equivalent to the class
-[a-zA-Z0-9_]
-\W This matches any non-alphanumeric character; this is equivalent to the
-class [^a-zA-Z0-9_]
+The special character matches :
+------------------------------------
+Element 		Description
+-------------------------------------
+[ 				Matches a set of characters
+^ 				Not matching this symbol's following characters
+\/ 				Matches a / character
+\ 				Matches a \ character
+] 				End of the set
 
+Alternation:(Matching a set regular expression)
+---------------------------------------------
+we want to match either if we find the word "yes"
+or the word "no". Using alternation, it will be as simple as:
+	/yes|no/
+	
+Quantifiers:(mechanisms to define how 
+character, metacharacter, or character set can be repeated.)
+-----------------------------------------------------------
+Symbol  Quantification of previous character
+? 		Optional (0 or 1 repetitions)
+* 		Zero or more times
++ 		One or more times
+{n,m} 	Curly braces Between n and m times	
+
+ex:  /cars?/ = to match the word car and its plural form cars
+ex: 555-555-555, 555 555 555,or 555555555= /\d+[-\s]?\d+[-\s]?\d+/
+Element 	Type 					Description
+\d 		Predefined character set 	Any decimal character
++ 		Quantifier - 				that is repeated one or more times
+[-\s] 	Character set 				A hyphen or whitespace character
+? 		Quantifier - 				that may or may not appear
+\d 		Predefined character set 	Any decimal character
++ 		Quantifier - 				that is repeated one or more times
+[-\s] 	Character set 				A hyphen or whitespace character
+\d 		Predefined character set 	Any decimal character
++ 		Quantifier - 				that is repeated one or more times
+	
+Syntax 	Description
+{n} 	The previous character is repeated exactly n times.
+{n,} 	The previous character is repeated at least n times.
+{,n} 	The previous character is repeated at most n times.
+{n,m} 	The previous character is repeated between n and m times(both inclusive).
+now 
+ 555-555-555, 555 555 555,or 555555555 = \d{1,3}[-\s]?\d{3}[-\s]?\d{3}/
+
+Greedy and reluctant quantifiers
+----------------------------------
+The greedy behavior of the quantifiers is applied by default in the quantifiers.
+A greedy quantifier will try to match as much as possible to have the biggest
+match result possible
+Ex:
+match a /".+"/ in English "Hello", Spanish "Hola" will match 
+"Hello", Spanish "Hola"
+
+The non-greedy behavior can be requested by adding an extra question mark
+to the quantifier; for example, ??, *? or +?. A quantifier marked as reluctant
+will behave like the exact opposite of the greedy ones. They will try to have
+the smallest match possible.
+Ex:
+match a /".+?"/ in English "Hello", Spanish "Hola" will match 
+"Hello"  "Hola"
+
+Boundary Matchers:(Matching Begining or End in line match)
+----------------------------------------------------------
+Matcher 		Description
+^ 				Matches at the beginning of a line
+$ 				Matches at the end of a line
+\b 				Matches a word boundary
+\B 				Matches the opposite of \b. Anything that is not a word boundary
+\A 				Matches the beginning of the input
+\Z 				Matches the end of the input
+
+Ex:
+a regular expression that
+will match lines that start with "Name:" = /^Name:/
+Ex:
+"Name:VVVHUHU"    /^Name:[\sa-zA-Z]+$/
+
+
+String Python 2.x
+-------------------------
+1. String 			String literals. They're encoded automatically by
+				using the default encoding (UTF-8 in our case).
+				The backslash is necessary to escape meaningful
+				characters.
+>>>"España \n"
+'Espa\xc3\xb1a \n'
+
+2) Raw string r or R They're equal to literal strings with the exception
+				of the backslashes, which are treated as normal
+				characters.
+>>>r"España \n"
+'Espa\xc3\xb1a \\n'
+3) Unicode 		string u or U These strings use the Unicode character set 
+				(ISO 10646).
+>>>u"España \n"
+u'Espa\xf1a \n'
+4)Unicode raw
+		string
+				ur or UR They're Unicode strings but treat backslashes as
+				normal raw strings.
+>>>ur"España \n"
+u'Espa\xf1a \\n'
+
+Building blocks for Python regex:
+---------------------------------
+• RegexObject: It is also known as Pattern Object. It represents a compiled
+regular expression
+• MatchObject: It represents the matched pattern
+
+>>> pattern = re.compile(r'<HTML>')
+>>> pattern.match("<HTML>")
+<_sre.SRE_Match at 0x108076578>
 
 
 

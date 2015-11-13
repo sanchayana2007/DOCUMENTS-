@@ -1763,7 +1763,8 @@ Python supports inheritance of base classes. When a class is defined, the base c
 
 class Car(Vehicle):
 
-In addition, Python supports multiple inheritance; that is, more than one parent or base class can be inherited from
+In addition, Python supports multiple inheritance; that is, more than one parent or base class can be
+ inherited from
 in a child class. For example:
 
 
@@ -2566,11 +2567,6 @@ Uses of Metaclass:
 2) register all classes in use to an API, 
 3) add user-interface logic to classes automatically,
 4) create or extend classes from simplified specifications in text files,
-
-
-
-
-
 
 
 variables and values are REFERENCES
@@ -4509,6 +4505,134 @@ class Myprojcts():
 			
 >>user = ram
 >>these_are = Myprojcts()
+
+Class Decorators:
+------------------------------------
+while similar in concept to function decorators, class decorators
+are applied to classes instead—they may be used either to manage classes themselves,
+or to intercept instance creation calls in order to manage instances.
+The basic class decorator is shown up with an example of singleton which interceptsa
+class during objecty creation 
+
+here the singleton decorator will be used whenever
+any class is decorated using the decorator 
+A singleton decorator function for classes :
+---------------------------------------------
+instances = {}
+def singleton(aClass): # On @ decoration
+	def onCall(*args, **kwargs): # On instance creation
+		if aClass not in instances: # One dict entry per class
+			instances[aClass] = aClass(*args, **kwargs)
+		return instances[aClass]
+	return onCall
+	
+decorate the classes for which you want to enforce a single-instance model
+(for reference, all the code in this section is in the file singletons.py):
+
+@singleton # Person = singleton(Person)
+class Person: # Rebinds Person to onCall
+	def __init__(self, name): # onCall remembers Person
+		self.name = name
+Use:
+	bob = Person('Bob', 40, 10) # Really calls onCall
+	print(bob.name, bob.pay())
+	
+	sue = Person('Sue', 50, 20) # Same, single object
+	print(sue.name, sue.pay())
+wrapping up Multipleclass methods by a Class:
+------------------------------------------------
+This technique is used by ocerlaoding __getattr__ insdide the class
+class Wrapper:
+	def __init__(self, object):
+		self.wrapped = object # Save object
+	def __getattr__(self, attrname):
+		print('Trace:', attrname) # Trace fetch
+		return getattr(self.wrapped, attrname) # Delegate fetch
+>>> x = Wrapper([1,2,3]) # Wrap a list
+>>> x.append(4) # Delegate to list method
+Trace: append
+>>> x.wrapped ## [1, 2, 3, 4]
+
+Doing the same using a class decorator:
+-----------------------------------------
+The init of the Wrapper will 
+def Tracer(aClass): # On @ decorator
+	class Wrapper:
+		def __init__(self, *args, **kargs): # On instance creation
+			self.fetches = 0
+			self.wrapped = aClass(*args, **kargs) # Use enclosing scope name
+		def __getattr__(self, attrname):
+			print('Trace: ' + attrname) # Catches all but own attrs
+			self.fetches += 1
+			return getattr(self.wrapped, attrname) # Delegate to wrapped obj
+		return Wrapper
+Uses 
+-----		
+@Tracer
+class Spam: # Spam = Tracer(Spam)
+	def display(self): # Spam is rebound to Wrapper
+	print('Spam!' * 8)
+##
+food = Spam() # Triggers Wrapper()
+food.display() # Triggers __getattr__
+print([food.fetches]) ## The instance can fetch a init deco variable
+the class decorator here allows us to trace an entire
+object interface—that is, accesses to any of the instance’s attributes.
+
+"""
+File access1.py (3.X + 2.X)
+Privacy for attributes fetched from class instances.
+See self-test code at end of file for a usage example.
+Decorator same as: Doubler = Private('data', 'size')(Doubler).
+Private returns onDecorator, onDecorator returns onInstance,
+and each onInstance instance embeds a Doubler instance.
+"""
+traceMe = False
+def trace(*args):
+	if traceMe: print('[' + ' '.join(map(str, args)) + ']')
+def Private(*privates): # privates in enclosing scope
+	def onDecorator(aClass): # aClass in enclosing scope
+		class onInstance: # wrapped in instance attribute
+			def __init__(self, *args, **kargs):
+				self.wrapped = aClass(*args, **kargs)
+			def __getattr__(self, attr): # My attrs don't call getattr
+				trace('get:', attr) # Others assumed in wrapped
+				if attr in privates:
+					raise TypeError('private attribute fetch: ' + attr)
+				else:
+					return getattr(self.wrapped, attr)
+			def __setattr__(self, attr, value): # Outside accesses
+				trace('set:', attr, value) # Others run normally
+				if attr == 'wrapped': # Allow my attrs
+					self.__dict__[attr] = value # Avoid looping
+				elif attr in privates:
+					raise TypeError('private attribute change: ' + attr)
+				else:
+					setattr(self.wrapped, attr, value) # Wrapped obj attrs
+		return onInstance # Or use __dict__
+	return onDecorator
+if __name__ == '__main__':
+	traceMe = True
+	@Private('data', 'size') # Doubler = Private(...)(Doubler)
+	class Doubler:
+Example
+def __init__(self, label, start):
+	self.label = label # Accesses inside the subject class
+	self.data = start # Not intercepted: run normally
+def size(self):
+	return len(self.data) # Methods run with no checking
+def double(self): # Because privacy not inherited
+	for i in range(self.size()):
+		self.data[i] = self.data[i] * 2
+	X = Doubler('X is', [1, 2, 3])
+	Y = Doubler('Y is', [-10, −20, −30])
+# The following all succeed
+	print(X.label) # Accesses outside subject class
+	X.display(); X.double(); X.display() # Intercepted: validated, delegated
+	print(Y.label)
+
+
+
 
 
 4. Context Provider
