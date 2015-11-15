@@ -11,7 +11,8 @@
 									4. Debugging Modules
 											Pdb
 									5. Unit test Modules 
-									6. Database Modules 
+									6. Gui Modules
+											Tkinter
 									7. Automation Modules
 									8. Protocol Modules
 									
@@ -424,7 +425,8 @@ a = 'My name is ShankarDD  12'
 
 1) Search any 2 any chars after Shankar.
 
-re.search('Shankar\w\w',a).group()  or re.search('Shankar[a-zA-Z0-9_][a-zA-Z0-9_]',a).group()
+re.search('Shankar\w\w',a).group()  or re.search('Shankar[a-zA-Z0-9_]
+													[a-zA-Z0-9_]',a).group()
 
 >> ShankarDD
 
@@ -994,7 +996,13 @@ OK
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                         Gui Modules                                                      +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Tkinter:
 
 
 
