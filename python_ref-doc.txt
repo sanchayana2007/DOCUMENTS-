@@ -24,13 +24,23 @@ That bytecode is either interpreted (note that there's a difference, both in the
 Python and LUA are handled quite differently—interpreted rather than compiled. When you run a Python program 
 (a file with an extension of .PY), it is not compiled, it is run. You could insert syntax errors into a function
 in Python and unless that function is called, Python will never complain about the errors!
-Process of interpreting :
---------------------------
-1) There are four steps that python takes when you hit return: lexing, parsing, compiling, and interpreting.
-2) Lexing is breaking the line of code you just typed into tokens.
-3) The parser takes those tokens and generates a structure that shows their relationship to each other
- (in this case, an Abstract Syntax Tree). 
-4) The compiler then takes the AST and turns it into one (or more) code objects.
+what happens wen a Python program is run :
+-----------------------------------------------
+1. when you execute a program Python first compiles your source code (the statements in your file) into a format known
+	as byte code(byte code is a lower-level,platform-independent representation of your source code which is much fast i.e Pyc files)
+	3.2 > version pyc will be in same dir after run 
+	3.2=< version pyc in the __pycache module
+	Process of interpreting :
+	--------------------------
+	1) There are four steps that python takes when you hit return: lexing, parsing, compiling, and interpreting.
+	2) Lexing is breaking the line of code you just typed into tokens.
+	3) The parser takes those tokens and generates a structure that shows their relationship to each other
+	 (in this case, an Abstract Syntax Tree). 
+
+2. PVM is just a big code loop that iterates through
+your byte code instructions, one by one, to carry out their operations.
+
+1) The compiler then takes the AST and turns it into one (or more) code objects.
 Finally, the interpreter takes each code object executes the code it represents.
 
 Python is dynamically but strongly typed:
@@ -167,11 +177,10 @@ AttributeError: 'builtin_function_or_method' object has no attribute '__contains
 
 Raising exceptions
 --------------------------
-Python 3.4.1
+Python 3.4.1 Errors are objects now 
 raise IOError, "file error"
-
-raise IOError, "file error"
-                     ^
+o/p:
+raise IOError, "file error"                     ^
 SyntaxError: invalid syntax
 
 raise IOError("file error")
@@ -193,11 +202,10 @@ Parsing user inputs via input()
 ==============================================
 
 Fortunately, the input() function was fixed in Python 3 so that it always stores the user inputs as str objects.
- In order to avoid the dangerous behavior in Python 2 to read in other types than strings, we have to use raw_input() instead.
-=======
+In order to avoid the dangerous behavior in Python 2 to read in other types than strings, we have to use raw_input() instead.
 
-
-New style objects have a different object model to classic objects, and some things won't work properly with old style objects, for instance,
+New style objects have a different object model to classic objects, and some things won't work properly with old style objects,
+for instance,
  super(), @property and descrpnt
 Explanation:
 Class :
@@ -248,12 +256,11 @@ Python also provides some built-in data types,here are the 6 built in types
 A dictionary is mutable and is another container type that can store any number of Python objects,
 including other container types. Dictionaries consist of pairs (called items) of keys and their
 corresponding values.
-<<<<<<< HEAD
 
 Python dictionaries are also known as associative arrays or hash tables. The general syntax of a
 dictionary is as follows:
 =======
->>>>>>> origin/master
+
 he following examples all return a dictionary equal to {"one": 1, "two": 2, "three": 3}:
 
 >>> a = dict(one=1, two=2, three=3)
