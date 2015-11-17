@@ -21,7 +21,7 @@
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Expertising OOPs                                                +                
++                                           Expertising OOPs                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -926,68 +926,60 @@ Like the doctest introduction, I’ll run through a simple example first, then s
 
 unittest example
 
-Using the same unnecessary_math.py module that I wrote in the
-doctest intro, here’s some example test
-code to test my ‘multiply’ function.
-
-test_um_unittest.py:
-
- 
-import unittest
-from unnecessary_math import multiply
-
-class TestUM(unittest.TestCase):
-
+class Tests(unittest.TestCase):
     def setUp(self):
+        print('Gonna Run the test cases')
+	def tearDown(self):
+        print('Over test cases')
+    def runTest3(self):
+        print('test1')
+        self.assertEqual({'acad'},lcs('academy', 'abracadabra'))
+    def runTest2(self):
+        print('test2')
+        self.assertEqual({'abc','aba'},lcs('ababc', 'abcdaba'))
+	
+	
+    @unittest.skipUnless(sys.platform.startswith("win"), "requires Windows")
+    def test_windows_support(self):
+        # windows specific testing code
         pass
 
-    def test_numbers_3_4(self):
-        self.assertEqual( multiply(3,4), 12)
-
-    def test_strings_a_3(self):
-        self.assertEqual( multiply('a',3), 'aaa')
-
-if __name__ == '__main__':
-    unittest.main()
-
-
-
-In this example, I’ve used assertEqual(). The unittest framework has a whole bunch of assertBlah() style functions like assertEqual().
- Once you have a reasonable reference for all of the assert functions bookmarked, working with unnittest is pretty powerful and easy.
-
-Aside from the tests you write, most of what you need to do can be accomplished with the test fixture methods such as setUp, tearDown,
- setUpClass, tearDownClass, etc.
-
-Running unittests
-
-At the bottom of the test file, we have this code:
-
-
  
-if __name__ == '__main__':
-    unittest.main()
-This allows us to run all of the test code just by running the file.
-Running it with no options is the most terse, and running with a ‘-v’ is more verbose, showing which tests
-ran.
 
 
 
-> python test_um_unittest.py
-..
+def suite():
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(Tests('runTest2'))
+    test_suite.addTest(Tests('runTest3'))
+	test_suite.addTest(Tests('test_windows_support'))
+    return test_suite
+
+
+
+if __name__ == "__main__":
+
+   unittest.TextTestRunner(verbosity=2).run(suite())
+The output of the above is 
+Gonna Run the test cases
+runTest2 (__main__.Tests) ... ok
+test2
+runTest3 (__main__.Tests) ... ok
+test_windows_support (__main__.Tests) ... skipped 'requires Windows'
+
 ----------------------------------------------------------------------
-Ran 2 tests in 0.000s
+Ran 3 tests in 0.000s
 
-OK
-> python test_um_unittest.py -v
-test_numbers_3_4 (__main__.TestUM) ... ok
-test_strings_a_3 (__main__.TestUM) ... ok
+OK (skipped=1)
+Gonna Run the test cases
+test2
+Over test cases
+Gonna Run the test cases
+test1
+Over test cases
 
-----------------------------------------------------------------------
-Ran 2 tests in 0.000s
-OK
-
-
-
+nose : Python testing framework 
+-----------------------------------
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1003,17 +995,66 @@ OK
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Tkinter:
+PyQt:
+	
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Database Modules (ORM)                                                     +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQLAlchemy is the Python SQL toolkit and Object Relational Mapper that gives application developers the full power
 
 
-
+The Django ORM and flexibility of SQL
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Database Modules                                                      +                
++                                           Web Server  Modules                                                   +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Tornado (Python web framework and asynchronous networking library)
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Event based Modules                                                   +                
++                                                                                                                 +
++                                                                                                                 +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+gevent is a coroutine-based Python networking library
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          Python object serialization Modules                                    +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+pickel 
+for serializing and de-serializing a Python object structure
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          Web Scarping  Modules                                                  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Mechanize:(very useful python module for navigating through web forms )
+Scrapy: (involved in webscraping then this is a must )
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          DataAnalytics Modules                                                  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Panda
+providing high-performance, easy-to-use data structures and data analysis tools for the Python programming language
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
