@@ -21,12 +21,13 @@
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Expertising OOPs                                                +                
++                                           Expertising OOPs                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1> 
 This deals with a instance atributes when some atribues differes according to type 
-of the subclass based on fixed input 
+of the subclass based on Some Atribute , So those inputs are preintialised from the instaces 
 class Card:
 	def __init__( self, rank, suit ):
 		self.suit= suit
@@ -46,6 +47,118 @@ class FaceCard( Card ):
 cards = [ AceCard('A', '♠'), NumberCard('2','♠'), NumberCard('3','♠'),
 ]
 
+2> Leveraging __init__() via a factory function:
+----------------------------------------------------
+In Python, a class isn't required. It's merely a good idea when there are 
+related factories that are complex. One of the strengths of Python is that we're
+
+def card( rank, suit ):
+	#  Ace / Num Card objs are just returned 
+	if rank == 1: return AceCard( 'A', suit )
+		elif 2 <= rank < 11: return NumberCard( str(rank), suit )
+		elif 11 <= rank < 14:
+		# here there is a Multi condition check by using a Map in a line
+			name = { 11: 'J', 12: 'Q', 13: 'K' }[rank]
+			return FaceCard( name, suit )
+		else:
+			raise Exception( "Rank out of range" )
+					OR
+3> Mapping to a tuple of values:
+------------------------------------
+The following is the essence of how mapping is done to a two-tuple:
+class_, rank_str= {
+	1: (AceCard,'A'),
+	11: (FaceCard,'J'),
+	12: (FaceCard,'Q'),
+	13: (FaceCard,'K'),
+	}.get(rank, (NumberCard, str(rank)))
+	return class_( rank_str, suit )
+4> fluent Card factory class:
+---------------------------
+We make the setting of the rank object a fluent method that
+returns self. Setting the suit object will actually create the Card instance.
+class CardFactory:
+	def rank( self, rank ):
+		self.class_, self.rank_str= {1:(AceCard,'A'),
+		11:(FaceCard,'J'),
+			12:(FaceCard,'Q'),
+			13:(FaceCard,'K'),
+			}.get(rank, (NumberCard, str(rank)))
+		return self
+	def suit( self, suit ):
+		return self.class_( self.rank_str, suit )
+card8 = CardFactory()
+deck8 = [card8.rank(r+1).suit(s) for r in range(13) for s in (Club,
+Diamond, Heart, Spade)]
+
+Simple composite objects
+---------------------------
+A composite object can also be called a container.use a simple list as a deck.
+Before designing a new class, we need to ask this question: is using a simple
+list appropriate?
+We can use random.shuffle() to shuffle the deck and deck.pop() to deal cards
+into a player's Hand.
+so for this 2 functionalities y to put a new class
+To design a collection of objects, we have the following three general design strategies:
+• Wrap: This design pattern is an existing collection definition. This might be
+an example of the Facade design pattern.
+• Extend: This design pattern is an existing collection class. This is ordinary
+subclass definition.
+• Invent: This is designed from scratch. We'll look at this in Chapter 6, Creating
+Containers and Collections.
+
+
+1) Wrapping a collection class:
+The following is a wrapper design that contains an internal collection:
+class Deck:
+	def __init__( self ):
+		self._cards = [card6(r+1,s) for r in range(13) for s in (Club,
+		Diamond, Heart, Spade)]
+		random.shuffle( self._cards )
+	def pop( self ):
+		return self._cards.pop()
+We've defined Deck so that the internal collection is a list object. 
+The pop() method of Deck simply delegates to the wrapped list object.
+We can then create a Hand instance with the following kind of code:
+	d= Deck()
+	hand= [ d.pop(), d.pop() ]
+A Facade design pattern or wrapper class contains methods that are
+simply delegated to the underlying implementation class. This delegation can
+become wordy. For a sophisticated collection, we may wind up delegating a large
+number of methods to the wrapped object.
+2) Extending a collection class:
+An alternative to wrapping is to extend a built-in class. 
+By doing this, we have the
+	> advantage of not having to reimplement the pop() method; we can simply inherit it.
+	> The advantage that it creates a class without writing too much code.
+	< In this example, extending the list class has the disadvantage that this
+provides many more functions than we truly need.
+class Deck2( list ):
+	def __init__( self ):
+		super().__init__( card6(r+1,s) for r in range(13) for s in
+		(Club, Diamond, Heart, Spade) )## create the deck list 
+		random.shuffle( self )## Shuffle the cards
+3) invent : Asd this approach goes up the building a new implementation 
+following is Deck definition that contains multiple sets of 52-card decks:
+class Deck3(list):
+	def __init__(self, decks=1):
+		super().__init__()
+		for i in range(decks):
+			self.extend( card6(r+1,s) for r in range(13) for s in
+			(Club, Diamond, Heart, Spade) )
+		random.shuffle( self )
+		burn= random.randint(1,52)
+		for i in range(burn): self.pop()
+		
+Here, we used the __init__() superclass to build an empty collection. Then, we
+used self.extend() to append multiple 52-card decks to the shoe. We could also
+use super().extend() since we did not provide an overriding implementation in
+this class.
+The same could hace achieved by the 2.extending code using a deeply nested loop for 
+intialising super.__init__
+
+( card6(r+1,s) for r in range(13) for s in (Club, Diamond, Heart,
+Spade) for d in range(decks) )
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -942,68 +1055,60 @@ Like the doctest introduction, I’ll run through a simple example first, then s
 
 unittest example
 
-Using the same unnecessary_math.py module that I wrote in the
-doctest intro, here’s some example test
-code to test my ‘multiply’ function.
-
-test_um_unittest.py:
-
- 
-import unittest
-from unnecessary_math import multiply
-
-class TestUM(unittest.TestCase):
-
+class Tests(unittest.TestCase):
     def setUp(self):
+        print('Gonna Run the test cases')
+	def tearDown(self):
+        print('Over test cases')
+    def runTest3(self):
+        print('test1')
+        self.assertEqual({'acad'},lcs('academy', 'abracadabra'))
+    def runTest2(self):
+        print('test2')
+        self.assertEqual({'abc','aba'},lcs('ababc', 'abcdaba'))
+	
+	
+    @unittest.skipUnless(sys.platform.startswith("win"), "requires Windows")
+    def test_windows_support(self):
+        # windows specific testing code
         pass
 
-    def test_numbers_3_4(self):
-        self.assertEqual( multiply(3,4), 12)
-
-    def test_strings_a_3(self):
-        self.assertEqual( multiply('a',3), 'aaa')
-
-if __name__ == '__main__':
-    unittest.main()
-
-
-
-In this example, I’ve used assertEqual(). The unittest framework has a whole bunch of assertBlah() style functions like assertEqual().
- Once you have a reasonable reference for all of the assert functions bookmarked, working with unnittest is pretty powerful and easy.
-
-Aside from the tests you write, most of what you need to do can be accomplished with the test fixture methods such as setUp, tearDown,
- setUpClass, tearDownClass, etc.
-
-Running unittests
-
-At the bottom of the test file, we have this code:
-
-
  
-if __name__ == '__main__':
-    unittest.main()
-This allows us to run all of the test code just by running the file.
-Running it with no options is the most terse, and running with a ‘-v’ is more verbose, showing which tests
-ran.
 
 
 
-> python test_um_unittest.py
-..
+def suite():
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(Tests('runTest2'))
+    test_suite.addTest(Tests('runTest3'))
+	test_suite.addTest(Tests('test_windows_support'))
+    return test_suite
+
+
+
+if __name__ == "__main__":
+
+   unittest.TextTestRunner(verbosity=2).run(suite())
+The output of the above is 
+Gonna Run the test cases
+runTest2 (__main__.Tests) ... ok
+test2
+runTest3 (__main__.Tests) ... ok
+test_windows_support (__main__.Tests) ... skipped 'requires Windows'
+
 ----------------------------------------------------------------------
-Ran 2 tests in 0.000s
+Ran 3 tests in 0.000s
 
-OK
-> python test_um_unittest.py -v
-test_numbers_3_4 (__main__.TestUM) ... ok
-test_strings_a_3 (__main__.TestUM) ... ok
+OK (skipped=1)
+Gonna Run the test cases
+test2
+Over test cases
+Gonna Run the test cases
+test1
+Over test cases
 
-----------------------------------------------------------------------
-Ran 2 tests in 0.000s
-OK
-
-
-
+nose : Python testing framework 
+-----------------------------------
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1014,21 +1119,77 @@ OK
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                         Gui Modules                                                      +                
++                                         Gui Modules                                                      		  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Tkinter:
+PyQt:
+	
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Database Modules (ORM)                                                     +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SQLAlchemy is the Python SQL toolkit and Object Relational Mapper that gives application developers the full power
+
+
+The Django ORM and flexibility of SQL
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Web Server  Modules                                                   +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Tornado (Python web framework and asynchronous networking library)
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Event based Modules                                                   +                
++                                                                                                                 +
++                                                                                                                 +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+gevent is a coroutine-based Python networking library
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          Python object serialization Modules                                    +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+pickel 
+for serializing and de-serializing a Python object structure
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          Web Scarping  Modules                                                  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<<<<<<< HEAD
+Tkinter:
 wrapper around Tcl\tk 
 
+=======
+Mechanize:(very useful python module for navigating through web forms )
+Scrapy: (involved in webscraping then this is a must )
+>>>>>>> origin/master
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Database Modules                                                      +                
++                                          DataAnalytics Modules                                                  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Panda
+providing high-performance, easy-to-use data structures and data analysis tools for the Python programming language
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
