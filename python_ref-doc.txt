@@ -1513,7 +1513,8 @@ It's one of the reasons that old-style classes should be avoided: multiple inher
 doesn't work sensibly with them, while it does with new-style
 
 
-Heterogeneous Arguments
+Heterogeneous Arguments:
+------------------------------
 Another issue with super usage is argument passing in initialization. How can a
 class call its base class __init__ code if it doesn't have the same signature? This
 leads to the following problem:
@@ -1735,7 +1736,7 @@ class MyClass :
 
 ### End ###
 Implementing a reference like in C++ Style
-----------------------------------------------------------------------------------------
+---------------------------------------------
 in order to do this, you'll need to keep a reference to the parent object around.
 class PropertyRef:
     def __init__(self, obj, prop_name):
@@ -1843,7 +1844,7 @@ def __radd__(self, other):
     return self.pages + other.pages
     
     Hash overideing for making a object as dictionary key :
-    =================================================================================================================
+    =======================================================
    class MyThing:
     def __init__(self,name,location,length):
         self.name = name
@@ -1870,6 +1871,24 @@ of user-defined classes are hashable by default; they all compare unequal (excep
 ****
 Python often wonder why, while the language includes both a tuple and a list type, tuples are usable as a dictionary keys, while lists are not.
  This was a deliberate design decision, and can best be explained by first understanding how Python dictionaries work.
+
+ The implicit superclass – object:
+----------------------------------
+Each Python class definition has an implicit superclass: object.
+class definition that simply extends object with a new name:
+class X:
+	pass
+The following are some interactions with our class:
+>>> X.__class__
+<class 'type'>
+>>> X.__class__.__base__
+<class 'object'>
+
+Intialising variables on the Fly :
+----------------------------------
+x = X()
+x.item_a =1
+Although this is allowed in python thats nota good design always 
 
  
 
