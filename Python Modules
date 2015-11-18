@@ -160,7 +160,35 @@ intialising super.__init__
 ( card6(r+1,s) for r in range(13) for s in (Club, Diamond, Heart,
 Spade) for d in range(decks) )
 
+Complete composite object initialization
+------------------------------------------
+Ideally, the __init__() initializer method will create a complete instance of an
+object. This is a bit more complex when creating a complete instance of a container
+that contains an internal collection of other objects.
+class Hand2:
+	def __init__( self, dealer_card, *cards ):
+		self.dealer_card= dealer_card
+		self.cards = list(cards)
+Stateless objects without __init__()
+The following is an example of a degenerate class that doesn't need an __init__()
+method. It's a common design pattern for Strategy objects. A Strategy object is plugged
+into a Master object to implement an algorithm or decision
 
+Initialization with type validation
+Type validation is rarely a sensible requirement. In a way, this might be a failure
+to fully understand Python. The notional objective is to validate that all of the
+arguments are of a proper type. The issue with trying to do this is that the definition
+of proper is often far too narrow to be truly useful.
+This is different from validating that objects meet other criteria. Numeric range
+checking, for example, may be essential to prevent infinite loops.
+What can create problems is trying to do something like the following in an
+__init__() method:
+class ValidPlayer:
+def __init__( self, table, bet_strategy, game_strategy ):
+assert isinstance( table, Table )
+assert isinstance( bet_strategy, BettingStrategy )
+assert isinstance( game_strategy, GameStrategy )
+self.bet_strategy = bet_strategy
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           String parsing Modules                                                +                
