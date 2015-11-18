@@ -1,0 +1,19 @@
+Instaling flusk on windows :
+-------------------------------------
+1) Install pip by the get-pip.py file available 
+
+C:\Python33>python.exe  C:\Users\sbha0001\Documents\GitHub\Flusk\get-pip.py
+
+2) Installing the Flask from the pip go to dir C:\Python33\Scripts>
+
+C:\Python33\Scripts>pip install Flask
+Collecting Flask
+  Downloading Flask-0.10.1.tar.gz (544kB)
+    100% |################################| 544kB 78kB/s
+Installing collected packages: Werkzeug, MarkupSafe, Jinja2, itsdangerous, Flask
+
+
+1> Templates are for rendering the views (jinga2 is the engine for rendering the templates)
+  Functionalties provided by this are 
+  1> render_templates :  for rendering the views 
+  2> url_for
