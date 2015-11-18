@@ -189,6 +189,24 @@ assert isinstance( table, Table )
 assert isinstance( bet_strategy, BettingStrategy )
 assert isinstance( game_strategy, GameStrategy )
 self.bet_strategy = bet_strategy
+Initializing static methods
+-----------------------------:
+When we have multiple ways to create an object, it's sometimes more clear
+ to use static
+methods to create and return instances rather than complex __init__() methods.
+class Hand5:
+def __init__( self, dealer_card, *cards ):
+self.dealer_card= dealer_card
+self.cards = list(cards)
+@staticmethod
+def freeze( other ):
+hand= Hand5( other.dealer_card, *other.cards )
+return hand
+
+h = Hand5( d.pop(), d.pop(), d.pop() )
+s1, s2 = Hand5.freeze()
+
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           String parsing Modules                                                +                
