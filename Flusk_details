@@ -6,14 +6,34 @@ C:\Python33>python.exe  C:\Users\sbha0001\Documents\GitHub\Flusk\get-pip.py
 
 2) Installing the Flask from the pip go to dir C:\Python33\Scripts>
 
-C:\Python33\Scripts>pip install Flask
+>>>>>C:\Python33\Scripts>pip install Flask
 Collecting Flask
   Downloading Flask-0.10.1.tar.gz (544kB)
     100% |################################| 544kB 78kB/s
 Installing collected packages: Werkzeug, MarkupSafe, Jinja2, itsdangerous, Flask
-
+Also what we will find 
+>>>>>C:\Python33\Scripts>pip install flask_wtf
+Collecting flask-wtf
+Installing collected packages: WTForms, flask-wtf
+Successfully installed WTForms-2.0.2 flask-wtf-0.12
 
 1> Templates are for rendering the views (jinga2 is the engine for rendering the templates)
   Functionalties provided by this are 
-  1> render_templates :  for rendering the views 
-  2> url_for
+  1> render_templates(template-name-or list, context) :  for rendering the html views inside template folder 
+    ex:
+      > render_template('index.html') // opens the html page 
+      > render_template('question.html',question=questions[id])// Opens the question.html and sets and passes the question value 
+  
+  2> url_for(endpoint,values)// works in script(.py) and templates(html)
+    ex: url_for('question',id=id+1)# Calls any route of the form with id value passed 
+                                    #  def question(id):
+  
+  3> redirect(location,code,response)
+  the redirect will call a get on the function is refering to 
+    ex: redirect(url_for('question',id=id+1))
+
+  4> (flask-wtf,wtforms):Witi form 
+  This is used for making a secret key which the app will use to associateas a token  with a
+  GET request and after that a POST will validate the Token ,so as a result of the Token 
+  
+  
