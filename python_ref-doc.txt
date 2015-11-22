@@ -1357,7 +1357,7 @@ dict keys or items in sets.
 __bool__()
 **************************************************************************************************
 if some_object:
-process( some_object )
+	process( some_object )
 Under the hood, this is the job of the bool() built-in function. This function depends
 on the __bool__() method of a given object.
 The default __bool__() method returns True. We can see this with the
@@ -1365,12 +1365,197 @@ following code:
  x = object()
  bool(x)
 True
+
+But for the objects which will having lists that is all collection instances
+, we might have something as shown in the following
+code snippet:
+def __bool__( self ):
+	return bool( self._cards )
+This delegates the Boolean function to the internal _cards collection.
+If we're extending a list, we might have something as follows:
+def __bool__( self ):
+	return super().__bool__( self )
+This delegates to the superclass definition of the __bool__() function.
+
+
+
 __del__() method.
 *************************************************************************************************
-Exception handling in the del method
+The intent is to give an object a chance to do any cleanup or finalization just before
+the object is removed from memory. This use case is handled much more cleanly
+by context manager objects and the with statement.
+
+> In the case where a Python object has a related OS resource, the __del__() method
+is a last chance to cleanly disentangle(An open file, a mounted device, or perhaps
+a child subprocess)
+Why context managers are preferred ?
+------------------------------------
+the __del__() method describes the circumstances as precarious and provides this
+additional note on exception processing: exceptions that occur during their execution
+are ignored, and a warning is printed to sys.stderr instead.
+For these reasons, a context manager is often preferable to implementing __del__()
+
+Reference count and Stories :
+--------------------------------
+CPython implementation, objects have a reference count. The count is
+incremented when the object is assigned to a variable and decremented when the
+variable is removed. When the reference count is zero, the object is no longer needed
+and can be destroyed. For simple objects, __del__() will be invoked and the object
+will be removed.
+For complex objects that have circular references among objects, the reference count
+might never go to zero and __del__() can't be invoked easily.
+For the reference count to be 0 in a simple object 
+class Noisy:
+	def __del__( self ):
+		print( "Removing {0}".format(id(self)) )
+We can create (and see the removal of) these objects as follows:
+>>> x= Noisy()
+>>> del x
+Removing 4313946640
+
+>>> ln = [ Noisy(), Noisy() ]
+>>> ln2= ln[:]
+>>> del ln
+There's no response to this del statement.
+>>> del ln2
+Removing 4313920336
+Removing 4313920208
+The ln2 variable was a shallow copy of the ln list. The Noisy objects were referenced
+in two lists. They could not be destroyed until both lists were removed, reducing the
+reference counts to zero.
+Circular references and garbage collection:
+-------------------------------------------
+Each Child instance contains a reference to the Parent class.
+We'll use these two classes to examine circular references:
+
+class parent:
+	def __init__(self,*children)
+		self.childern = list(children)
+		for child n childern:
+			child.parent = self
+	def __del__( self ):
+		print( "Removing {__class__.__name__} {id:d}".
+			format( __class__=self.__class__, id=id(self)) )
+
+class Child:
+	def __del__( self ):
+		print( "Removing {__class__.__name__} {id:d}".
+			format( __class__=self.__class__, id=id(self)) )
+Each Child instance has a reference to the Parent class that contains it. The reference
+is created during initialization when the children are inserted into the parent's
+internal collection.
+
+>>>> p = Parent( Child(), Child() )
+>>> id(p)
+4313921808
+>>> del p
+
+mutual or circular references, a Parent instance and its list of Child
+instances cannot be removed from the memory. This references can seen by 
+>>> import gc
+>>> gc.collect()
+174
+>>>gc.garbage
+
+[<__main__.Parent object at 0x101213910>, <__main__.Child object at
+0x101213890>, <__main__.Child object at 0x101213650>..............]
+
+Breaking of circular references:
+------------------------------------
+The __del__ method wont help here bacause it will get invoked once the 
+circular reference gets broken
+
+So we can break the circularity or use a weakref reference,
+which permits garbage collection.
+
+Need of weak references:
+------------------------
+So now the reference which is a direct refernce 
+	child.parent = self
+The loop executing this will run and the refernce counting 
+mechanism is Python and after that gc module will check i the 
+refernce can be removed or not .
+Now the weak reference implemntation is such that it happens in two steps 
+1> weakref = self
+2> child.parent = weakref
+Now the gc will remove the count and make it call del on the same 
+
+replace this in above code in parent 
+
+	child.parent= weakref.ref(self)
+and in child 
+class Child:
+# This is an extra caution that parent ref  exists or not 
+	p = self.parent()
+	if p is not None:
+		# process p, the Parent instance
+	else:
+		# the parent instance was garbage collected.
+
+So now we can see that 
+>>> p = Parent2( Child(), Child() )
+>>> del p
+Removing Parent2 4303253584
+Removing Child 4303256464
+Removing Child 4303043344
+
+__new__()  auto-magically a static method
+**********************************************************
+The __new__() method is where our code can build an uninitialized
+object. This allows processing before the __init__() method is called to set the
+attribute values of the object
+
+__new__ method to Update an Ommutable :
+-----------------------------------------
+The __new__() method is used to extend the immutable classes where the
+__init__() method can't easily be overridden
+
+class Float_Fail(float):
+	def __init__(self,value,unit):
+		super().__init__(value)
+		slef.unit = unit 
+		
+The following is what happens when we try to use this class definition:
+>>> s2 = Float_Fail( 6.5, "knots" )
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+TypeError: float() takes at most 1 argument (2 given)
+
+The default implementation of __new__() simply does this:
+return super().__new__( cls ). It delegates the operation to the superclass.
+The work winds up getting delegated to object.__new__(), which builds a simple,
+empty object of the required class.
+
+the Arguments which is passd to new will this new 2 exceptions
+>When we want to subclass an immutable class definition. We'll dig into
+ that later.
+> When we need to create a metaclass.as it's fundamentally different from
+ creating immutable objects.  
+
+ The following is an example class definition that shows us the proper way to
+extend float:
+class Float_Units( float ):
+	def __new__( cls, value, unit ):
+		obj= super().__new__( cls, value )
+		obj.unit= unit
+		return obj
+In the preceding code, we set
+prepare
+******************************************************************
+class Ordered_Attributes(type):
+@classmethod
+def __prepare__(metacls, name, bases, **kwds):
+return collections.OrderedDict()
+def __new__(cls, name, bases, namespace, **kwds):
+result = super().__new__(cls, name, bases, namespace)
+result._order = tuple(n for n in namespace if not
+n.startswith('__'))
+return result
+This class extends the built-in
+
 
 __bytes__()
-**************************************************************************************************
+******************************************************************
 In the most common situation, an application can create a string representation, and
 the built-in encoding capabilities of the Python IO classes will be used to transform
 the string into bytes.
@@ -1388,7 +1573,6 @@ for example a Implementation of comparison for objects of
 the same class
 We'll look at a simple same-class comparison by looking at a more complete
 
-BlackJackCard class:
 class BlackJackCard:
 
 def __init__( self, rank, suit, hard, soft ):
@@ -1402,24 +1586,43 @@ def __lt__( self, other ):
 		return NotImplemented
 	return self.rank < other.rank
 	
-def __le__( self, other ):
+def __lt__( self, other ):
 	try:
 		return self.rank <= other.rank
 	except AttributeError:
 		return NotImplemented
-		
-def __gt__( self, other ):
-	for objects
+
 	
-Now lets try the same thing of mixed classes
-We'll use the BlackJackCard class as an example to see what happens when we
-attempt comparisons where the two operands are from different classes.
-The following is a Card instance that we can compare against the int values:
- two = card21( 2, '♣' )
- two < 2
-Traceback (most recent call last):
-File "<stdin>", line 1, in <module>
-TypeError: unorderable types: Number21Card() < int()
+First, the operand on the left is checked for an operator implementation:
+A<B means A.__lt__(B).
+Second, the operand on the right is checked for a reversed operator
+implementation: A<B means B.__gt__(A).
+The rare exception to this occurs when the right operand is a subclass
+of the left operand; then, the right operand is checked first to allow a
+subclass to override a superclass
+>>> two = BlackJackCard_p( 2, '♠' )
+>>> three = BlackJackCard_p( 3, '♠' )
+>>> two < three
+Compare 2♠ < 3♠
+True
+>>> two > three
+Compare 3♠ < 2♠
+False
+>>> two == three
+False
+
+for two > three, there's no __gt__() method defined; Python uses
+three.__lt__(two) as a fallback plan.
+By default, the __eq__() method is inherited from object; it compares the object
+IDs; the objects participate in == and != tests as follows:
+>>> two_c = BlackJackCard_p( 2, '♣' )
+>>> two == two_c
+False
+We can see that the results aren't quite what we expect. We'll often need to override
+the default implementation of __eq__().
+
+
+
 
 
 **************************************************************************************************
