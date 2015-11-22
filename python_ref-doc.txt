@@ -2052,34 +2052,14 @@ def __radd__(self, other):
     
     Hash overideing for making a object as dictionary key :
     =======================================================
-   class MyThing:
-    def __init__(self,name,location,length):
-        self.name = name
-        self.location = location
-        self.length = length
-
-    def __hash__(self):
-        return hash((self.name, self.location))
-
-    def __eq__(self, other):
-        return (self.name, self.location) == (other.name, other.location) 
-    
-    
-    
-hashable
-An object is hashable if it has a hash value which never changes during its lifetime (it needs a __hash__() method), and can be compared to other 
-objects (it needs an __eq__() method). Hashable objects which compare equal must have the same hash value.
-
-Hashability makes an object usable as a dictionary key and a set member, because these data structures use the hash value internally.
-
-All of Python’s immutable built-in objects are hashable, while no mutable containers (such as lists or dictionaries) are. Objects which are instances
-of user-defined classes are hashable by default; they all compare unequal (except with themselves), and their hash value is derived from their id().
-
+   
 ****
-Python often wonder why, while the language includes both a tuple and a list type, tuples are usable as a dictionary keys, while lists are not.
- This was a deliberate design decision, and can best be explained by first understanding how Python dictionaries work.
+Python often wonder why, while the language includes both a tuple and a list type,
+ tuples are usable as a dictionary keys, while lists are not.
+ This was a deliberate design decision, and can best be explained by first understanding
+ how Python dictionaries work.
 
- The implicit superclass – object:
+The implicit superclass – object:
 ----------------------------------
 Each Python class definition has an implicit superclass: object.
 class definition that simply extends object with a new name:
@@ -2097,8 +2077,6 @@ x = X()
 x.item_a =1
 Although this is allowed in python thats nota good design always 
 
- 
-
 Object declaration :
 *****************************
 A = Classname(22,22)
@@ -2108,8 +2086,26 @@ Calling the function is same as C++
 A.fumc("dewded",12)
 
 --------------------------------------------------------------------------------------
+Atribute managment:
+=========================
+The class when created supports following four behaviors with respect
+to attributes:
+• To create a new attribute by setting its value
+• To set the value of an existing attribute
+• To get the value of an attribute
+• To delete an attribute
+class Generic:
+	pass 
+g = Generic()	
+> g.atrib =1
+> g.atrib  ## 1
+> del g.atrib
+> g.atrib ##No atribute is found 
 
- Descriptors and properties:
+
+
+
+Descriptors and properties:
 ===========================
 For python as there is no private keyword in the classes the name managling comes handy 
 Suppose we have a class with an atribute vale 
@@ -2131,6 +2127,141 @@ _ in private
 When an attribute is not public, the convention to use is a "_" prefix. This does not call any
 mangling algorithm, but just documents the attribute as being a private element of
 the class and is the prevailing style.
+Properties:
+=======================
+A property is
+actually a method function and can process, rather than simply preserve, a reference
+to another object.
+
+2 ways to create properties :
+-----------------------------
+1) Using Property function :
+2) Property Decorator : 
+The decorator implementation is shown below 
+
+class Parrot(object):
+    def __init__(self):
+        self._voltage = 100000
+
+    @property
+    def voltage(self):
+        """Get the current voltage."""
+        return self._voltage
+        
+A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property with the
+ corresponding accessor function set to the decorated function
+class C(object):
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+
+    @x.deleter
+    def x(self):
+        del self._x
+        
+ Take a look at two basic design patterns for properties       
+• Eager calculation: In this design pattern, when we set a value via a property,
+other attributes are also computed
+• Lazy calculation: In this design pattern, calculations are deferred until
+requested via a property
+
+common features of the Hand object into an abstract superclass, as follows:
+class Hand:
+	pass
+ Lazy calculation:
+ -----------------------
+The following is a subclass of Hand, where total is a lazy property that is computed
+only when needed:
+class Hand_Lazy(Hand):
+	def __init__( self, dealer_card, *cards ):
+		self.dealer_card= dealer_card
+		self._cards= list(cards)
+	@property  ##total is a lazy property
+	def total( self ):
+		delta_soft = max(c.soft-c.hard for c in self._cards)
+		hard_total = sum(c.hard for c in self._cards)
+			if hard_total+delta_soft <= 21: 
+				return hard_total+delta_soft
+		return hard_total
+		
+	@property
+	def card( self ):
+		return self._cards
+		
+	@card.setter
+	def card( self, aCard ):
+		self._cards.append( aCard )
+		
+	@card.deleter
+	def card( self ):
+		self._cards.pop(-1)
+	
+The Hand_Lazy class initializes a Hand object with a list of the Cards object.
+The total property is a method that computes the total only when requested.
+h= Hand_Lazy( d.pop(), d.pop(), d.pop() )
+>>> h.total
+19
+>>> h.card= d.pop()
+>>> h.total
+29
+Eagerly computed properties:
+----------------------------
+where total is a simple attribute that's computed eagerly as each card is added
+ class Hand_Eager(Hand):
+	def __init__( self, dealer_card, *cards ):
+		self.dealer_card= dealer_card
+		self.total= 0
+		self._cards= list()
+		for c in cards:
+			self.card = c
+			
+	@property
+	def card( self ):
+		return self._cards
+	@card.setter
+	def card( self, aCard ):
+		self._cards.append(aCard)
+		self._delta_soft = max(aCard.soft-aCard.hard,self._delta_soft)
+		self._hard_total += aCard.hard
+		self._set_total() #The set total is calculated when this property is set 
+	@card.deleter
+	def card( self ):
+		removed= self._cards.pop(-1)
+		self._hard_total -= removed.hard
+		# Issue: was this the only ace?
+		self._delta_soft = max( c.soft-c.hard for c in self._cards)
+		self._set_total() #The set total is calculated when this property is deleted
+	def _set_total( self ):
+		if self._hard_total+self._delta_soft <= 21:
+			self.total= self._hard_total+self._delta_soft
+		else:
+			self.total= self._hard_total
+In this case, each time a card is added, the total attribute is updated.
+h1= Hand_Lazy( d.pop(), d.pop(), d.pop() )
+print( h1.total )
+h2= Hand_Eager( d.pop(), d.pop(), d.pop() )
+print( h2.total )
+
+This is main purpose of using the getter ad setter functions
+special methods for attribute access:
+--------------------------------------
+• The __setattr__() method will create and set attributes.
+• The __getattr__() method will do two things. Firstly, if an attribute
+already has a value, __getattr__() is not used; the attribute value is
+simply returned. Secondly, if the attribute does not have a value, then
+__getattr__() is given a chance to return a meaningful value. If there is
+no attribute, it must raise an AttributeError exception.
+• The __delattr__() method deletes an attribute.
+• The __dir__() method returns a list of attribute names.
+
 
 Descriptors:
 =======================
@@ -2173,117 +2304,7 @@ print (obj.__dict__)
 >>{'new_ano_atr': 'New Ano  Str', 'new_atr': 'New Str'}
 
 
-Properties:
-=======================
-
-
-class Parrot(object):
-    def __init__(self):
-        self._voltage = 100000
-
-    @property
-    def voltage(self):
-        """Get the current voltage."""
-        return self._voltage
-        
-A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property with the
- corresponding accessor function set to the decorated function
-class C(object):
-    def __init__(self):
-        self._x = None
-
-    @property
-    def x(self):
-        """I'm the 'x' property."""
-        return self._x
-
-    @x.setter
-    def x(self, value):
-        self._x = value
-
-    @x.deleter
-    def x(self):
-        del self._x
-        
- Take a look at two basic design patterns for properties       
-• Eager calculation: In this design pattern, when we set a value via a property,
-other attributes are also computed
-• Lazy calculation: In this design
-common features of the Hand object into an abstract superclass, as follows:
-class Hand:
-	def __str__( self ):
-		return ", ".join( map(str, self.card) )
-		
-	def __repr__( self ):
-		return "{__class__.__name__}({dealer_card!r}, {_cards_str})".
-			format(__class__=self.__class__,_cards_str=", ".join( map(repr, self.card) ),**self.__dict__ )
-			
-In the preceding code, we defined just some string representation methods and
-nothing else.
-The following is a subclass of Hand, where total is a lazy property that is computed
-only when needed:
-
-class Hand_Lazy(Hand):
-	def __init__( self, dealer_card, *cards ):
-		self.dealer_card= dealer_card
-		self._cards= list(cards)
-	@property
-	def total( self ):
-		delta_soft = max(c.soft-c.hard for c in self._cards)
-		hard_total = sum(c.hard for c in self._cards)
-			if hard_total+delta_soft <= 21: 
-				return hard_total+delta_soft
-		return hard_total
-		
-	@property
-	def card( self ):
-		return self._cards
-		
-	@card.setter
-	def card( self, aCard ):
-		self._cards.append( aCard )
-		
-	@card.deleter
-	def card( self ):
-		self._cards.pop(-1)
 	
-The Hand_Lazy class initializes a Hand object with a list of the Cards object.
-The total property is a method that computes the total only when requested.
-
-Eagerly computed properties:
- class Hand_Eager(Hand):
-	def __init__( self, dealer_card, *cards ):
-		self.dealer_card= dealer_card
-		self.total= 0
-		self._delta_soft= 0
-		self._hard_total= 0
-		self._cards= list()
-		for c in cards:
-			self.card = c
-			
-	@property
-	def card( self ):
-		return self._cards
-	@card.setter
-	def card( self, aCard ):
-		self._cards.append(aCard)
-		self._delta_soft = max(aCard.soft-aCard.hard,self._delta_soft)
-		self._hard_total += aCard.hard
-		self._set_total()
-	@card.deleter
-	def card( self ):
-		removed= self._cards.pop(-1)
-		self._hard_total -= removed.hard
-		# Issue: was this the only ace?
-		self._delta_soft = max( c.soft-c.hard for c in self._cards)
-		self._set_total()
-	def _set_total( self ):
-		if self._hard_total+self._delta_soft <= 21:
-			self.total= self._hard_total+self._delta_soft
-		else:
-			self.total= self._hard_total
-In this case, each time a card is added, the total attribute is updated.
-		
 Introspection Descriptor:
 ==============================
 The introspection Descriptor is needed when a class is doing introspection over tehir atribute 
@@ -2347,13 +2368,44 @@ Slots:
 It allows you to set a static attribute list for a given class with the __slots__ attribute,
 and skip the creation of the __dict__ list in each instance of the class.
 > If you intend to save memory space for classes with very atributes
-> Design classes whose signature needs to be frozen
+> Creating immutable objects with __slots__
+Example:
+	If you cannot set an atribute or create a new one then its immutable 
 
-class Frozen(object):
-	__slots__=['ice','cream']
-	
->> a = Frozen()
->> a.__dir__ # not found 
+class BlackJackCard:
+	"""Abstract Superclass"""
+	__slots__ = ( 'rank', 'suit', 'hard', 'soft' )
+	def __init__( self, rank, suit, hard, soft ):
+		super().__setattr__( 'rank', rank )
+		super().__setattr__( 'suit', suit )
+		super().__setattr__( 'hard', hard )
+		super().__setattr__( 'soft', soft )
+		def __str__( self ):
+		return "{0.rank}{0.suit}".format( self )
+	def __setattr__( self, name, value ):
+		raise AttributeError( "'{__class__.__name__}' has no
+		attribute '{name}'".format( __class__= self.__class__, name= name
+		) )
+We made three significant changes:
+• We set __slots__ to the names of only the allowed attributes. This turns off
+the internal __dict__ feature of the object and limits us to just the attributes
+and no more.
+• We defined __setattr__() to raise an exception rather than do
+anything useful.
+• We defined __init__() to use the superclass version of __setattr__()
+so that values can be properly set in spite of the absence of a working
+__setattr__() method in this class.
+
+
+With some care, we can bypass the immutability feature if we work at it.
+object.__setattr__(c, 'bad', 5)
+The point of
+an immutable object like this is to guarantee __hash__() returning a consistent value
+and not to prevent people from writing rotten code.
+
+
+
+
 
 Meta-programming:
 =====================================================
