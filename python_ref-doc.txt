@@ -2261,7 +2261,14 @@ __getattr__() is given a chance to return a meaningful value. If there is
 no attribute, it must raise an AttributeError exception.
 • The __delattr__() method deletes an attribute.
 • The __dir__() method returns a list of attribute names.
-
+The __getattribute__() method
+------------------------------
+An even lower level attribute processing is the __getattribute__() method.
+The default implementation attempts to locate the value as an existing attribute
+in the internal __dict__ (or __slots__). If the attribute is not found, it calls
+__getattr__() as a fallback. If the value located is a descriptor (see in the following
+Creating descriptors section), then it processes the descriptor. Otherwise, the value is
+simply returned.
 
 Descriptors:
 =======================
