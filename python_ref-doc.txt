@@ -1620,12 +1620,36 @@ IDs; the objects participate in == and != tests as follows:
 False
 We can see that the results aren't quite what we expect. We'll often need to override
 the default implementation of __eq__().
+__setitem__:
+******************************************************************
+__setitem__ method call  This allows us to write Python
+ statements like myZipTree['Plymouth'] = 55446, just like a Python dictionary.
+def __setitem__(self,k,v):
+    self.insert_value(k,v)
+	
+__getitem__:
+**********************************************************************
+y implementing the __getitem__ method we can write a Python statement that looks just 
+like we are accessing a dictionary, when in fact we are using a binary search tree, 
+for example 
+
+	z = myZipTree['Fargo']
+	
+__contains__:
+**********************************************************************
+implement the in operation by writing a __contains__ method for the
+BinarySearchTree. The __contains__ method will simply call get and return
+def __contains__(self,key):
+    if self._get(key,self.root):
+        return True
+    else:
+        return False
+		
+Example : 
+	if 'test' in TreeNode:
 
 
-
-
-
-**************************************************************************************************
+***********************************************************
 
 For a function dir output gives the same as above 
 The main use is to  inherit the base class for our use suppose the dict is inherited for inheritance 
@@ -2272,12 +2296,50 @@ simply returned.
 
 Descriptors:
 =======================
-A descriptor lets you customize what should be done when you refer to an attribute
-on an object. 
-The descriptor classes are based on three special methods they have to implement:
-1) __set__: This is called whenever the attribute is set
-2) __get__: This is called whenever the attribute is read
-3) __delete__: This is called when del is invoked on the attribute.
+A descriptor is a class that mediates attribute access.
+Descriptor objects are built inside a class at class
+definition time.
+The descriptor design pattern has two parts: 
+1> an owner class (uses one or more descriptors for its attributes)
+2> descriptor itself (A descriptor class defines some combination of get,
+ set, and delete methods)
+ 
+Unlike other attributes, descriptors are created at the class level. They're not
+created within the __init__() initialization they ca e set only at intilaisat
+ion
+
+To be recognized as a descriptor, a class must implement any combination of the
+following three methods.
+• Descriptor.__get__( self, instance, owner ) → object: 
+-----------------------------------------------------------
+ the instance parameter is the self variable of the object being
+accessed. 
+owner parameter is the owning class object. in a class context,  will get a None value.
+Descriptor.__set__( self, instance, value ): 
+-----------------------------------------------------------
+In this method, the
+instance parameter is the self variable of the object being accessed. The
+value parameter is the new value that the descriptor needs to be set to.
+Descriptor.__delete__( self, instance ):
+-----------------------------------------------------------
+ In this method, the
+instance parameter is the self variable of the object being accessed. This
+method of the descriptor must delete this attribute's va
+
+2 species of Descriptors:
+----------------------------------------
+> A nondata descriptor: This kind of descriptor defines __set__() or __
+delete__() or both. It cannot define __get__(). The nondata descriptor
+object will often be used as part of some larger expression. It might be
+a callable object, or it might have attributes or methods of its own. An
+immutable nondata descriptor must implement __set__() but may simply
+raise AttributeError.
+
+
+> A data descriptor: This descriptor defines __get__() at a minimum. Usually,
+it defines both __get__() and __set__() to create a mutable object. The
+descriptor can't define any further attributes or methods of this object since
+the descriptor will largely be invisible.
 
 Lets Implenment each one of them 
 class A(object):
@@ -2316,7 +2378,7 @@ Introspection Descriptor:
 ==============================
 The introspection Descriptor is needed when a class is doing introspection over tehir atribute 
 A property API class that render a redible documentation over the public methods of 
-__author__ = 'Sanchayan'
+
 
 class API(object):
     def print_values(self,obj):

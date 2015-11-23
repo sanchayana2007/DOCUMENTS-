@@ -206,6 +206,16 @@ return hand
 h = Hand5( d.pop(), d.pop(), d.pop() )
 s1, s2 = Hand5.freeze()
 
+ABCs of Consistent Design:
+=============================================================
+Python 3.2, the abstract base classes for collections were buried in collections.
+In Python 3.3, however, the abstract base classes have been split into a separate
+submodule named collections.abc.
+We'll also look at the numbers module, because it contains ABCs for numeric types.
+There are abstract base classes for I/O in the io module too.
+
+
+
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
