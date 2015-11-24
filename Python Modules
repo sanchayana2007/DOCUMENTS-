@@ -213,8 +213,59 @@ In Python 3.3, however, the abstract base classes have been split into a separat
 submodule named collections.abc.
 We'll also look at the numbers module, because it contains ABCs for numeric types.
 There are abstract base classes for I/O in the io module too.
+. Abstract : Subclass must override some methods
+. Base : Other Class will use it as a super class
+
+Callable:
+---------------
+functional objects which is required , any class with a __call__ method
+collections.abc.Callable.
+** We should make evry call class defination a proper subclass for 
+collections.abc.Callable
+
+>>> abs(3)
+3
+>>> isinstance(abs, collections.Callable)
+True
+isinstance( {}, collections.abc.Mapping )
+
+isinstance( 355/113, numbers.Number )
+True
+
+The entire family tree of built-in containers is reflected in the abstract base classes.
+Lower-level features include Container, Iterable, and Sized.
+Higher-level features include the following characteristics:
+
+• Sequence and MutableSequence: These are the abstractions of the concrete
+classes list and tuple. Concrete sequence implementations also include
+bytes and str.
+• MutableMapping: This is the abstraction of dict. It extends Mapping, but
+there's no built-in concrete implementation of this.
+• Set and MutableSet: These are the abstractions of the concrete classes,
+frozenset and set.
+This allows us to build new classes or extend existing classes
+
+How the Abstarct behaviour is taken care off:
+-----------------------------------------------
+This module
+includes the ABCMeta class that provides several features.
+1) First, the ABCMeta class assures that abstract classes can't be instantiated. A subclass
+that provides all of the required definitions, however, can be instantiated. The
+metaclass will invoke the abstract class's special method, __subclasshook__(),
+as a part of processing __new__(). If that method returns NotImplemented, then an
+exception will be raised to show that the class didn't define all the required methods.
+
+2) Second, it provides definitions for __instancecheck__() and __subclasscheck__
+(). These special methods implement the isinstance() and issubclass() built-in
+functions. They provide the checks to confirm that an object (or a class) belongs to
+the proper ABC. This includes a cache of subclasses to speed up the testing.
+
+The abc module also includes a number of decorators for creating abstract method
+ The most important of these is the @abstractmethod decorator.
+ 
 
 
+----------------------------------------
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
