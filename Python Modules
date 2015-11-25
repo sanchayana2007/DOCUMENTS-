@@ -232,6 +232,9 @@ isinstance( {}, collections.abc.Mapping )
 isinstance( 355/113, numbers.Number )
 True
 
+>>>isinstance( x_iter, collections.abc.Iterator )
+True
+
 The entire family tree of built-in containers is reflected in the abstract base classes.
 Lower-level features include Container, Iterable, and Sized.
 Higher-level features include the following characteristics:
