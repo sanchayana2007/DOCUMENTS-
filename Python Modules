@@ -267,10 +267,48 @@ The abc module also includes a number of decorators for creating abstract method
  The most important of these is the @abstractmethod decorator.
  
 
-
+Abstract class Implementation
 ----------------------------------------
+class AbstractEntity(metaclass=ABCMeta):
+    __slots__ = ()
+    @abstractmethod
+    def func1(self):
+        return 1
 
+    @classmethod
+    def __subclasshook__(cls, subclass):
+        if cls is Hand:
+            if any('func1' in B.__dict__ for B in subclass.__mro__):
+                return True
+            return NotImplemented
 
+class Entity(AbstractEntity):
+    def test(self):
+        pass
+    def func1(self):
+        print('derived')
+
+Now if you dont implement the Abstract method func1 the instance creation from entity will throw up an error 
+saying that the Abstarct Method is not implemented .
+** You can change the signature of func1 is derived and  not very sure of subclasshook as it didnt got called 
+
+creating a Callable class :
+----------------------------
+> Using the def statement to create a function
+
+> By creating an instance of a class that uses collections.abc.Callable as its base class.
+
+import collections.abc
+class Power1( collections.abc.Callable ):
+	def __call__( self, x, n ):
+		p= 1
+		for i in range(n):
+			p *= x
+			return p
+pow1= Power1()
+pow1(2,4)
+		
+		
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           String parsing Modules                                                +                
