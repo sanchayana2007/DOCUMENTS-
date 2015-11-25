@@ -300,6 +300,9 @@ creating a Callable class :
 
 import collections.abc
 class Power1( collections.abc.Callable ):
+	def __init__(self):
+		self.i = 23
+	
 	def __call__( self, x, n ):
 		p= 1
 		for i in range(n):
@@ -307,6 +310,20 @@ class Power1( collections.abc.Callable ):
 			return p
 pow1= Power1()
 pow1(2,4)
+
+** So now if we dont define the call it wull create a Error and we are ask to overide the 
+__call__ method .
+
+Optimisation by divide and conquer by calling __call__ recursively inder a function 
+
+class Power4( abc.Callable ):
+	def __call__( self, x, n ):
+		if n == 0: return 1
+		elif n % 2 == 1:
+			return self.__call__(x, n-1)*x
+		else: # n % 2 == 0:
+		t= self.__call__(x, n//2)
+		return t*t
 		
 		
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

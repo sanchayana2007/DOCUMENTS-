@@ -5023,7 +5023,8 @@ The advantage of using a with statement is that it is guaranteed to close the fi
 	
 now this will become problematic to update if the open and the close is not mapped properlly 
 for more number of the sockets 
-So this bahaviour can be ensued by writing the Context manager and there are Two ways to do that 
+So this bahaviour can be ensued by writing the Context manager and there are Two ways to
+ do that 
 1. Implementing the Context Manager as a Class
 ***************************************************
 Here’s the first approach. To implement a context manager, we define a class containing an
@@ -5036,16 +5037,16 @@ class Socket():
         self.send_udp.open()
         return self.send_udp
     def __exit__(self, type, value, traceback):
+		
         self.send_udp.close()
 		
 Thanks to those two methods, it’s valid to instantiate a Socket object and use it in a with statement.
  The Socket object is considered to be the context manager.
 
-send_udp.translate(68, 68)
-for i in xrange(6):
-    with Socket(send_udp):
-		send_udp.connect()
-		send_udp.write()
+
+with Socket(send_udp):
+	send_udp.connect()
+	send_udp.write()
         
 Here are the exact steps taken by the Python interpreter when it reaches the with statement:
 --------------------------------------------------------------------------------------------
@@ -5053,9 +5054,10 @@ Here are the exact steps taken by the Python interpreter when it reaches the wit
  (Actually, it only stores the bound __exit__ method, but that’s a detail.)
 2. The with statement calls __enter__ on the Socket object, giving the context manager a chance to do its job.
 	The __enter__ method calls open on the send_udp context.
-	The __enter__ method returns the send_udp context, but as you can see, we have not specified the optional "as" 
-	target part of the with statement. Therefore, the return value is not Socket anywhere. We don’t need it; we
-	know it’s the same send_udp context that we passed in.
+	The __enter__ method returns the send_udp context, but as you can see, we have not
+	specified the optional "as" 
+	target part of the with statement. Therefore, the return value is not Socket anywhere.
+	We don’t need it; we know it’s the same send_udp context that we passed in.
 
 3. The nested block of code is executed. connect and write
 4. At the end of the nested block, the with statement calls the Socket object’s __exit__ method, passing the arguments 
@@ -5067,17 +5069,20 @@ Once we understand what the Python interpreter is doing, we can make better sens
  
  Steps when an Exception is occured during send_udp.connect()/send_udp.write()
  --------------------------------------------------------------------------------------------
-1.  The connect method raises a TypeError exception: “Context.connect() takes exactly 4 arguments.”
+1. The connect method raises a TypeError exception: “Context.connect() takes exactly 4 arguments.”
 2. The with statement catches this exception.
 3. The with statement calls __exit__ on the Socket object. It passes information about the exception 
- in three arguments: (type, value, traceback) – the same values you’d get by calling sys.exc_info.
- This tells the __exit__ method everything it could possibly need to know about the exception that occurred.
+ in four arguments:  __exit__(self, exc_type, exc_val, exc_tb): – the same values you’d get by calling sys.exc_info.
  
+ This tells the __exit__ method everything it could possibly need to know about the
+ exception(exc_type,exc_val) that occurred.
 4.In this case, our __exit__ method doesn’t particularly care. It calls restore on the  context anyway,
- and returns None. (In Python, when no return statement is specified, the function actually returns None.)
+ and returns None.(In Python, when no return statement is specified, the function actually returns None.)
 5.The with statement checks to see whether this return value is true. Since it isn’t, the with statement 
  re-raises the TypeError exception to be handled by someone else.
 In this manner, we can guarantee that restore will always be called on the  context, whether an exception occurs or not.
+
+
  
 2. Implementing the Context Manager as a Generator
 ***************************************************
@@ -5102,7 +5107,9 @@ function, and an internal class named GeneratorContextManager. The source code, 
 3. The contextmanager function returns a “factory” function, which creates GeneratorContextManager objects wrapped around the provided generator. 
 
 Finally, the factory function is assigned to Socket. From this point on, when we call Socket, we’ll actually be calling the factory function.
-
+The other conetxts usd are 
+1. decimal context
+2. 
 
 What is Multithreading?
 =============================================================================
