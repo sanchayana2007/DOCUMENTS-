@@ -1,6 +1,12 @@
 ## Installing And Running Mongodb
 
+sc create MongoDbService binPath="C:\Program Files (x86)\MongoDB\Server\3.0\bin\mongod.exe"
+This above should creat e a service and should run the Mongodb service 
 
+
+else run 
+
+mongod.exe and thn the shell mongo.exe
 
 
 ## Writing the Code to Add structures
