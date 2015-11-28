@@ -324,8 +324,17 @@ class Power4( abc.Callable ):
 		else: # n % 2 == 0:
 		t= self.__call__(x, n//2)
 		return t*t
-		
-		
+
+
+----------------------  Object serialisation ---------------------
+Serialisationl of python Objects :
+> to have a persistance in Local file
+> exchange objects between Applications 
+(simple persistence using libraries focused on various data representations: JSON, YAML, 
+pickle, XML, and CSV)
+
+
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           String parsing Modules                                                +                
