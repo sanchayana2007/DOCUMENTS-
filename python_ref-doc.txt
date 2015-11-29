@@ -1043,13 +1043,29 @@ def moving_average(iterable, n=3):
         s += elem - d.popleft()
         d.append(elem)
         yield s / n
-The rotate() method provides a way to implement deque slicing and deletion. For example, a pure Python implementation of del d[n] relies on the rotate() method to position elements to be popped:
+The rotate() method provides a way to implement deque slicing and deletion. 
+For example, a pure Python implementation of del d[n] relies on the rotate()
+ method to position elements to be popped:
 
 def delete_nth(d, n):
     d.rotate(-n)
     d.popleft()
     d.rotate(n)
--------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+defaultdict(list):
+---------------------
+>>> s = [('yellow', 1), ('blue', 2), ('yellow', 3), ('blue', 4), ('red', 1)]
+>>> d = defaultdict(list)
+>>> for k, v in s:
+...     d[k].append(v)
+...
+>>> d.items()
+[('blue', [2, 4]), ('red', [1]), ('yellow', [1, 3])]
+When keys are encountered again, the look-up proceeds normally (returning the list for that key) and the list.append() operation adds another 
+value to the list. 
+
+
+
 -------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------

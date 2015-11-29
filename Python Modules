@@ -2,7 +2,9 @@
 											---------
 									1. Expertising OOPs
 										
-									2. String Parsing Modules 
+									2. Object serialisation
+									
+									3. String Parsing Modules 
 											String 
 											Regex
 									3. Utility Modules 
@@ -325,15 +327,49 @@ class Power4( abc.Callable ):
 		t= self.__call__(x, n//2)
 		return t*t
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                           Object serialisation                                              	  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Serialisation:
+-----------------
+Convertion of Python objects in bytes and write the bytes to a file called this as 
+serialisation .
 
-----------------------  Object serialisation ---------------------
 Serialisationl of python Objects :
 > to have a persistance in Local file
 > exchange objects between Applications 
 (simple persistence using libraries focused on various data representations: JSON, YAML, 
 pickle, XML, and CSV)
 
+There are ways to perform incremental serialization, but they involve extra work.
+Single Python serialised objects (list of Objects can be serialised as one)
 
+Perssistance:
+-------------
+Usually python objects lives only as long as there is a reference associated with the 
+object to make an objects lifetime beyond running of the python program is called 
+Persistane.
+This can be acieved by writing the objects in files Class definitions exist
+primarily as source code. The class definition in the volatile memory is rebuilt from
+the source (or the byte-code version of the source) every time it's needed .
+
+Python terminology tends to focus on the words dump and load. 
+• dump(object, file): This will dump the given object to the given file
+• dumps(object): This will dump an object, returning a string representation
+• load(file): This will load an object from the given file, returning the
+constructed object
+• loads(string): This will load an object from a string representation,
+returning the constructed object.
+
+
+
+
+
+Block n Char Mode :
+---------------------
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
