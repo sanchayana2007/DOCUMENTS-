@@ -38,7 +38,7 @@ what happens wen a Python program is run :
 	 (in this case, an Abstract Syntax Tree). 
 
 2. PVM is just a big code loop that iterates through
-your byte code instructions, one by one, to carry out their operations.
+	your byte code instructions, one by one, to carry out their operations.
 
 1) The compiler then takes the AST and turns it into one (or more) code objects.
 Finally, the interpreter takes each code object executes the code it represents.
