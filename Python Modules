@@ -363,14 +363,19 @@ Python terminology tends to focus on the words dump and load.
 constructed object
 • loads(string): This will load an object from a string representation,
 returning the constructed object.
-
-
-
-
-
 Block n Char Mode :
 ---------------------
+Block-mode devices can also be called seekable
+because the OS supports a seek operation that can access any byte in the file in an
+arbitrary order.
 
+Character-mode devices are not seekable; they are interfaces where
+bytes are transmitted serially.
+Modules:
+----------
+JSON
+Pickel (objects saved to binary files )
+shelve()
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           String parsing Modules                                                +                
