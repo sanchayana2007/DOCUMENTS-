@@ -373,9 +373,10 @@ Character-mode devices are not seekable; they are interfaces where
 bytes are transmitted serially.
 Modules:
 ----------
-JSON
-Pickel (objects saved to binary files )
-shelve()
+JSON ()
+Pickel (single objects saved to binary files ; multiple objects can set as list)
+shelve(complex—typically objects that
+contain other objects)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
 +                                           String parsing Modules                                                +                

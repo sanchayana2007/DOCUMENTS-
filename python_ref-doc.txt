@@ -217,10 +217,22 @@ The classes and the derived thing
 > Meta-programing
 
 
-The __prepare__ method
+The __prepare__ method (Prepare_method_100)
 ======================================
-This method is called before the class body is executed and it must return a dictionary-like object that's used as the local namespace
-for all the code from the class body. It was added in Python 3.0, see PEP-3115.
+Metaclass can be any callable type , Now in order to fully exploate metaclas functionality an extra atribute 
+named __prepare__ is called during the class pre-construction .
+def prepare_class(name, *bases, metaclass=None, **kwargs):
+  if metaclass is None:
+     metaclass = compute_default_metaclass(bases)
+  prepare = getattr(metaclass, '__prepare__', None)
+  if prepare is not None:
+     return prepare(name, bases, **kwargs)
+  else:
+     return dict()
+
+
+This prepare method is called before the class body is executed and it must return a dictionary-like object 
+that's used as the local namespace for all the code from the class body. It was added in Python 3.0, 
 
 If your __prepare__ returns an object x then this:
 
@@ -290,17 +302,14 @@ Virtually all Python implementations use hash maps to allow extremely fast acces
 But the order they're stored in has nothing to do with the order that they're added. They are stored in the order
 that makes it easiest to look them up. Python dictionaries work the same way 
 
- 
+Fetching the Keys and Values:
+----------------------------
 Now methods to dictionaries that return different kinds of iterators explicitly:
 for key in dict.iterkeys(): or keys for 3.x
 
 for value in dict.itervalues():or values for 3.x
 
 for key, value in dict.iteritems() or items
-
-
-
-
 
 Delete Dictionary Elements:
 ------------------------------
@@ -311,7 +320,8 @@ del dict ;        # delete entire dictionary
 Key properties :
 ------------------
 a) More than one entry per key not allowed. Which means no duplicate key is allowed. When duplicate keys 
-encountered during assignment, the last assignment wins. Following is a simple example:
+encountered during assignment, the last assignment wins.
+b) Keys not present when searched results in Error
 b) Tuples can be used as Dict keys but not Lists 
 
 Dictionary Update :
@@ -328,6 +338,13 @@ del dict[old_key]
 Or in 1 step:
 
 dict[new_key] = dict.pop(old_key)
+
+Dictionary Comprehensions (Only = after 3.0)
+----------------------------
+dict1 = {value : str(value) for value in range(3) }
+>> {'1':1,'2':2,'3':3}
+
+
 Lists  not as Dictionary Keys
 ----------------------------
 That said, the simple answer to why lists cannot be used as dictionary keys is that lists do not provide a valid __hash__ method. Of course, 
@@ -352,7 +369,7 @@ Note that since tuples are immutable, they do not run into the troubles of lists
 
 
 
-2. list:(collection)
+2. list:(collection) [Can be used as Generator and comprehnesion]
 *********************
 The list is a most versatile datatype available in Python  Good thing about a list is that items in a list need not all have the same type.
 Creating a list is putting different comma-separated values between squere brackets. For example:
@@ -411,8 +428,13 @@ refactored in a list comprehension like this:
 Addition :
 -----------
 s = {'jack', 'sjoerd'}##in addition to the set constructor.
+s = set(['jack', 'sjoerd'])# Put a List 
+s = set(('jack', 'sjoerd')) # Put a Tuple 
 
-
+Comprehensions:
+{str(val) for val in range(3)}
+>>{1,2,3}
+ 
 
 Properties:
 -----------------
@@ -486,6 +508,10 @@ Spatialnet use of set
 								if staging_ent.attributes.get("POLE_ID")])
 here a set of unique pole ids referenced from a Drops can be drawn up 
 
+Combining two Iterables  (Generators): 
+------------------------------------------------
+>chain from Itertools: Joins two Generator to form a Third one 
+itertools.chain(range(3),range(3,6))
 
 
 3.frozenset:(ordered Collection Immutable)
@@ -494,13 +520,20 @@ here a set of unique pole ids referenced from a Drops can be drawn up
  it can therefore be used as a dictionary key or as an element of another set.
 
 Supports all set properties except add n remove
+cities = frozenset(["Frankfurt", "Basel","Freiburg"])
+>>> cities.add("Strasbourg")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'frozenset' object has no attribute 'add'
+>>> 
 
 
 
 4. tuple:
 ***********
 It is a Immutable List and its fast in retriving and all it can be termed as an array
- A tuple is a sequence of immutable Python objects. Tuples are sequences, just like lists. The only difference is that 
+ A tuple is a sequence of immutable Python objects. Tuples are sequences, just like lists. The only difference
+ is that 
  
  1) tuples can't be changed i.e., tuples are immutable 
  2) tuples use parentheses and lists use square brackets.
@@ -541,9 +574,15 @@ Python Expression	Results	 Description
 6. bytes class (holding data in  binary data buffer ):
 
 ********************************************
+A byte is an 8-bit value, equivalent to an integer from 0–255, and represents the raw bit patterns stored by the 
+computer or transmitted over a network.
+They are very similar to strings in use and support many of the same methods. The type names are spelled as byte and bytearray respectively.
+Literal byte strings are represented in quotes preceded by the letter b. Byte strings are immutable.
+Bytearrays are similar, but they are mutable.
+
 Bytes objects are immutable sequences of single bytes. 
-bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects,
-instead they are always created by calling the constructor:
+bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray
+objects, instead they are always created by calling the constructor:
 
 Creation :
 ------------
@@ -565,18 +604,15 @@ print(values)
 		data = bytes([10, 20, 30, 40])
 	2. Python that converts string, bytearray
 	----------------------------------------------------------
-	# Create a bytearray from a string with ASCII encoding.
+	# Create a bytearray from a string with ASCII encoding. This converts a key encodes a value 
 	arr = bytearray("abc", "ascii")
 	print(arr)
-	
+	>>bytearray(b'abc') 
 	# Convert bytearray back into a string.
 	result = arr.decode("ascii")
 	print(result)
+	>> abc
 	
-	Output
-	
-	bytearray(b'abc')
-	abc
 	
 Copying existing binary data via the buffer protocol: 
 ----------------------------------------------------
@@ -596,7 +632,7 @@ bytes.fromhex('2Ef0 F1f2  ')
 b'.\xf0\xf1\xf2'
 
 bytearray objects are a mutable counterpart to bytes objects. There is no dedicated literal syntax for bytearray objects,
- instead they are always created by calling the constructor:
+instead they are always created by calling the constructor:
 >>> bytearray.fromhex('2Ef0 F1f2  ')
 bytearray(b'.\xf0\xf1\xf2')
 
@@ -614,6 +650,9 @@ view = memoryview(b"abc")
 
 # Print the first element.
 print(view[0])
+b'a'
+# String Difference with Byte arrays 
+view[0] == b'a' will returm a False 
 
 # Print the element count.
 print(len(view))
@@ -682,7 +721,7 @@ True
 
 Specialized data types:
 ------------------------------------
-1. datetime — Basic date and time types:
+1. datetime — Basic date and time types:[time_types_100.py]
 *****************************************
 Actually there two modules onehandles time(HH:MM:SS:MS) and other datetime handles the date(YY:MM:DD)
 
@@ -762,7 +801,8 @@ cursor = conn.cursor()
 cursor.execute('SELECT name, age, title, department, paygrade FROM employees')
 for emp in map(EmployeeRecord._make, cursor.fetchall()):
     print(emp.name, emp.title)
-In addition to the methods inherited from tuples, named tuples support three additional methods and two attributes. To prevent conflicts with field names, the method and attribute names start with an underscore.
+In addition to the methods inherited from tuples, named tuples support three additional methods and two attributes.
+ To prevent conflicts with field names, the method and attribute names start with an underscore.
 
 classmethod somenamedtuple._make(iterable)
 Class method that makes a new instance from an existing sequence or iterable.
@@ -865,8 +905,8 @@ In addition to the usual mapping methods, ordered dictionaries also support reve
 Equality tests between OrderedDict objects are order-sensitive and are implemented as list(od1.items())==list(od2.items()). Equality tests between OrderedDict objects and other Mapping objects are order-insensitive like regular dictionaries. This allows OrderedDict objects to be substituted anywhere a regular dictionary is used.
 
 The OrderedDict constructor and update() method both accept keyword arguments, but their order is lost because Python’s function call semantics pass in keyword arguments using a regular unordered dictionary.
-
-8.3.6.1. OrderedDict Examples and Recipes
+ OrderedDict Examples and Recipes:
+ -----------------------------------
 Since an ordered dictionary remembers its insertion order, it can be used in conjunction with sorting to make a sorted dictionary:
 
 >>>
@@ -1084,7 +1124,7 @@ The collections module offers the following ABCs:
 | Set  |  Sized, Iterable,| __contains__,__iter__,__len__		| __le__, __lt__, __eq__, __ne__, __gt__
 |	   |Container		  |										| __ge__, __and__, __or__, isdisjoint
 ------------------------------------------------------------------------------------------------------------
-class ListBasedSet(collections.abc.Set):
+class ListBasedSet(collections.abc.Set): [abc.cloocetions_100.py]
      ''' Alternate set implementation favoring space over speed
          and not requiring the set elements to be hashable. '''
      def __init__(self, iterable):
@@ -1092,6 +1132,7 @@ class ListBasedSet(collections.abc.Set):
          for value in iterable:
              if value not in lst:
                  lst.append(value)
+				 
      def __iter__(self):
          return iter(self.elements)
      def __contains__(self, value):
@@ -1194,6 +1235,38 @@ class ExtendedRef(weakref.ref):
             ob = (ob, self.__counter)
         return ob
 		
+
+Need of weak references:
+------------------------
+So now the reference which is a direct refernce 
+	child.parent = self
+The loop executing this will run and the refernce counting 
+mechanism is Python and after that gc module will check i the 
+refernce can be removed or not .
+Now the weak reference implemntation is such that it happens in two steps 
+1> weakref = self
+2> child.parent = weakref
+Now the gc will remove the count and make it call del on the same 
+
+replace this in above code in parent 
+
+	child.parent= weakref.ref(self)
+and in child 
+class Child:
+# This is an extra caution that parent ref  exists or not 
+	p = self.parent()
+	if p is not None:
+		# process p, the Parent instance
+	else:
+		# the parent instance was garbage collected.
+
+So now we can see that 
+>>> p = Parent2( Child(), Child() )
+>>> del p
+Removing Parent2 4303253584
+Removing Child 4303256464
+Removing Child 4303043344
+
 		
 
 8. types — Dynamic type creation and names for built-in types
@@ -1483,37 +1556,6 @@ circular reference gets broken
 
 So we can break the circularity or use a weakref reference,
 which permits garbage collection.
-
-Need of weak references:
-------------------------
-So now the reference which is a direct refernce 
-	child.parent = self
-The loop executing this will run and the refernce counting 
-mechanism is Python and after that gc module will check i the 
-refernce can be removed or not .
-Now the weak reference implemntation is such that it happens in two steps 
-1> weakref = self
-2> child.parent = weakref
-Now the gc will remove the count and make it call del on the same 
-
-replace this in above code in parent 
-
-	child.parent= weakref.ref(self)
-and in child 
-class Child:
-# This is an extra caution that parent ref  exists or not 
-	p = self.parent()
-	if p is not None:
-		# process p, the Parent instance
-	else:
-		# the parent instance was garbage collected.
-
-So now we can see that 
->>> p = Parent2( Child(), Child() )
->>> del p
-Removing Parent2 4303253584
-Removing Child 4303256464
-Removing Child 4303043344
 
 __new__()  auto-magically a static method
 **********************************************************
