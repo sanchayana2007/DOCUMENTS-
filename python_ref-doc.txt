@@ -1594,6 +1594,7 @@ In general there are two recommended strategies for performing manual garbage co
  event-based garbage collection. Time-based garbage collection is simple: the garbage collector is called
  on a fixed time interval. Event-based garbage collection calls the garbage collector on an event. For example,
  when a user disconnects from the application or when the application is known to enter an idle state.
+ 
 Recommendations:
 ------------------------
 Which garbage collection technique is correct for an application? It depends. The garbage collector should be
@@ -1931,25 +1932,39 @@ Victor Hello
 
 difference between __getattr__ and __getattribute__ 
 ----------------------------------------------------------
-A key difference between __getattr__ and __getattribute__ is that __getattr__ is only invoked if the attribute wasn't found the usual ways. 
+A key difference between __getattr__ and __getattribute__ is that __getattr__ is only invoked if the attribute 
+wasn't found the usual ways. 
 It's good for implementing a fallback for missing attributes, and is probably the one of two you want.
 
-__getattribute__ is invoked before looking at the actual attributes on the object, and so can be tricky to implement correctly.
+__getattribute__ is invoked before looking at the actual attributes on the object, and so can be tricky to
+ implement correctly.
  You can end up in infinite recursions very easily.
-class Foo(object):
-    def __getattr__(self, attr):
-        print "looking up", attr
-        value = 42
-        self.__dict__[attr] = value
-        return value
+class A:
+    def __init__(self,t):
+        self.test=t
+    '''
+    def __getattribute__(self, item):
+        print('x y z')
+        return item
+    '''
+    def __getattr__(self, item):
+        print('jkl')
+        return item
 
-f = Foo()
-print f.x 
-#output >>> looking up x 42
+if __name__ == '__main__':
+    a = A(45)
 
-f.x = 3
-print f.x 
-#output >>> 3
+    print(a.test)
+    print(a.nf)
+>>>>>
+
+45
+jkl
+nf
+
+if getattribute is uncommented the _getattr wont get called at all for not present atributes 
+also
+
 ---------------------------------------------------------
 Order of referring the methods :
 
@@ -2507,8 +2522,6 @@ Another way to add an atribute
 obj.__dict__['new_atr'] = 'New Str'
 print (obj.__dict__)
 >>{'new_ano_atr': 'New Ano  Str', 'new_atr': 'New Str'}
-
-
 	
 Introspection Descriptor:
 ==============================
@@ -4120,8 +4133,20 @@ TypeError: unsupported operand type(s) for /: 'str' and 'str'
 As you can see, the finally clause is executed in any event. The TypeError raised by dividing two strings is not handled by the except clause and therefore re-raised after the finally clause has been executed.
 
 In real world applications, the finally clause is useful for releasing external resources (such as files or network connections), regardless of whether the use of the resource was successful
+C
+Catching Exception of any Type :
+---------------------------------
+try:
+    a = 2/0
+except Exception as e:
+    print e.__doc__
+    print e.message
 
-User-defined Exceptions
+This wil catch andy exception and print it .
+
+
+User-defined Exceptions:
+---------------------------
 Programs may name their own exceptions by creating a new exception class (see Classes for more about Python classes). Exceptions should typically be derived from the Exception class, either directly or indirectly. For example:
 
 >>>
@@ -4746,7 +4771,7 @@ You can not un-decorate a function. There are hacks to create decorators that ca
  So once a function is decorated, it's done. For all the code.
 Decorators wrap functions, which can make them hard to debug.
 Python 2.5 solves this last issue by providing the functools module including functools.wraps that copies the name, module and docstring
- of any wrapped function to it's wrapper. Fun fact, functools.wraps is a decorator :-)
+of any wrapped function to it's wrapper. Fun fact, functools.wraps is a decorator :-)
 
  # "functools" can help for that
 
