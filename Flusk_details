@@ -17,6 +17,11 @@ Collecting flask-wtf
 Installing collected packages: WTForms, flask-wtf
 Successfully installed WTForms-2.0.2 flask-wtf-0.12
 
+>>>>C:\Python33\Scripts> pip install Flask-Script
+
+
+
+
 1> Templates are for rendering the views (jinga2 is the engine for rendering the templates)
   Functionalties provided by this are 
   1> render_templates(template-name-or list, context) :  for rendering the html views inside template folder 
