@@ -346,8 +346,9 @@ SpreadsheetCell aThirdCell = myCell;
 an asignment operator
 ***********************
 anotherCell = myCell; 
+
 7) Use of Copy constructor:
-----------------------------------------------------------------------------------------
+----------------------------
 a} 
 string SpreadsheetCell::getString()
 {
@@ -358,15 +359,14 @@ s1 = myCell2.getString();
 
 The compiler actually creates an unnamed temporary 
 object by calling a class copy constructor. When you assign this result to s1, the assignment operator
-is called for s1 with the temporary string as a parameter this temporary string Value is copied from Copy Constructor
-output value.When the Value is copied by the assiagnment operator then the temporary string object is
-destroyed. Thus, the single line of code invokes the copy constructor and the assignment operator (for
-two different objects).
+is called for s1 with the temporary string as a parameter this temporary string Value is copied from
+Copy Constructor output value.When the Value is copied by the assignment operator then the temporary 
+string object is destroyed. Thus, the single line of code invokes the copy constructor and the assignment 
+operator (for two different objects).
 
 string s2 = myCell3.getString();
            getString() still creates a temporary unnamed string object when it returns mString.
 But now s1 gets its copy constructor called, not its assignment operator.
-
 So in case 2 temporary objects are being created we can remove it by uisng MoveContructor ,
 
 
@@ -395,23 +395,22 @@ a move constructor suppresses the default availability of the copy constructor.
 The default copy constructor is also suppressed if a move assignment operator is declared So to restore that 
 class Class
 {
-public:
+	public:
 
-Class() = default;
-Class(Class const &other) = default;
-Class(Class &&tmp)
-{}
+		Class() = default;
+		Class(Class const &other) = default;
+		Class(Class &&tmp){}
 
 
-~Class()
-{
-delete[] d_str;
-}
+		~Class()
+		{
+			delete[] d_str;
+		}
 };
 int main()
 {
-Class one;
-Class two(one);
+	Class one;
+	Class two(one);
 }
 
 
@@ -501,7 +500,7 @@ A virtual function is a member function of a class, whose functionality can be o
 It is one that is declared as virtual in the base class using the virtual keyword. 
 
 What is Binding?
-***********************************
+*****************
 Binding refers to the act of associating an object or a class with its member. 
 If we can call a method fn() on an object o of a class c, we say that the object o is binded with the method fn().
  This happens at compile time and is known as static or compile - time binding.
@@ -537,16 +536,16 @@ version.
 
 
  virtual  table architecture:
-****************************************************
+*****************************
 The virtual function table actually contains two more entries before the function pointers: 
 1>a pointer to a "type ID" structure, a separate structure that describes the class itself,
 2>memory offset whose use we'll look at later. So if we have this C++ code:
 
 class foo {
-virtual void a(int);    // Virtual functions
-virtual void b(float);
-int c;
-float d;
+	virtual void a(int);    // Virtual functions
+	virtual void b(float);
+	int c;
+	float d;
 };
 
 The equivalent C code would look something like this:
@@ -562,12 +561,13 @@ void foo_a(int) { }
 void foo_b(float) { }
 
 static type_id foo_type_id = { ... };  
-static foo_vtable sfoo_vtable = { &foo_type_id, 0, foo_a, foo_b }; //Per class has only 1 vtable and its intialised wd v fun ptrs n type id n offset
+static foo_vtable sfoo_vtable = { &foo_type_id, 0, foo_a, foo_b }; //Per class has only 1 vtable and its intialised 
+wd v fun ptrs n type id n offset
 
 struct foo {
-foo_vtable * vtable; // gets initiated to &sfoo_vtable
-int c;
-float d;
+	foo_vtable * vtable; // gets initiated to &sfoo_vtable
+	int c;
+	float d;
 };
 
 Class type is stored separately - first ptr in the v-table. Motivation for this will be clear later.
@@ -594,7 +594,6 @@ class B
 	virtual funb(){}
 
 };
-
 
 
 class C: public A , public B
@@ -629,7 +628,7 @@ void m()
 {
   B* pb = new B;
   A* pa = pb;
-  pa->f(); //OK, calls pa->B::f(7)
+  pa->f(); //OK, calls pa->B::f(7) 
   pb->f(); //error: wrong number of arguments for B::f()
 }
 
@@ -752,7 +751,8 @@ A constructor cannot be virtual because at the time when the constructor is invo
 A virtual destructor is one that is declared as virtual in the base class and is used to ensure that destructors
 are called in the proper order. It is to be remembered that destructors are called in the reverse order of 
 inheritance. 
-If a base  class pointer points to a derived class object and we some time later use the delete operator to delete the object, 
+If a base  class pointer points to a derived class object and we some time later use the delete operator to delete
+ the object, 
 then the derived class destructor is not called. Refer to the code that follows:
 #include <iostream.h>
 class base

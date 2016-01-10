@@ -1469,7 +1469,6 @@ def __bool__( self ):
 This delegates to the superclass definition of the __bool__() function.
 
 
-
 __del__() method.
 *************************************************************************************************
 The intent is to give an object a chance to do any cleanup or finalization just before
@@ -1514,6 +1513,7 @@ Removing 4313920208
 The ln2 variable was a shallow copy of the ln list. The Noisy objects were referenced
 in two lists. They could not be destroyed until both lists were removed, reducing the
 reference counts to zero.
+
 Circular references and garbage collection:
 -------------------------------------------
 Each Child instance contains a reference to the Parent class.
@@ -1553,7 +1553,7 @@ instances cannot be removed from the memory. This references can seen by
 
 
 gc module :
---------------------
+=====================================
 
 Manual Garbage Collection
 -------------------------------
@@ -1620,12 +1620,6 @@ Consider manually running garbage collection either before or after timing-criti
  affect field device battery life, it makes sense to manually run garbage collection as the gateway is entering
  the idle period AFTER the adjustment process - or run it every sixth or tenth idle period. This insures that 
  garbage collection won't be triggered automatically during the next timing-sensitive period.
-
-
-
-
-
-
 
 
 Breaking of circular references:
@@ -2436,6 +2430,7 @@ __getattr__() is given a chance to return a meaningful value. If there is
 no attribute, it must raise an AttributeError exception.
 • The __delattr__() method deletes an attribute.
 • The __dir__() method returns a list of attribute names.
+
 The __getattribute__() method
 ------------------------------
 An even lower level attribute processing is the __getattribute__() method.
@@ -2622,9 +2617,6 @@ an immutable object like this is to guarantee __hash__() returning a consistent 
 and not to prevent people from writing rotten code.
 
 
-
-
-
 Meta-programming:
 =====================================================
 The new-style classes brought the ability to change classes' and objects' definitions
@@ -2741,10 +2733,6 @@ Because Python invokes the metaclass automatically at the end of the class state
 when the new class is created, it can augment, register, or otherwise manage the class
 as needed.
  
- 
-
-
-
 
 Metaclasses Are Subclasses of Type
 -------------------------------------
@@ -3020,9 +3008,10 @@ Metaclass Versus Superclass :
 Metaclass:
 		class A(type): attr = 1
 
-		class B(metaclass=A): pass # B is meta instance and acquires meta attr
-		I = B() # I inherits from class but not meta!
-		B.attr
+		class B(metaclass=A): 
+			pass # B is meta instance and acquires meta attr
+			I = B() # I inherits from class but not meta!
+			B.attr
 		>> 1
 >>> I.attr
 AttributeError: 'B' object has no attribute 'attr'
@@ -3122,10 +3111,6 @@ Now in this condition as var is a reference we are assigning the addresesss refe
 So this willl refelect on self.variable also
 
 
-Python Associations:
-=================================================================================================================
-
-
 Functions:
 ===================================================================================================
 In python the functions are defined with def
@@ -3143,10 +3128,12 @@ Variable-length arguments:
 		for var in vartuple:
       print var
 	return;
+	
 More on Defining Function:
----------------------------
+--------------------------
+
 1> Default argumnents :
------------------------------
+----------------------_
 def fun(i,k=5):
 	print k
 this function can be called from the following ways 
@@ -3154,23 +3141,42 @@ fun(3) # 5
 fun(5) # 5 
 So the default argument is evaluated only onece that is for the 1st call
 Now for a function which is taking a mutable object he default argument is evaluated everytime
-def fun(i,L=[]):
-	L.append(i)
-	return L
-fun(1) #[1]
-fun(2) #[1,2]
+def foobar(arg_string="abc", arg_list = []): 
+    print arg_string, arg_list 
+    arg_string = arg_string + "xyz"
+    arg_list.append("F")
+ 
+for i in range(4): 
+    foobar()
+abc [] 
+abc ['F'] 
+abc ['F', 'F'] 
+abc ['F', 'F', 'F']
+
+What happens here is The objects that provide the default values are not created at the time that fun is called.
+They are created at the time that the statement that defines the function is executed
+
+1) A new function object is created, bound to the name fun, and stored in the namespace of foo_module.
+2) Within the fun function object, for each argument with a default value, an object is created to hold
+   the default object. In the case of fun, a string object containing “abc” is created as the default for 
+   the arg_string argument, and an empty list object is created as the default for the arg_list argument.
+3) whenever fun is called without arguments, arg_string will be bound to the default string object, and 
+arg_list will be bound to the default list object. In such a case, arg_string will always be “abc”,
+ but arg_list not be an empty list. 
+
+
+
 
 2> Arbitary Arg List
------------------------------
-. Arbitrary Argument Lists
-Finally, the least frequently used option is to specify that a function can be called with an arbitrary number
+--------------------
+The least frequently used option is to specify that a function can be called with an arbitrary number
 of arguments. These arguments will be wrapped up in a tuple
+
 def write_multiple_items(file, separator, *args):
     file.write(separator.join(args))
 
-3) 
-multiple argument 
-***************************************************************************************************
+3) multiple argument 
+--------------------
 def manyArgs(*arg):
   print "I was called with", len(arg), "arguments:", arg
 
@@ -3180,9 +3186,6 @@ I was called with 1 arguments: (1,)
 I was called with 3 arguments: (1, 2, 3)	
 
 j_txt = _("jobs: ") 
-
-
-
 
 
 Single Lone Underscore (_)
@@ -3224,6 +3227,7 @@ def my_view(request):
     output = _("Welcome to my site.")
     return HttpResponse(output)
 The second and third purposes can conflict, so one should avoid using _ as a throw-away name in any code block that also uses it for i18n lookup and translation.
+
 Difference between _, __ and __xx__ in Python
 ==================================================
 When learning Python many people don't really understand why so much underlines in the beginning of the methods, sometimes even in the end like __this__! 
@@ -3234,9 +3238,7 @@ Python doesn't have real private methods, so one underline in the beginning of a
  it's not part of the API. It's very common when using properties:
 
 class BaseForm(StrAndUnicode):
-       
-    
-    def _get_errors(self):
+     def _get_errors(self):
         "Returns an ErrorDict for the data provided for the form"
         if self._errors is None:
             self.full_clean()
@@ -3344,37 +3346,13 @@ room.add("Igor")
 print len(room)     # 1
 The documentation covers all these special methods.
 
-Conclusion
+Conclusion:
+--------------------
 Use _one_underline to mark you methods as not part of the API. Use __two_underlines__ when you're creating 
 objects to look like native python objects or you wan't to customize behavior in specific situations. And 
 don't use __just_to_underlines, unless you really know what you're doing!
 
 	
-Magic functions:
-===================================================================================================
-These are teh set of functions always surounded by the Underscores
-__class__ =  
-__name__ = 
-
- __init__ is not the first thing to get called. Actually, it's a method called __new__, which
- actually creates the instance, then passes any arguments at creation on to the initializer. At the other end of the object's 
- lifespan, there's __del__. Let's take a closer look at these 3 magic methods:
-
-__new__(cls, [...)
-__new__ is the first method to get called in an object's instantiation. It takes the class, then any other arguments that it 
-will pass along to __init__. __new__ is used fairly rarely, but it does have its purposes, particularly when subclassing an 
-immutable type like a tuple or a string.
-I don't want to go in to too much detail on __new__ because it's not too useful, but it is covered in great detail in the 
-Python docs.
-__init__(self, [...)
-The initializer for the class. It gets passed whatever the primary constructor was called with (so, for example, if we called
-
-x = SomeClass(10, 'foo'),
-__init__ would get passed 10 and 'foo' as arguments. __init__ is almost universally used in Python class definitions.
-__del__(self)
-If __new__ and __init__ formed the constructor of the object, __del__ is the destructor. It doesn't implement behavior for the
-statement del x (so that code would not translate to x.__del__()). Rather, it defines behavior for when an object is garbage 
-collected. It can be quite useful for objects that might require extra cleanup upon deletion, like sockets or file objects. 
 
 
 Lambda Functions
@@ -3460,7 +3438,7 @@ reduce will do a operation in all the elements at a once and output a result
 
 reduce(lambda x, y: x + y, foo)
 >> 139
-
+the functools has the reduce now  
 
 Modules:
 =================================
@@ -3536,7 +3514,6 @@ two.py is being run directly
 Thus, when module one gets loaded, its __name__ equals "one" instead of __main__.
 
 
-
 Global Variables:
 =================================
 Global vs. Local variables:
@@ -3565,7 +3542,7 @@ Inside the function local total :  30
 Outside the function global total :  0
 Another way to that is by using 
 
-rd global is only useful to change or create global variables in a local context, although creating global variables is seldom considered a good solution.
+Third global is only useful to change or create global variables in a local context, although creating global variables is seldom considered a good solution.
 
 def bob():
     me = "locally defined"    # Defined only in local context
@@ -3580,7 +3557,8 @@ Traceback (most recent call last):
   File "file.py", line 9, in <module>
     print me
 NameError: name 'me' is not defined
-While if you use the global statement, the variable will become available "outside" the scope of the function, effectively becoming a global variable.
+While if you use the global statement, the variable will become available "outside" the scope of the function, 
+effectively becoming a global variable.
 
 def bob():
     global me
@@ -3596,18 +3574,15 @@ locally defined
 
 
 class and objects:
-=============================================================================================================
+=====================================
 Class declaration in python
 
 class a:
-     
-    
-
 new way of class declaration in Python
 
 class a(object):
-// calling the instance of the python
-x = a()
+	// calling the instance of the python
+	x = a()
 now if we print the object 
 
 print a
@@ -3629,11 +3604,13 @@ iv)you can pass it as a function parameter
 	print a
 
 OOSP pythonic Way :
-=======================================================
-virtual clases:
----------------------
+====================
 
-When abstractmethod() is applied in combination with other method descriptors, it should be applied as the innermost decorator,
+virtual clases:
+---------------
+
+When abstractmethod() is applied in combination with other method descriptors, it should be applied as the
+ innermost decorator,
  as shown in the following usage examples:
 
 import abc
@@ -3663,6 +3640,7 @@ class Shape(object):
            
     x = property(_get_x, _set_x)
 If your class is already using a metaclass, derive it from ABCMeta rather than type and you can continue to use your own metaclass.
+
 Alternative of Abstarct methods:
 --------------------------------
 A cheap alternative (and the best practice before the abc module was introduced) would be to have all your abstract methods just
@@ -4771,7 +4749,7 @@ You can not un-decorate a function. There are hacks to create decorators that ca
  So once a function is decorated, it's done. For all the code.
 Decorators wrap functions, which can make them hard to debug.
 Python 2.5 solves this last issue by providing the functools module including functools.wraps that copies the name, module and docstring
-of any wrapped function to it's wrapper. Fun fact, functools.wraps is a decorator :-)
+of any wrapped function to it's wrapper. Func fact, functools.wraps is a decorator :-)
 
  # "functools" can help for that
 
@@ -4780,7 +4758,7 @@ import functools
 def bar(func):
     # We say that "wrapper", is wrapping "func"
     # and the magic begins
-    @functools.wraps(func)
+    @functools.wraps(func)i
     def wrapper():
         print "bar"
         return func()

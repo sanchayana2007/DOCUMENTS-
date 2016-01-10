@@ -37,7 +37,7 @@ Twiki   0.203125GB
 local   0.078125GB
 
 
-checking the database required 
+checking the database required and creating the Database
 -------------------------------------------------------------
 > use Twiki
 switched to db Twiki
@@ -49,6 +49,7 @@ Check the current selected data base
 > use Twiki
 switched to db Twiki
 
+The Database will show up only when there is a 
 
 Check the tables present inside the DB system.indexes will be a default table (collections)
 This collectios are List of Records row which will be shown as (twikis) which is multiple twiki (Document)
