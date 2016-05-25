@@ -1,33 +1,47 @@
 											Contents:
 											---------
 									1. Expertising OOPs
-										
+										> Ways of Sub Classes Initialization:
+										> Composite objects
+										> ABCs of Consistent Design
+										> Abstract class
+										> Callable
 									2. Object serialisation
-									
+										> Json
 									3. String Parsing Modules 
-											String 
-											Regex
-									3. Utility Modules 
-											 Itertools Module
-											  Functools Module
-									4. Debugging Modules
+										>String 
+										>Regex
+									4. Utility Modules 
+										>Itertools Module
+										>Functools Module
+									5. Debugging Modules
 											Pdb
-									5. Unit test Modules 
-									6. Gui Modules
+									6. Unit test Modules 
+									7. File parsing Modules     
+									8. Gui Modules
+											
 											Tkinter
-									7. Automation Modules
-									8. Protocol Modules
-									
+									9. Database Modules (ORM)    
+									10. Web Server  Modules 
+									11. Event based Modules 
+									12. OS handling Modules   
+									13. Web Scarping  Modules
+									14. DataAnalytics Modules
+									15. Automation Modules
+									16. Protocol Modules  
+									17. Threading     
 
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Expertising OOPs                                                	  +                
++                                          1.  Expertising OOPs                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-1> 
+Subclass Initialization Ways 
+1> Sub Classes Initialization:
+-------------------------------
 This deals with a instance atributes when some atribues differes according to type 
 of the subclass based on Some Atribute , So those inputs are preintialised from the instaces 
 class Card:
@@ -269,7 +283,7 @@ The abc module also includes a number of decorators for creating abstract method
  The most important of these is the @abstractmethod decorator.
  
 
-Abstract class Implementation
+Abstract class Implementation (OOPS_in_python_100.py)
 ----------------------------------------
 class AbstractEntity(metaclass=ABCMeta):
     __slots__ = ()
@@ -329,7 +343,7 @@ class Power4( abc.Callable ):
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Object serialisation                                              	  +                
++                                         2.  Object serialisation                                              	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -339,10 +353,12 @@ Convertion of Python objects in bytes and write the bytes to a file called this 
 serialisation .
 
 Serialisationl of python Objects :
+-----------------------------------
 > to have a persistance in Local file
 > exchange objects between Applications 
 (simple persistence using libraries focused on various data representations: JSON, YAML, 
 pickle, XML, and CSV)
+pickel (Object_serialisation_200.py)
 
 There are ways to perform incremental serialization, but they involve extra work.
 Single Python serialised objects (list of Objects can be serialised as one)
@@ -372,14 +388,20 @@ arbitrary order.
 Character-mode devices are not seekable; they are interfaces where
 bytes are transmitted serially.
 Modules:
-----------
+---------
 JSON ()
-Pickel (single objects saved to binary files ; multiple objects can set as list)
+Pickel (single objects saved to binary files ; multiple objects can set as list)[Object_serialisation_200.py]
 shelve(complex—typically objects that
 contain other objects)
+
+Json/REST/XML/SOAP Web Services :
+-------------------------------
+Restful APIs:
+----------------
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           String parsing Modules                                                +                
++                                         3.  String parsing Modules                                                +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -913,54 +935,9 @@ $	Matches end of line.
 [...]	Matches any single character in brackets.
 [^...]	Matches any single character not in brackets
 
-
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           OS handling Modules                                                	  +                
-+                                                                                                                 +
-+                                                                                                                 +
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-import os
-
-os.environ['saikat'] = '/local/saikatsa/python'] <---this creates an environment variable named as saikat
-Print os.environ['saikat'] <--- this gives environment variable printed
-os.getenv('env name') <---this gives given environment variable value 
-os.putenv('env name', 'value') <---this actually sets env value
-os.environ.pop('env variable name') <---this deletes env variable
-
-os.getlogin() <--- this gives login name
-os.getcwd() <--- this gives current working directory
-Os.chdir('..') <--- this changes the directory e.g. here it goes one level up
-os.uname() <--- gives OS/Processor information
-
-os.access('filename', os.R_OK) <--- this returns True if Read access is available else False
-os.access('filename', os.F_OK) <---this returns true if filename/path is correct/exists otherwise False
-os.access('filename', os.W_OK) <---this returns True if write access persists otherwise false
-os.access('filename', os.X_OK) <---this returns true if filename is executable otherwise false
-
-os.listdir('/local/saikatsa')  <---this gives filename, directory name as a list in the given path
-os.walk() <--- it returns a generator which shall give same as listdir while doing next operator
-
-os.rename('temp.cc','temp1.cc') <--- this renames file temp.cc to temp1.cc. Also it renames the directory
-os.renames('directory_names', 'new name') <--- this renames directory name
-os.remove('filename') <--- it removes a file
-os.removedirs('directory') <--- it removes empty directory
-
-os.abort() <--- closes the program
-os.system('linux command') <--- it executes linux commands
-
-os.path.abspath('.') <--- this gives absolute path of current directory e.g. /local/saikatsa/python
-os.path.exists('/home/saikatsa') <--- this returns true if path exist otherwise false same as os.access('path', os.F_OK)
-os.path.isfile('name') <--- returns true if name is a file
-os.path.isdir('name') <--- returns true if name is a directory
-os.path.isabs('path name')  <---- returns true if given path is absolute one.
-
-
-
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+                                                                                                                 +
-+                                           Utility Modules                                                      +                
++                                          4.  Utility Modules                                                      +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1222,7 +1199,7 @@ You can see it in action in the functools source code, but if you’d prefer a c
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Debugging Modules                                                	  +                
++                                        5.   Debugging Modules                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1253,13 +1230,13 @@ python -m pudb.run my-script.py
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Unit test Modules                                                	  +                
++                                     6.  Unit test Modules                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Testing the Python Modules :
 ------------------------------------------
-The standard workflow is:
+The standard workflow is:[unit_test_200.py]
 1. You define your own class derived from unittest.TestCase.
 2. Then you fill it with functions that start with ‘test_’.
 3. You run the tests by placing unittest.main() in your file, usually at the bottom.
@@ -1269,7 +1246,7 @@ One of the many benifits of unittest, that you’ll use when your tests get bigg
 
 Like the doctest introduction, I’ll run through a simple example first, then show how I’m using unittest for testing markdown.py.
 
-unittest example
+unittest example  [unit_test_200.py]
 
 class Tests(unittest.TestCase):
     def setUp(self):
@@ -1329,23 +1306,23 @@ nose : Python testing framework
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           File parsing Modules                                                  +                
++                                         7.  File parsing Modules                                                  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                         Gui Modules                                                      		  +                
++                                       8.  Gui Modules                                                      		  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Tkinter:
-PyQt:
+Tkinter:[Mod_tkinter_200.py]
+PyQt:[Pyqt_300.py]
 	
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Database Modules (ORM)                                                     +                
++                                       9.    Database Modules (ORM)                                                     +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1357,7 +1334,7 @@ The Django ORM and flexibility of SQL
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Web Server  Modules                                                   +                
++                                       10.    Web Server  Modules                                                   +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1366,7 +1343,7 @@ Tornado (Python web framework and asynchronous networking library)
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Event based Modules                                                   +                
++                                         11.  Event based Modules                                                   +                
 +                                                                                                                 +
 +                                                                                                                 +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1375,32 +1352,63 @@ gevent is a coroutine-based Python networking library
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                          Python object serialization Modules                                    +                
++                                          12. OS handling Modules                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-pickel 
-for serializing and de-serializing a Python object structure
+[Sel_copy_200.py]
+import os
+
+os.environ['saikat'] = '/local/saikatsa/python'] <---this creates an environment variable named as saikat
+Print os.environ['saikat'] <--- this gives environment variable printed
+os.getenv('env name') <---this gives given environment variable value 
+os.putenv('env name', 'value') <---this actually sets env value
+os.environ.pop('env variable name') <---this deletes env variable
+
+os.getlogin() <--- this gives login name
+os.getcwd() <--- this gives current working directory
+Os.chdir('..') <--- this changes the directory e.g. here it goes one level up
+os.uname() <--- gives OS/Processor information
+
+os.access('filename', os.R_OK) <--- this returns True if Read access is available else False
+os.access('filename', os.F_OK) <---this returns true if filename/path is correct/exists otherwise False
+os.access('filename', os.W_OK) <---this returns True if write access persists otherwise false
+os.access('filename', os.X_OK) <---this returns true if filename is executable otherwise false
+
+os.listdir('/local/saikatsa')  <---this gives filename, directory name as a list in the given path
+os.walk() <--- it returns a generator which shall give same as listdir while doing next operator
+
+os.rename('temp.cc','temp1.cc') <--- this renames file temp.cc to temp1.cc. Also it renames the directory
+os.renames('directory_names', 'new name') <--- this renames directory name
+os.remove('filename') <--- it removes a file
+os.removedirs('directory') <--- it removes empty directory
+
+os.abort() <--- closes the program
+os.system('linux command') <--- it executes linux commands
+
+os.path.abspath('.') <--- this gives absolute path of current directory e.g. /local/saikatsa/python
+os.path.exists('/home/saikatsa') <--- this returns true if path exist otherwise false same as os.access('path', os.F_OK)
+os.path.isfile('name') <--- returns true if name is a file
+os.path.isdir('name') <--- returns true if name is a directory
+os.path.isabs('path name')  <---- returns true if given path is absolute one.
+
+
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                          Web Scarping  Modules                                                  +                
++                                       13.   Web Scarping  Modules                                                  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-<<<<<<< HEAD
-Tkinter:
-wrapper around Tcl\tk 
 
-=======
+urlib: [website_crawler_urllib_200.py],[website_crawler_200.py]
 Mechanize:(very useful python module for navigating through web forms )
 Scrapy: (involved in webscraping then this is a must )
->>>>>>> origin/master
-
+beautifulsoup:
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                          DataAnalytics Modules                                                  +                
++                                     14.     DataAnalytics Modules                                                  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1409,14 +1417,23 @@ providing high-performance, easy-to-use data structures and data analysis tools 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                          Automation Modules                                                	  +                
++                                     15.     Automation Modules                                                	  +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +                                                                                                                 +
-+                                           Protocol Modules                                                      +                
++                                       16.    Protocol Modules                                                      +                
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                       17.    Threading Modules                                                      +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[threading_test_200.py]

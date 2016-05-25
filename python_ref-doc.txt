@@ -2760,6 +2760,7 @@ c.__class__
 
 now what is __class__.__class__ ie class of class which is metaclass
 c.__class__.__class__
+
 >><type 'type'>
 type is a class that generates user-defined classes.
 • Metaclasses are subclasses of the type class.
@@ -2792,9 +2793,10 @@ Example:
 For example, given a class definition like the following for Spam:
 class Eggs: ... # Inherited names here
 class Spam(Eggs): # Inherits from Eggs
-data = 1 # Class data attribute
-def meth(self, arg): # Class method attribute
-return self.data + arg
+	data = 1 # Class data attribute
+	def meth(self, arg): # Class method attribute
+		return self.data + arg
+		
 Python will internally run the nested code block to create two attributes of the class
 (data and meth), and then call the type object to generate the class object at the end of
 the class statement:
@@ -4048,7 +4050,8 @@ In fact, all iterables follow this pattern. When a for statement is first evalua
 
 As it happens, both the __iter__() and __getitem__() functions are required to raise an exception when the items to iterate over are exhausted.
  __iter__() raises the StopIteration exception, as discussed earlier, and __getitem__() raises the IndexError exception. This is how for knows when to stop
- __iter__() raises the StopIteration exception, as discussed earlier, and __getitem__() raises the IndexError exception. This is how for knows when to stop
+ 
+ 
 
 Raising the exceptions :
 -------------------------------------------------------------------------------
