@@ -9,3 +9,180 @@ Installation HPSA Client :
 
 Connectivity checks:
 ====================
+
+SA Client:
+==========
+Management of Servers:
+	> Device Groups: (displays all the groups of servers you or others have defined)
+	> Public Servers (Servers of various Domains[Wholesale,OpsWare,RiskMangment] and 
+		type[TIBCO,DB2,Splunk] and OS[Solaris,Windows])
+	> User(Present user Servers Associated )
+	> Servers: (All Servers who HPSA Agent )
+	> All managed Servers: (All Servers HPSA Agent shows every server)
+	> Oracle Solaris Zone: (Zones of Server)
+	> Provisoned Servers: (have an operating system installed)
+	> UnManged Servers : (discovered servers in your data center that are not yet managed by HPSA)
+	> Unprovisoned Serevers: (do not yet have an operating system installed.
+	
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          SERVERs INFO		                                                	  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The information avialable for the Servers are 
+	name,
+	Server Use(lab),
+	Model,
+	OS,
+	manufacturer,
+	Agent Version,
+	Customer,
+	Hostname,
+	Realm,(Group or MEsh it Belongs)
+	IP Addr.
+	Management IP,
+	History,
+	Object ID(HPSA Object ID)
+	
+	
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          INDIVIDUAL SERVER INFO                                                 +	  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+from Devices Tab only (one Serever full details) 
+	> Summary (System, computer,Agent Info)
+	> Properties 
+		Managment Info(All common server Info.. Hostname,Realm...)
+		Custom Info (remedy CI_ID )
+		Reported Information(Reporting, MAC ADDR, Serial No, CHASIS ID)
+	>Custom Atributes (manage some Custom Atributes)
+		patching provisioning time, JAVA_DATA1
+	>History 
+	>Audits (audits Run On /for this Server)
+	> Archived Audit results 
+	> Software policies
+	> patch Policies 
+	> complaince (This will show for ALL SERVERS INFO for Audit , Software,Configurations as RED/GREEN)
+	> Device Groups (the groups where this erver is asociated with )
+	> Applications
+	> Hardware(processor Info, cache, Cores ,)
+	> Network 
+		Ethernet Network Settings
+			>Hostname
+			> mangment IP 
+			> gateway 
+			> DNS Servers
+			> Search Domains
+		ethernet connections
+			>IP
+			>MAC Addre
+			>NetMask
+	> Server Location :
+		>rack 
+		> enclosure by 
+		> bay 
+	Patches:
+		> needed 
+		> recomended
+		> installed 
+		> with Exceptions
+snap Shot Specifications:
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                                                                                                                 +
++                                          UTILITIES                                                	  +                
++                                                                                                                 +
++                                                                                                                 +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1. Bringing an Unmanged Server under HPSA
+	> Go to Unmanged Servers and Scan on choices
+										Realm
+										Range(Sey of IPs in A range)
+										Indvidual IP 
+										File having IP list as csv
+										
+	> Once Scan isdone an a server is found , hit Actions>Manage server
+	> put the user name and Password for the admin hit run
+	> HPSA Agent is Installed 
+	> In Managed servers we will get teh server IP 
+	
+2. Bridging an Unprovisoned Server to a OS.
+	For provisioning the OS a bare metal wrapper is provided for HPSA w hich is done by SA Image
+	> Power In Manualy and use PXE to boot Server(winpe ogfs,Linux solaris, SA Boot Image)oln a network or by Local
+		Disk
+	> Enter a boot Image and press Enter
+	> boot process finishes succesfully , ready for provsioning and it appears on Unprovisioned server
+
+
+	> Go to Unprovisioned Servers and Select a server
+	> Hit Actions>Run OS build Plan/OS Sequence 
+	> Select the Build Plan from the Lsit 
+	> OSBP has Steps as Phases so now Hit Start 
+	> Once Success go to manage Servers and Check the properties
+	
+	
+	Notes:
+	----------
+	You can provision an OS on:
+	> A server in SA unmannaged Server pool that dosent have an OS(Bare Metal)
+	> A server in SA unmannaged Server pool that have an OS
+	> A non windows to windows 
+	
+	Boot a Server Remotly : 
+	> Solaris : Network boot via Inetboot 
+	> Windows or Linux : network boot via PXE or boot from bootable CD
+	
+3. Adding a virtualization service (V.S.)
+		basically refers as of Adding of Service for Virtual controlling of the Server and use it as cloud resource. 
+		For HPSA VS by : VMcenter, openStack, MS-SCVMM .
+		
+	Prequisite for Adding the VS
+	--------------------------------------
+	> HPSA Agent manged Servers only 
+	> Vcenter/Open Stack .. Should be running on that Server.
+	
+	Process of Adding the VS to the Server:
+		> Click Virtulisation>VMWare vcenter rt click to add VS.
+		> on the New window add VMWare vcenter Server.
+		> this will show only Servers running Vcenter in them .
+		> click the Server and Add Username/Pwd
+		> click and Start the Job ,
+		> finish is succesful VS addition on the SERVER.
+		> check the Virtulisation>VMWare vcenter ,the new server is found
+		> once the srever is there check the VMs, Hyperviors
+4. Creating a VM :
+	> In virtaulisation > Vm Ware V center> Server . 
+	> right click on the server
+	> hit Create vM option 
+	> Opens Create Virtual Machine tab 
+	
+	Virtual machine Defination:
+	---------------------------
+	>Virtual machine name , Description , customer , inventory Location (Virtul servers List Step 2 and then select a folder to keep the VM)
+	>HOST (select the virtual Server Name )
+	>resourse Pool (inside Server there are resourse pools select 1 )
+	
+	Compute Properties :
+	---------------------
+	> memory Size,Virtual processors , guest OS(Slect a OS from the List )
+	> Storage (select the Storage Name)
+
+	Strorage properties: (Add virtual hard Disk , add CD/DVD, Floppy )
+	---------------------
+	> Select the virtual Hard drive add 
+	> selectthe CD/DVD and Add it with dATASTORE: virtualimage
+	> ISO Image: as destination .
+	> Select Network configuration , add a new network card with Auto mac .
+	
+	OS Installation : 
+	-----------------
+	Select OS build Plan , 
+	provision method :,PXE ,Boot image , 
+	provisiong Network :
+	
+	Preview
+	Start

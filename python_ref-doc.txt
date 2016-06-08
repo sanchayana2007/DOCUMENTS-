@@ -148,15 +148,22 @@ Python 3.4.1 has <class 'bytes'>
 4. xrange
 ================================================================
 The usage of xrange() is very popular in Python 2.x for creating an iterable object, e.g., in a for-loop or list/set-dictionary-comprehension.
-The behaviour was quite similar to a generator (i.e., "lazy evaluation"), but here the xrange-iterable is not exhaustible - meaning, you could iterate over it infinitely.
+The behaviour was quite similar to a generator (i.e., "lazy evaluation"), but here the xrange-iterable is 
+not exhaustible - meaning, you could iterate over it infinitely.
 
-Thanks to its "lazy-evaluation", the advantage of the regular range() is that xrange() is generally faster if you have to iterate over it only once (e.g., in a for-loop). However, in contrast to 1-time iterations, it is not recommended if you repeat the iteration multiple times, since the generation happens every time from scratch!
+Thanks to its "lazy-evaluation", the advantage of the regular range() is that xrange() is generally faster
+ if you have to iterate over it only once (e.g., in a for-loop). However, in contrast to 1-time iterations,
+ it is not recommended if you repeat the iteration multiple times, since the generation happens every time
+ from scratch!
 
-In Python 3, the range() was implemented like the xrange() function so that a dedicated xrange() function does not exist anymore (xrange() raises a NameError in Python 3).
+In Python 3, the range() was implemented like the xrange() function so that a dedicated xrange() function does
+ not exist anymore (xrange() raises a NameError in Python 3).
 
 5. __contains__ 
 
- is that range got a "new" __contains__ method in Python 3.x (thanks to Yuchen Ying, who pointed this out). The __contains__ method can speedup "look-ups" in Python 3.x range significantly for integer and Boolean types.
+ is that range got a "new" __contains__ method in Python 3.x (thanks to Yuchen Ying, who pointed this out).
+ The __contains__ 
+ method can speedup "look-ups" in Python 3.x range significantly for integer and Boolean types.
 ================================================================
  "proofs" that the __contain__ method wasn't added to Python 2.x yet:
 
@@ -192,8 +199,8 @@ try:
     let_us_cause_a_NameError
 except NameError as err:
     print(err, '--> our error message'
-  next in generator
 
+next in generator
 Only in 3.x 
 next(my_generator) is ok 
 my_generator.next() WILL RESULT in error 
@@ -204,9 +211,10 @@ Parsing user inputs via input()
 Fortunately, the input() function was fixed in Python 3 so that it always stores the user inputs as str objects.
 In order to avoid the dangerous behavior in Python 2 to read in other types than strings, we have to use raw_input() instead.
 
-New style objects have a different object model to classic objects, and some things won't work properly with old style objects,
-for instance,
+New style objects have a different object model to classic objects, and some things won't work properly with
+ old style objects, for instance,
  super(), @property and descrpnt
+ 
 Explanation:
 Class :
 -----------------------------
