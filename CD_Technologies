@@ -1,5 +1,23 @@
 This Documents Specifies the Terms and Workflow for HPSA (No Architecture and Worklows nd represented by this Document)
 
+Application Deployment:
+========================
+With Application Deployment, you can create, test, and deploy your custom software applications to target servers 
+in your data centers. For example, you can move applications from the development team to the quality assurance team
+ for testing. Once testing is complete, you can move the application to other phases such as preproduction, staging,
+ and finally to production. 
+ 
+ The Application Deployment tool reduces the complex communications necessary to deploy applications by providing a 
+ single point of access where everyone involved can view or enter data that is relevant to them and to their role.
+With Application Deployment, you can:
+•Model your application components such as code, scripts, configuration files, and tiers such as 
+application servers, web servers, and databases.
+
+•Manage multiple concurrent releases and versions of your applications.
+
+•Deploy, roll back, and undeploy your applications on target servers.
+
+
 Installation of HPSA Server:
 ============================
 
@@ -98,6 +116,23 @@ snap Shot Specifications:
 +                                                                                                                 +
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Agentless Server Discovery and Agent Installation:
+===================================================
+Agentless server discovery and agent installation allows you to deploy Server Agents to a large number of servers 
+in your facility and place them under SA management.
+
+Virtualization Management
+HP-supported integrations with virtualization vendors and cloud computing solutions are referred to collectively
+ as virtualization services.
+The virtualization vendors manage multiple hypervisors and VMs in a virtualization environment. HP supports 
+integration with VMware vCenter Server and Microsoft System Center Virtual Machine Manager (SCVMM).
+Cloud computing solutions such as OpenStack offer Infrastructure as a Service (IaaS). HP supports limited
+ integration with OpenStack.
+
+Control over your entire virtual environment so you can keep VM sprawl in check and detect and resolve problems quickly.
+Storage Visibility and Automation
+Storage Visibility and Automation offers storage management capabilities by enabling end-to-end visibility and management of the entire storage supply chain. Storage Visibility and Automation helps server administrators day-to-day tasks by providing tools that increase cost savings through application storage, dependency and visibility, storage audits, storage capacity and utilization trending, and scripting and automation
+
 1. Bringing an Unmanged Server under HPSA
 	> Go to Unmanged Servers and Scan on choices
 										Realm
@@ -109,6 +144,35 @@ snap Shot Specifications:
 	> put the user name and Password for the admin hit run
 	> HPSA Agent is Installed 
 	> In Managed servers we will get teh server IP 
+
+
+SA Provisioning :
+==================
+SA Provisioning provides the ability to to install (or provision) pre-configured operating system baselines 
+onto bare metal and virtual servers quickly, consistently, and with minimal manual intervention. Bare metal and 
+virtual server SA Provisioning is a key part of the overall process of getting a server into production
+
+SA automates the entire process of provisioning a comprehensive server baseline, which typically consists of the following tasks:
+
+•Preparing the hardware for OS installation using an OS installation profile (required only for OS Sequences).
+
+•Defining OS Build Plans which are a list of tasks to be performed on a server before and after operating system installation. OS Build Plans are more powerful than and can be used in place of OS Sequences.
+
+•Defining OS Sequences which are a list of tasks to be performed on a server during installation. OS Sequences can include application, patch, and remediation policies. SA recommends that you use the more flexible OS Build Plans.
+
+•Installing a base operating system and default OS configuration using an OS Build Plan or OS Sequence.
+
+•Applying the latest set of OS patches. The exact list depends on the applications running on the server.
+
+•Executing pre-installation or post-installation scripts that configure the system with values such as a 
+root password.
+
+•Installing system agents and utilities such as SSH, PC Anywhere, backup agents, monitoring agents,
+ or anti-virus software.
+
+•Installing widely shared system software such as Java Virtual Machines.
+
+
 	
 2. Bridging an Unprovisoned Server to a OS.
 	For provisioning the OS a bare metal wrapper is provided for HPSA w hich is done by SA Image
@@ -135,6 +199,12 @@ snap Shot Specifications:
 	Boot a Server Remotly : 
 	> Solaris : Network boot via Inetboot 
 	> Windows or Linux : network boot via PXE or boot from bootable CD
+Virtualization management in HP Server Automationprovides:
+===========================================================
+•Visibility into your datacenter and all your physical and virtual machines (VMs).
+
+•Compliance with all your regulatory and enterprise policies.
+
 	
 3. Adding a virtualization service (V.S.)
 		basically refers as of Adding of Service for Virtual controlling of the Server and use it as cloud resource. 
