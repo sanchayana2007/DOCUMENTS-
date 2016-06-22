@@ -1,0 +1,20 @@
+Inversion of control : 
+===========================
+inversion of control (IoC) is a design principle in which custom-written portions of a computer program receive the flow of control from a generic framework. A software architecture with this design inverts control as compared to traditional procedural programming: in traditional programming, the custom code that expresses the purpose of the program calls into reusable libraries to take care of generic tasks, but with inversion of control, it is the framework that calls into the custom, or task-specific, code.
+Used in :
+The custom code "fills in the blanks" for the framework, such as supplying a table of menu items and registering a code subroutine for each item, but it is the framework that monitors the user's actions and invokes the subroutine when a menu item is selected. In the mail client example, the framework could follow both the keyboard and mouse inputs and call the command invoked by the user by either means, and at the same time monitor the network interface to find out if new messages arrive and refresh the screen when some network activity is detected. The same framework could be used as the skeleton for a spreadsheet program or a text editor. Conversely, the framework knows nothing about Web browsers, spreadsheets or text editors; implementing their functionality takes custom code..
+when we a have class using a database acess mechanism and It is written in the class itself .
+Normally : 
+This Employee Db Connection has to be mentioned in the class Extensively
+Class Employee {
+Employee()
+{
+connect = MysqlConnector OR OracleConnector
+}
+With IOC:
+Now We seperate the Db connection logic by Inverting the Db connection Choice Logic given by the Frame Work to Employee
+Class Employee {
+Employee (DB Connection )
+}
+------Inside framework-----------------
+Employee (MysqlConnector ) // This will Handled by Dependency Injection
