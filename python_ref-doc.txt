@@ -379,7 +379,8 @@ Note that since tuples are immutable, they do not run into the troubles of lists
 
 2. list:(collection) [Can be used as Generator and comprehnesion]
 *********************
-The list is a most versatile datatype available in Python  Good thing about a list is that items in a list need not all have the same type.
+The list is a most versatile datatype available in Python  Good thing about a list is that items in a list 
+need not all have the same type.
 Creating a list is putting different comma-separated values between squere brackets. For example:
 
 list1 = ['physics', 'chemistry', 1997, 2000];
