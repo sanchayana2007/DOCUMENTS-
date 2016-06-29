@@ -256,3 +256,264 @@ Virtualization management in HP Server Automationprovides:
 	
 	Preview
 	Start
+	
+Application deployment :
+============================
+An Application will Move in many cycles between 
+Development <-> QA . 
+QA(OK)
+Deployed on PreProduction (whole/Upgrade)
+Production (UAT OK)<->Develop
+Production
+Application Archi:
+==============
+1. code components .(bin,Jar,war,database)
+2. scripts 
+3. Configuration 
+4. SA software Policies 
+5. Package from Sa library 
+6. HPOO flows 
+7. SA Libraries 
+8. win registry settings
+this applications have Realeases and releases has versions(Immutable snapshot in time of the release )
+The verison is deployed of an Application
+Operations Architecture: 
+====================
+This components deployes in Tiers Like 
+> web Servers 
+> appplication Servers 
+> Data Bases
+targets : wer Application is deployed
+Enviroment : Targets have an Enviroment , UAT , DEVP, DB.
+How the Application and Operations Architectures Align
+---------------------------------------------------------------------------
+Tiers are the mechanism used to connect applications to targets. An application is deployed by mapping the components that are part of each tier to the target servers that belong to the same tier. Regardless of the size or composition of the targets, the application tiers do not change.
+(**** Paste the Diagram of the server Used )
+
+How an Application Moves through the Software Lifecycle!!!!
+
+A lifecycle consists of a series of environments. An environment consists of a group of servers. You can use 
+different lifecycles for different purposes , 
+(**** Paste the Diagram of the server Used )
+As the application becomes more stable, it becomes ready for formal QA testing. At this point, you might install the
+ latest build on each server in the QA environment twice per week.
+As the application moves forward in the lifecycle, changes become less frequent, and fewer deployments are required. Eventually, there will be a small number of release candidates that are deployed for user acceptance testing (UAT) and performance testing.
+Upon successfully passing UAT and demonstrating acceptable performance, the release candidate could be deployed to 
+Pre-Production and, ultimately, to Production.
+
+Applications creation : 
+========================
+Creating a New Application:
+	> name of Application 
+	> Application group (If there)
+	> Current release 
+	> Lifecycle (Development > QA > Pre-Production > Production)
+	> Add a Tier 
+		> (Name , group , OS , back up Dir )
+		> Add a component to tier .(Code, Script , OO Flow, config Files )
+		
+properties:
+--------------
+The functional properties uniquely identify the component, specify its behavior, and tell Application Deployment 
+where to find any items that this component includes.
+The rollback properties tell Application Deployment what to do with this component in the event that a deployment
+ fails and an orderly rollback is required.
+For certain types of components, you must specify a rollback action if you enable rollback. This is either a 
+script, a flow, or a set of explicit instructions, depending on the component type. You may also need to specify a backup action. In this case, the backup action is executed before the component is deployed; the rollback action restores the backed up items if the deployment fails.
+The undeploy properties tell Application Deployment how to uninstall this component in the event that an instruction to undeploy the application is given
+
+** an application may have multplle tiers with many components 
+> Change the Deployment Order View
+which compo should gets deployed before whom .
+(Scripts are after code).
+Done .
+
+Managing Applications:
+-------------------------------------
+1) create versions that can be deployed to targets 
+Before you can deploy a release, you must create a version of that release
+in manage Application tool :
+Creation : 
+a) The Version shown is based on the name (which is frequently a number) of the previous version.
+ You can change this if you like.
+
+b)Optional: The Description initially indicates which release the version is based on. You can also change this
+ if you like.
+
+c)Optional: Select the Show Code Component Changes box if you want to see a list of the Code component files.
+For a full release, all files are listed. For a delta release, only those files that have changed since 
+the “baseline” version are listed. For example:
+
+Create a New Release of an Existing Application:
+=====================================
+a)Clone Release drop-down list, select the release that you want to clone. The new application will contain the 
+same tiers and components as the release that you select.
+
+b)Enter a Name for this release (on.
+
+c)Optional: Provide a Description for the release
+d)Optional: Specify a Change Request number
+e)If this is a delta release, select the Delta check-box, and select the “baseline” version from the 
+drop-down list.
+
+Deploying an Application on an Enviroment : 
+========================================
+In SA Application deployment Enviroment are known as Device groups , type of Application Deployment object it is:
+Environment
+Target and tier : 
+Target and tier device group names are paths indicating their parent environment and target, respectively.
+When you make a change to an environment or target in the Application Deployment user interface—for example, renaming a target—that change is also made in the corresponding Device Group.
+
+Preparing the Enviroment and Deploying the application : (Brief )
+=============================================
+Imagine that you are opening an online store. You want to make the site available to the public as soon as possible. The application that handles orders is still in Development, but it is almost ready to move to QA.
+Your application has two tiers: an Apache 2.2.9 web server and an Oracle 11g database. It consists of several components that are stored in your source code control system.
+Here are the steps that your team would follow to use Application Deployment to move the new application into the QA environment for testing:
+1)
+Your Application Deployment administrator sets the permissions required. For example:
+
+—
+The Application Expert needs permission to Edit the application and Deploy it into the Development environment.
+
+—
+The Deployment Specialist needs permission to View (but not Edit) the application and Deploy it into the QA environment.
+
+2)
+Your Application Expert defines the application architecture by creating the pertinent components and assigning them to a Web Server tier and a Database tier.
+
+3)
+Your QA Environment Owner then reviews the application architecture and prepares the QA environment needed for this application.
+
+	a)
+	First, he creates a target, called Store Orders. The target must contain the same tiers that were specified in the application architecture.
+
+	b)
+	Next, he specifies the servers that belong to each tier—the servers must already be managed by SA. The QA environment for the online store is now ready.
+
+4)
+When your Software Engineering team decides that the first version of the application is ready for testing, they create a version in preparation for deployment. Next, they inform QA that the application is ready for testing.
+
+5)
+A Deployment Specialist then deploys the application to the QA environment, and the QA engineers begin testing.
+
+Your goal is for the team to move through the testing process with the minimum number of iterations between Development and QA. Automating the deployment reduces the number of iterations.
+
+
+
+Provisioning Servers before Deployment : 
+==================================
+This will provide4 the Updated Os an stuffs on which the server will load Up ok with the application .
+> Platform match correct build agent type to a tier.
+> Os sequence available on the bare metal servers .
+When you deploy a version of an application, Application Deployment performs the following steps at staging time:
+1)
+Runs the Pre-Deployment Flow (if any) associated with the environment.
+
+2)
+Runs the OS Sequences (if any) associated with the tiers in the specified target. This installs and configures the specified OS on any unprovisioned servers in the target.
+
+3)
+Attaches and remediates any Policies associated with the tiers in the specified target.
+
+Application Deployment then deploys the version.
+
+
+Deployment Overview
+======================
+In Application Deployment, you deploy a specific version of your application to a target. The components of the application are deployed to all servers in the pertinent tier of the specified target.
+> The deployment of a component has four phases:
+1
+Any necessary files are copied from the SA Core to a temporary location on the target server. This is called staging.
+
+For Software Policy components—and Code and Package components that use the Policy deploy method—the policy is attached during staging.
+2
+Application Deployment waits until the specified cut over time.
+
+3
+If Rollback is enabled in the component, pertinent files and directories on the target server are backed up in the location that was specified when the tier was defined
+4
+The action required to deploy the component is performed. The nature of this action depends on the component type:
+
+—
+For a Code component, one of two things happens:
+
+If the deploy method is Package, the files are extracted from the staged ZIP file and placed in the specified location on the target server.
+If the deploy method is Policy, the policy attached during staging is remediated.
+—
+For a Script component, the specified script is executed on the target server.
+
+—
+For a Configuration File component, the file is created on the target server.
+
+—
+For a Software Policy component, the policy is attached during staging is remediated.
+
+—
+For a Package component, one of two things happens:
+
+If the deploy method is Package, the packages are installed on the target server.
+If the deploy method is Policy, the policy attached during staging is remediated.
+—
+For an Application Configuration component, the Application Configuration is deployed to the target server.
+
+—
+For an OO Flow component, the flow is run to completion on the HP Operations Orchestration server.
+
+—
+For a Windows Registry component, the pertinent registry keys or values are added or deleted.
+
+Application Deployment creates a deployment job that will perform these steps for each component included in the selected version for each server in the specified target (or targets). You can view the progress and status of the job on the Jobs screen.
+If any component fails to deploy properly or the Deployment job is cancelled, the deployment will automatically roll back from the point of failure. For each component for which rollback is enabled, the rollback action specified in the component is performed, and any staging files stored in the temporary directory are removed.
+An alternative to rolling back is undeploying. The undeploy process uninstalls the version and removes any trace of it on the server. It is a more aggressive process than a rollback. It does not attempt to return the server to its previous state.
+
+
+
+creating and Running Audit in HPSA ::
+==========================================
+1. Library > Audit And remediation 
+2. Audit Policy :
+> Unix 
+> windows 
+3. Select the Os (Unix), and hit action on the Top 
+new and put the name for the Audit 
+4. Specify the audit Rules(specify the conditions to be enfporced on the managed servers ) : 
+> Compliance Checks
+5. If you want to link other audit policies to this audit, click to select an audit policy.
+If you want to edit any of the linked audit policies, from the Rules list, select an audit policy and then click to open the Audit Policy window.
+6. 
+In the Select an Audit Policy window, select one or more audit policies to link to the audit policy, and then click OK to save your selections.
+
+If you link one or more audit policies to an audit policy, you can still configure individual rules in the audit policy.
+Save it .
+For creating audit Scripts :
+> Click Add Rule to add a new custom script rule.
+>Move Up: Click Move Up to move selected audit rules up to specify the execution order for custom script audit rules. The audit rules are saved in the order you specify. This order displays when you open the audit or audit policy.
+>Move Down: Click Move Down to move selected audit rules down to specify the execution order for custom script audit rules. The audit rules are saved in the order you specify. This order displays when you open the audit or audit policy.
+>Rule Details
+Name: Enter a name for the script.
+Type of Script: Choose from Batch, Python, PowerShell, or Visual Basic (VBS), or PowerShell for ESXi.
+>Script: Type or copy and paste the script contents here. Or, click Import Script to import a script from your local drive.
+
+Success Criteria
+===================
+Output: Either Exit Code or Standard Output.
+operator: Choose an Operator, such as equals (=), not equals (<>), less than (<(), greater than (>), and so on.
+
+Configuring the File Rule
+The file rule allows you to audit and compare files and directories on a target server by specifying the following options.
+> it can check >Directory name < Scope < Recursive Dir Structure / checksum , Modification date, User and Group Access Rights (unix), Windows ACL
+—
+Reference: Choose the source of the script output. 
+--------------------------
+Source: Select this option if you want the rule to execute the script on the source when an audit is run, and gets the value that the script requests. It will then compare that value with the value retrieved from the script that was run on the target server.
+If you choose this option for a snapshot specification, then the script will run on the target, and the results of the script execution will be captured in the snapshot (results).
+If the source of the audit is a snapshot, then the custom script rule will use the custom script definition configured in the snapshot specification.
+Value: Enter your own value. This option uses the value you enter and compares it with the value returned from the script after it is run on the target server. This option means that the script does not run on the source server at audit runtime. Click the icon if you want to immediately get the output from the script from the source server
+7. now its about RUNNING The Audit in servers , 
+> on the newly created Audit policy rt click 
+> Select "Cretate Audit "
+> specify the targets 
+> Save .
+8. select Server and on actions menu hit Run 
+9 . New Windows open (task Sumary , Scheduling , notifications , Job Status).
+10 . reopen the Audit Again and We can see whether the audit is satisfied with server or Not .

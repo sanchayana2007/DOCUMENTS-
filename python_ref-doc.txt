@@ -913,7 +913,8 @@ In addition to the usual mapping methods, ordered dictionaries also support reve
 
 Equality tests between OrderedDict objects are order-sensitive and are implemented as list(od1.items())==list(od2.items()). Equality tests between OrderedDict objects and other Mapping objects are order-insensitive like regular dictionaries. This allows OrderedDict objects to be substituted anywhere a regular dictionary is used.
 
-The OrderedDict constructor and update() method both accept keyword arguments, but their order is lost because Python’s function call semantics pass in keyword arguments using a regular unordered dictionary.
+The OrderedDict constructor and update() method both accept keyword arguments, but their order is lost because
+ Python’s function call semantics pass in keyword arguments using a regular unordered dictionary.
  OrderedDict Examples and Recipes:
  -----------------------------------
 Since an ordered dictionary remembers its insertion order, it can be used in conjunction with sorting to make a sorted dictionary:
@@ -1495,7 +1496,7 @@ are ignored, and a warning is printed to sys.stderr instead.
 For these reasons, a context manager is often preferable to implementing __del__()
 
 Reference count and Stories :
---------------------------------
+-----------------------------
 CPython implementation, objects have a reference count. The count is
 incremented when the object is assigned to a variable and decremented when the
 variable is removed. When the reference count is zero, the object is no longer needed
@@ -1594,11 +1595,12 @@ def main():
     for i in range(10):
         make_cycle()
     collected = gc.collect()
-    print "Garbage collector: collected %d objects." % (collected)
+    print "Garbage collector: collected %d objects." %(collected)
  
 if __name__ == "__main__":
     ret = main()
     sys.exit(ret)
+	
 In general there are two recommended strategies for performing manual garbage collection: time-based and
  event-based garbage collection. Time-based garbage collection is simple: the garbage collector is called
  on a fixed time interval. Event-based garbage collection calls the garbage collector on an event. For example,
@@ -2326,8 +2328,8 @@ class Parrot(object):
         """Get the current voltage."""
         return self._voltage
         
-A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property with the
- corresponding accessor function set to the decorated function
+A property object has getter, setter, and deleter methods usable as decorators that create a copy of the property
+with the corresponding accessor function set to the decorated function
 class C(object):
     def __init__(self):
         self._x = None
@@ -2394,6 +2396,7 @@ Eagerly computed properties:
 ----------------------------
 where total is a simple attribute that's computed eagerly as each card is added
  class Hand_Eager(Hand):
+	_cards = 0
 	def __init__( self, dealer_card, *cards ):
 		self.dealer_card= dealer_card
 		self.total= 0
@@ -6028,8 +6031,10 @@ for _ in (myClass().Function(things) for things in biggerThing):
 Soln:
 
 d = {key: value for (key, value) in iterable}
-Of course, you can use the iterable in any way you want (tuples and lists literals, generator comprehensions, list comprehensions, 
-generator functions, functional composition    feel creative) as long as each element is an iterable itself of two elements:
+Of course, you can use the iterable in any way you want (tuples and lists literals, generator comprehensions, list
+ comprehensions, 
+generator functions, functional composition    feel creative) as long as each element is an iterable itself of 
+two elements:
 
 d = {value: foo(value) for value in sequence if bar(value)}
 
@@ -6260,7 +6265,7 @@ For the most part, xrange and range are the exact same in terms of functionality
 list of integers for you to use, however you please. The only difference is that range returns a Python list object and
  xrange returns an xrange object.
 What does that mean? Good question! It means that xrange doesn't actually generate a static list at run-time like range does.
- It creates the values as you need them with a special technique called yielding. This technique is used with a type of object
+ It creates the values as you need them with a s     pecial technique called yielding. This technique is used with a type of object
  known as generators. If you want to read more in depth about generators and the yield keyword
 
  Python's xrange and range with Odd Numbers
