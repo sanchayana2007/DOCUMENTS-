@@ -27,10 +27,26 @@
 									11. Event based Modules 
 									12. OS handling Modules   
 									13. Web Scarping  Modules
+										Crawling : Request/Urllib
+										
+										Scraping : beautifulsoap
+										
 									14. DataAnalytics Modules
 									15. Automation Modules
+										Selenium 
+										
 									16. Protocol Modules  
-									17. Threading     
+									17. Threading  
+									18. Python Packaging :
+											Py2exe,setuptools
+									19. Memory Profiling :
+										Heapy, 
+										Guppy 
+									20. Graph Plotting (BI):
+										MplotLib 
+										Mplot3d
+									
+											
 
 
 
@@ -1328,6 +1344,28 @@ PyQt:[Pyqt_300.py]
 +                                                                                                                 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SQLAlchemy is the Python SQL toolkit and Object Relational Mapper that gives application developers the full power
+
+Python classes <---> Database tables 
+classes (objects) <--->  rows in the corresponding tables {Declarative}
+
+ SQLAlchemy, this is done by creating an SQLEngine object, which knows how to talk to one particular type of database 
+ (SQLite, PostgreSQL, Firebird, MySQL, Oracle...).
+  it will create a pool of database connections and re-use them automatically as needed, to keep your application 
+  running quickly.
+  
+  
+
+
+
+Declarative : 
+--------------
+It allows us to create classes that include directives to describe the actual database table they will be mapped to
+
+Declarative base class.
+------------------------
+catalog of classes and tables relative to that base, Each module using Declarative have only one instance 
+
+
 
 
 The Django ORM and flexibility of SQL

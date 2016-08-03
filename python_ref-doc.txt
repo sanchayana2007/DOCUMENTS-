@@ -2727,20 +2727,19 @@ What are metaclasses?
 ************************
 Metaclasses are the 'stuff' that creates classes.
 metaclasses are what create these objects. They are the classes' classes, you can picture them this way:
-
   MyClass = MetaClass()
   MyObject = MyClass()
 You've seen that type lets you do something like this:
 Without the metaclass use 
-def extra(self, arg): ...
 
-class Client1: ... # Client augments: too distributed
-	if required():
-		Client1.extra = extra
-		
-class Client2: ...
-	if required():
-		Client2.extra = extra 
+def extra(self, arg): ...
+	class Client1: ... # Client augments: too distributed
+		if required():
+			Client1.extra = extra
+			
+	class Client2: ...
+		if required():
+			Client2.extra = extra 
 
 
  
@@ -3222,10 +3221,11 @@ j_txt = _("jobs: ")
 
 
 Single Lone Underscore (_)
-==================================================
+============================================
 This is typically used in 3 cases:
 
-In the interpreter: The _ name points to the result of the last executed statement in an interactive interpreter session.
+In the interpreter: The _ name points to the result of the last executed statement in an interactive interpreter
+ session.
  This was first done by the standard CPython interpreter, and others have followed too.
 
  _
@@ -3239,7 +3239,8 @@ NameError: name '_' is not defined
 'alright!'
  _
 'alright!'
-As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the next person reading your code to know that,
+As a name: This is somewhat related to the previous point. _ is used as a throw-away name. This will allow the 
+next person reading your code to know that,
  by convention, a certain name is assigned but not intended to be used. 
 For instance, you may not be interested in the actual value of a loop counter:
 
@@ -3423,7 +3424,9 @@ diffrence between two functions
  
  print make_incrementor(22)(33)
 55
-The above code defines a function "make_inrementor" that creates an anonymous function on the fly and returns it. The returned function increments its argument by the value that was specified when it was created.
+The above code defines a function "make_inrementor" that creates an anonymous function 
+on the fly and returns it. The returned function increments its argument by the value that
+was specified when it was created.
 
 
 
@@ -3990,6 +3993,24 @@ class myiter(object):
 >> for el in MyIterator(4):
     print el
 
+	
+vars:
+=========	
+vars() returns a dictionary to the local variables that is indexed by the name of the variable
+as a string. The scope is local.
+>>> x = 5
+>>> dir()
+['__builtins__', '__doc__', '__name__', 'x']
+>>> vars()[4] = 'An integer'
+>>> dir()
+[4, '__builtins__', '__doc__', '__name__', 'x']
+>>> x
+5
+>>> 4S
+4
+>>> vars()[4]
+'An integer'
+	
 Generators :
 -------------------------------------------------------------
 generators provide an elegant way to write simple and efficient
