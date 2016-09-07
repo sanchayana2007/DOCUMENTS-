@@ -1,0 +1,92 @@
+
+TO DO ARCHITECTURE
+
+
+
+Filesystem layers
+Docker containers are made up of stacked filesystem layers, each identified by a
+unique hash, where each new set of changes made during the build process is laid on
+top of the previous changes. That’s great because it means that when you do a new
+docker: Cannot connect to the Docker daemon. Is the docker daemon running on this host?.
+build, you only have to rebuild the layers that include and build upon the change
+you’re deploying. This saves time and bandwidth because containers are shipped
+around as layers and you don’t have to ship layers that a server already has stored.
+
+
+
+Image tags
+Docker has a built-in mechanism for
+handling this: it provides image tagging at deployment time. You can leave multiple
+revisions of your application on the server and just tag them at release.
+
+
+Building
+Docker builds are a single invocation of the docker build command and gen‐
+erate a single artifact, the container image.
+
+Testing
+ Docker facilitates better testing by guaran‐
+teeing that the artifact that passed testing will be the one that ships to production.
+This can be guaranteed because we can either use the Docker SHA for the container,
+or a custom tag
+
+
+Packaging
+Docker produces what for all intents and purposes is a single artifact from each build.
+No matter which language your application is written in, or which distribution of
+Linux you run it on, you get a multilayered Docker image as the result of your build.
+
+
+
+Deploying:
+Docker makes most of that a nonissue. The built-in tooling supports a simple, one-
+line deployment strategy to get a build onto a host and up and running. The standard
+Docker client only handles deploying to a single host at a time, but there are other
+tools available that make it easy to deploy into a cluster of Docker hosts.
+
+
+Orchestration
+The first important category of tools that adds functionality to the core Docker distri‐
+bution contains orchestration and mass deployment tools like Docker’s Swarm, New
+Relic’s Centurion and Spotify’s Helios. All of these take a generally simple approach to
+orchestration. For more complex environments, Google’s Kubernetes and Apache
+Mesos are more powerful options. There are new tools shipping constantly as new
+adopters discover gaps and publish improvements.
+
+ations that talk to each other remotely via something
+like an API, developers of one application can easily develop against a version of the
+other service that is currently tagged for the environment they require, like produc‐
+tion or staging. Developers on each team don’t have to be experts in how the other
+service works or is deployed, just to do development on their own application. If you
+expand this to a service-oriented architecture with innumerable microservices,
+Docker containers can be a real lifeline to developers
+
+Docker client
+The docker command used to control most of the Docker workflow and talk to
+remote Docker servers.
+
+
+
+The docker command run in daemon mode. This turns a Linux system into a
+Docker server that can have containers deployed, launched, and torn down via a
+remote client.
+
+Docker images
+Docker images consist of one or more filesystem layers and some important met‐
+adata that represent all the files required to run a Dockerized application. A sin‐
+gle Docker image can be copied to numerous hosts. A container will typically
+have both a name and a tag. The tag is generally used to identify a particular
+release of an image.
+
+Docker container
+A Docker container is a Linux container that has been instantiated from a Docker
+image. A specific container can only exist once; however, you can easily create
+multiple containers from the same image.
+
+Atomic host
+An atomic host is a small, finely tuned operating system image, like CoreOS and
+Project Atomic, that supports container hosting and atomic OS upgrades.
+Generally a 3.8 or later kernel is required
+
+1) sudo usermod -aG docker $(whoami)
+2) gnome-session-quit
