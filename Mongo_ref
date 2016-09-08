@@ -1,3 +1,14 @@
+Installing Mongodb :
+In ubuntu :
+1) sudo apt install mongo 
+2) sudo touch /data/db/ #in the root dir all the dbs are created  
+3) sudo chown 555 /data/db/
+4) sudo /usr/bin/mongod
+5)sudo mongo // Goes to db console 
+
+In windows :
+1) 
+
 ## Installing And Running Mongodb
 
 sc create MongoDbService binPath="C:\Program Files (x86)\MongoDB\Server\3.0\bin\mongod.exe"
@@ -6,11 +17,14 @@ This above should creat e a service and should run the Mongodb service
 
 else run 
 
-mongod.exe and thn the shell mongo.exe
+2) mongod.exe and thn 
+
+3) the shell mongo.exe
 
 
 ## Writing the Code to Add structures
-
+4) Inside C: craete 
+data\db file 
 
 
 
