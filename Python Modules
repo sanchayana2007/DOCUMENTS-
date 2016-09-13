@@ -29,7 +29,9 @@
 									13. Web Scarping  Modules
 										Crawling : Request/Urllib
 										
-										Scraping : beautifulsoap
+										Scraping : 
+											scrapy 
+											beautifulsoap
 										
 									14. DataAnalytics Modules
 									15. Automation Modules
@@ -1442,7 +1444,15 @@ os.path.isabs('path name')  <---- returns true if given path is absolute one.
 
 urlib: [website_crawler_urllib_200.py],[website_crawler_200.py]
 Mechanize:(very useful python module for navigating through web forms )
+--------------------------------------------------------------------------
 Scrapy: (involved in webscraping then this is a must )
+
+To install scarpy i have tested for a 64 bit ubuntu 
+1) sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+2) sudo apt install scrapy 
+
+
+
 beautifulsoup:
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
