@@ -1,5 +1,20 @@
 Data Mining:
-==================
+=======================================================================================================
+Application of Mathematical Algorithms to data to get previously unknown pattens in data.
+
+Patterns :
+-----------
+Analysis             Pattern                        Futher Analysis
+Cluster Aanlysis : group of data records.           Machine Learning/Prdeictive modelling
+Unusual Analyis: Anomaly detection .
+Dependency Analysis: Assoctaion detection.  
+Regression Analysis: 
+
+
+
+
+
+=======================================================================================================
 
 Data Extraction:
 ===============
