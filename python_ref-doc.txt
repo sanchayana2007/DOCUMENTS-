@@ -791,6 +791,25 @@ Day : 21
 
 A timedelta object represents a duration, the difference between two dates or times.
 
+Clock utility to measure the time taken to executte a program
+===============================================================
+start= clock()
+file1=Excel('test1.csv')
+end=clock()
+
+time: end - start 
+From  3.3, time.clock() is deprecated, and it's suggested to use time.process_time() or time.perf_counter() instead.
+
+Previously in 2.7, according to the time module docs:
+
+time.clock()
+
+On Unix, return the current processor time as a floating point number expressed in seconds. The precision, and in fact the very definition of the meaning of “processor time”, depends on that of the C function of the same name, but in any case, this is the function to use for benchmarking Python or timing algorithms.
+
+On Windows, this function returns wall-clock seconds elapsed since the first call to this function, as a floating point number, based on the Win32 function QueryPerformanceCounter(). The resolution is typically better than one microsecond.
+
+So it provides Diffrent timings as per OS
+
 
 2. collections — Container datatypes:
 *****************************************
