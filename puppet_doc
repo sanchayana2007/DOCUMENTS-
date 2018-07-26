@@ -1,0 +1,78 @@
+Configuring Agents Certificate:
+================================
+puppet master>>
+> puppet cert list 
+It Shows the agent name and secure socket layer SHA256 32 digit code 
+> puppet cert sign Agentname 
+
+ways to push changes to the agents 
+puppet Agent>>
+> puppet agent -t # Request data from the master 
+
+
+Cretaing Resourses and Class :
+==================================
+resources-> Classes -> manifest.pp -> Module 
+
+puppet master>>
+location of manifets 
+> /etc/puppet/manifests.pp
+
+Resourses:
+----------
+  file{'/etc/inet/inted.conf':
+  ensure => '/etc/inet/inted.conf'
+  }
+
+puppet Agent>>
+> puppet agent -t 
+ls /etc/inet/inted.conf
+
+
+
+class :
+--------
+class {'apache':}  # This class is taken from puppet forge 
+{
+ apache:vhost{'testserver,com',# A vhhosts name is defined the name is set in the predefined class vhostname 
+ port => '80'
+ docroot => '/var/www/html'
+ 
+ }
+
+Apache installation using Puppet :
+================================
+
+puppet master>>
+ 
+package{'httpd':
+ensure => installed
+}
+ 
+service{'httpd':
+ensure=> running 
+} 
+ 
+puppet Agent>>
+> puppet agent -t 
+
+
+Install php and mysql from puppet forge:
+=========================================
+
+puppet master>>
+> puppet module install mayflower-php
+> puppet module install mysql 
+
+site.pp # Remove all the entries and only new should stay 
+  include '::mysql::server'
+  include '::php'
+
+
+puppet Agent>>
+> puppet agent -t  # Thsi should install the php/mysql overe there 
+
+==========================
+puppet master>>
+puppet Agent>>
+> puppet agent -t 
