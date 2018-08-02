@@ -1,3 +1,78 @@
+Enterprise: 100 GBB free , 4 GB RAM 
+puppet forge : preexisting Modules having all tthe puppet code Github : Source code in Github 
+
+============
+puppet master>>
+> vi /etc/hostname #So the hostname as Puppet master 
+> apt-get purge puppet  puppet-common -y # Purge both teh puppet will be removed 
+ls -ls /etc/puppet and /var/lib/puppet 
+> wget https://xxxx/xxxx/xxxx/puppets-release-trustly.deb
+> dpkg -i puppet.deb 
+> ls -a *.deb 
+> apt-get update 
+> apt-get install puppetmaster -y # Set yes to all questions 
+ls -ls /etc/puppet and /var/lib/puppet 
+
+> service puppetmaster stop 
+> ls -la /var/lib/puppet/ssl # Check the ssl file and geta folder 
+> mv /var/lib/puppet/ssl /var/lib/puppet/ssl_bak
+> /var/lib/puppet
+> 
+-------
+[main]
+#tepmlatedir # comment the template the dir 
+[master]
+cert=puppet 
+
+> service puppetmaster start
+> puppet cert list --all #This will show the + in front is been acepted against the puppet master own 
+
+Steps for remove Puppet from the Server :
+========================================
+> apt-get purge puppet  puppet-common -y # Purge both teh puppet will be removed 
+> apt-get autoremove -y 
+> puppet cert clean puppetmaster.com # The name with teh domain of the machine is been shown over  ssl
+
+
+puppet Agent>>
+puppet help | tail -n 1  # get teh version of the Agent 
+
+
+Puppet Tools :
+================
+facter:
+------------
+This tool will be run the msater to ge the information (OS,space,IP,node)
+
+hiera :
+-------------
+All the resouse key : value are kept on hiera , if query name value will get  the return  value 
+
+
+mcolllective:
+---------------
+framework used Orchestration (what comes after which node )
+
+puppetdb:
+----------------
+PostSQL can store , logs , collections will get stored .
+
+puppet dashboard/Foreman:
+----------------------------
+
+Geppeto:
+----------
+Teh puppet code wit eclipse is used for pushing puppet code to git 
+
+ENC:(TO DO)
+-----
+
+
+Provision: Setting up an Application 
+Deploy : pushing to the servers 
+Configure: Changes is the configuration file , version contrl (dir of installtion )
+
+
 Configuring Agents Certificate:
 ================================
 puppet master>>
@@ -9,12 +84,43 @@ ways to push changes to the agents
 puppet Agent>>
 > puppet agent -t # Request data from the master 
 
+Architecture of Puppet:
+=========================
+Teh master Server componenets , Reporting , Security , content can be seperated 
+Ex: master 1 : only Content Server
+
+Flow of the puppet client and master :
+=====================================
+The master Server componenets , reporting , Security , content can be seperated 
+Ex : master 1 : inly Content serer 
+
+Pics 1 and Pics 2 
+i) Agent requiest after configuration lands of Master Plugin 
+2) client send the Facts (Normalised data )to ECN(External Node classifier)
+3) ENC will finalise the node details set the respective catalogue .
+4) master complies a catalogue file(How teh nodes gets configured ), sent to teh client 
+then the RAL (Ruby Absratect layer) will handle 
+  if platform ="WIN "
+    #install .exe 
+    thsi stype of logic is autohandlesd by RAL and we dont have to mention 
+    specifically .
+    So a .pp file can be used for all OS types 
+  5) It Runs the catlogue on the node and isntalls the binary 
+  6) teh output of thsi trnaction is stored in the pupet db 
+  
+  Node reports back to the master 
+  
+  
+  
+
 
 Cretaing Resourses and Class :
 ==================================
 resources-> Classes -> manifest.pp -> Module 
 
 puppet master>>
+
+> puppet resouse types # Should shopw all the resourses this master knwos of 
 location of manifets 
 > /etc/puppet/manifests.pp
 
