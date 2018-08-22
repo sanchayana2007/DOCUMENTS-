@@ -27,6 +27,56 @@ cert=puppet
 > service puppetmaster start
 > puppet cert list --all #This will show the + in front is been acepted against the puppet master own 
 
+Files and Contents of File:
+===========================
+/etc/puppet
+1) auth.conf : Who has access to what path folder of puppet 
+---
+path /certificate/
+aith_any
+method find , save
+allow * 
+
+2) fileserver.conf : When puppet master needs to configured as the file server 
+---
+[fileserver]
+path /etc/puppet/files 
+allow * 
+---
+files:///filename.testfile # We can use the kind of notation in the manifests to be set of 
+
+puppet client Installation :
+============================
+> puppet help | tail -n 1 # Puppet should not present 
+> wget https://xxxxx/xxxx/puppetlabs-release-trusty.deb
+> sudo dpkg -i puppetlabs-release-trusty.deb
+> sudo apt-get update
+> apt-get install puppet -y # Ste yes to all questions 
+> /etc/default/puppet
+Start = yes # this will make start the agent whenevr the server is up 
+> /etc/puppet/puppet.conf
+---
+[main]
+[master] #change this to Agent 
+[agent]
+
+server=puppetmaster.sridemo.com # mention the server name same as certificate if multiple servers aremaster fail 
+                                # over add those too 
+  
+  > /etc/hosts puppetmaster.sridemo.com 
+  
+  * Installing a agent using puppet possibilties provide a script 
+  The PE package managment repo is created during installation of the master and servers packages over 
+  HTTPS using the same port as the master (8140). This means agents dont require any new ports to be 
+  open other than the one they already need to comunicate with master .
+  When you run the isnatll script , it detects the OS on which it is runing , sets up an apt ,yum or zipper repo that refers 
+  back puppet.conf and kicks of puppet run . 
+  
+  PE(Enterprise )n has package managment tools but he installation differs as per OS.
+  > Install *nix agents with PE package managment (curl -k https://<MASTER HOSTNAME:> 8140/packages/current/install.bash | sudo bash)
+  > Install *nix agents with ypur own package managment 
+  
+
 Steps for remove Puppet from the Server :
 ========================================
 > apt-get purge puppet  puppet-common -y # Purge both teh puppet will be removed 
@@ -94,7 +144,7 @@ Flow of the puppet client and master :
 The master Server componenets , reporting , Security , content can be seperated 
 Ex : master 1 : inly Content serer 
 
-Pics 1 and Pics 2 
+Pics 1 and Pics 2 (1:03:33) and (1:14:30)
 i) Agent requiest after configuration lands of Master Plugin 
 2) client send the Facts (Normalised data )to ECN(External Node classifier)
 3) ENC will finalise the node details set the respective catalogue .
@@ -104,7 +154,7 @@ then the RAL (Ruby Absratect layer) will handle
     #install .exe 
     thsi stype of logic is autohandlesd by RAL and we dont have to mention 
     specifically .
-    So a .pp file can be used for all OS types 
+    So a .pp file can be used for all OS types.(1:20:44) 
   5) It Runs the catlogue on the node and isntalls the binary 
   6) teh output of thsi trnaction is stored in the pupet db 
   
@@ -145,6 +195,18 @@ class {'apache':}  # This class is taken from puppet forge
  docroot => '/var/www/html'
  
  }
+ 
+ Creating manifests :
+ ==========================
+ etc/puppet/manifests/test_apache.pp
+ class {'apache':} # takem from the Puppet forge , this will include default apache class
+ {
+ apache:vhost {'testserver.com', # A vhost resourse is defined 
+ port => 80
+ docroot => '/var/www/html'
+ }
+ 
+ 
 
 Apache installation using Puppet :
 ================================
