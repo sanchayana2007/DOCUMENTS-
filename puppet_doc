@@ -116,21 +116,33 @@ Teh puppet code wit eclipse is used for pushing puppet code to git
 
 ENC:(TO DO)
 -----
-
+A script or application which tell puppet which classes a node should have .
+master > EncApp 'nodel'
+This should output a yaml document 
+ENCs can co-existwith standard node definitions in the site.pp and the classes declared in each in each 
+sources are merged together .
 
 Provision: Setting up an Application 
 Deploy : pushing to the servers 
 Configure: Changes is the configuration file , version contrl (dir of installtion )
 
-
 Configuring Agents Certificate:
 ================================
+* How to validate the Master certificate in Slave 
+* What happens if the master certificate gets changed and does it needs to get reloaded in the agent .
+* getting the certification from a CA (What does that mean )
+* generating client certifiactes in Agents automatically Signed by the master .
+* Autosigned can be used 
+* Failure and issues best practices 
+* is there way to do Orhestration 
+
 puppet master>>
 > puppet cert list 
 It Shows the agent name and secure socket layer SHA256 32 digit code 
 > puppet cert sign Agentname 
 
-ways to push changes to the agents 
+* ways to push changes to the agents 
+* How to know in a agent which softwares are installed by puppet 
 puppet Agent>>
 > puppet agent -t # Request data from the master 
 
@@ -166,6 +178,9 @@ then the RAL (Ruby Absratect layer) will handle
 
 Cretaing Resourses and Class :
 ==================================
+* All kind of entities and scripting 
+* how to add a new resourse 
+
 resources-> Classes -> manifest.pp -> Module 
 
 puppet master>>
@@ -226,16 +241,21 @@ puppet Agent>>
 
 
 Install php and mysql from puppet forge:
-=========================================
-
+========================================= 
+The modules are taken from puppetforge in 2 modes 
 puppet master>>
 > puppet module install mayflower-php
 > puppet module install mysql 
 
+** Is site.pp is the only file or setting the manifests
 site.pp # Remove all the entries and only new should stay 
+
+node default { #Replacing the default(all agents) with agent name will make it agent specific 
   include '::mysql::server'
   include '::php'
-
+}
+* How to pull only specific modules from the server on nodes .
+* List of common errors in manifetsts files and ther identifications 
 
 puppet Agent>>
 > puppet agent -t  # Thsi should install the php/mysql overe there 
