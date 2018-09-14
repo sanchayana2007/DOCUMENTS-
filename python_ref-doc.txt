@@ -28,8 +28,10 @@ what happens wen a Python program is run :
 	3.2=< version pyc in the __pycache module
 	Process of interpreting :
 	--------------------------
-	1) There are four steps that python takes when you hit return: lexing, parsing, compiling, and interpreting.
-	2) Lexing is breaking the line of code you just typed into tokens.
+	There are four steps that python takes when you hit return: lexing, parsing, compiling, and interpreting.
+	
+	Lexing is breaking the line of code you just typed into tokens(a fixed symbol for an entity.)
+	
 	3) The parser takes those tokens and generates a structure that shows their relationship to each other
 	 (in this case, an Abstract Syntax Tree). 
 
