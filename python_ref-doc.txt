@@ -5,7 +5,7 @@ http://www.cse.msu.edu/~cse231/PracticeOfComputingUsingPython/
 
 http://showmedo.com/learningpaths/12/view#id5  (BEST1)
 http://www.saltycrane.com/blog/tag/python/
-
+** Table of Contents please serach the keyword : TOPIC 
 Installation:
 +++++++++++++++++
 C:\Python33
@@ -17,9 +17,7 @@ Python is an Interpretted language
 Interpreted : A high level language run and executed by an Interpreter(a program which converts the high-level language to machine code and 
 then executing) 
 
-Python and LUA are handled quite differently—interpreted rather than compiled. When you run a Python program 
-(a file with an extension of .PY), it is not compiled, it is run. You could insert syntax errors into a function
-in Python and unless that function is called, Python will never complain about the errors!
+TOPIC :
 what happens wen a Python program is run :
 -----------------------------------------------
 1. when you execute a program Python first compiles your source code (the statements in your file) into a format known
@@ -29,17 +27,29 @@ what happens wen a Python program is run :
 	Process of interpreting :
 	--------------------------
 	There are four steps that python takes when you hit return: lexing, parsing, compiling, and interpreting.
+	Lexing(Token)--> parser (AST)--> Compiler(Byte Code)--> Interpretor
 	
-	Lexing is breaking the line of code you just typed into tokens(a fixed symbol for an entity.)
-	
-	3) The parser takes those tokens and generates a structure that shows their relationship to each other
-	 (in this case, an Abstract Syntax Tree). 
+	1) Lexing is breaking the line of code you just typed into tokens(a fixed symbol for an entity.)
+	  lexer is a tokenizer which creates token from the code string.
+		Ex : if a==2:
+		Output of lexer
+		Token (if, 'if')
+		Token (name, 'a')
+		Token (equal, '==')
+		Token (semicolon, ':')
+	  Only whitespace is ignored.This tokenizer uses regex to reach that.	
+	2) The parser takes those tokens and generates a structure that shows their relationship to each other
+	 parser takes a list of token and creates a abstract syntax tree. It aranges as the flow in ast  , like if check is 	    true do this from the root if false do that. This is a rule for the python as if is encountered do check for true 		and false. 
+	Ex :
+	Block start
+		Comparison ('==', Name(a), number (2))
+	3) The compiler then takes the AST and turns it into one (or more) code objects.
+	  Finally, the interpreter takes each code object executes the code it represents
+	  bytecode : machine understand code got out from compiling the parser output. It will use the objects of the 		  datatype it provides (list, dict).
+	  It places values and then complies the code So only the part on the run is complied for errors only intendation 	    will get errors registered. 
 
-2. PVM is just a big code loop that iterates through
-	your byte code instructions, one by one, to carry out their operations.
 
-1) The compiler then takes the AST and turns it into one (or more) code objects.
-Finally, the interpreter takes each code object executes the code it represents.
+	4) the interpretor in c runs the bytecode and outputs.
 
 Python is dynamically but strongly typed:
 +++++++++++++++++++++++++++++++++++++++++
@@ -64,10 +74,8 @@ def ErrorProne():
     printgobblegobble("Hello there!")
 
 print("See, nothing bad happened. You worry too much!")
-
 There is no function called printgobblegobble() in Python or in this program, so that should have generated an error! 
 Here is the output:
-
 
 See, nothing bad happened. You worry too much!
 
@@ -175,10 +183,6 @@ Python 2.7.7
 ---------------------------------------------------------------------------
 AttributeError                            Traceback (most recent call last)
  in ()
-      1 print 'Python', python_version()
-----> 2 range.__contains__
-
-AttributeError: 'builtin_function_or_method' object has no attribute '__contains__'
 
 Raising exceptions
 --------------------------
@@ -223,47 +227,6 @@ The classes and the derived thing
 > Meta-programing
 
 
-The __prepare__ method (Prepare_method_100)
-======================================
-Metaclass can be any callable type , Now in order to fully exploate metaclas functionality an extra atribute 
-named __prepare__ is called during the class pre-construction .
-def prepare_class(name, *bases, metaclass=None, **kwargs):
-  if metaclass is None:
-     metaclass = compute_default_metaclass(bases)
-  prepare = getattr(metaclass, '__prepare__', None)
-  if prepare is not None:
-     return prepare(name, bases, **kwargs)
-  else:
-     return dict()
-
-
-This prepare method is called before the class body is executed and it must return a dictionary-like object 
-that's used as the local namespace for all the code from the class body. It was added in Python 3.0, 
-
-If your __prepare__ returns an object x then this:
-
-class Class(metaclass=Meta):
-    a = 1
-    b = 2
-    c = 3
-Will make the following changes to x:
-
-x['a'] = 1
-x['b'] = 2
-x['c'] = 3
-This x object needs to look like a dictionary. Note that this x object will end up as an argument to Metaclass.__new__ and 
-if it's not an instance of dict you need to convert it before calling super().__new__. [21]
-
-So basically when an object is created 
-
-1. Metaclass {__Call__} is called off (__call__ will call Class.__new__.)
-2. __new__ (and if it returned an instance of Class it will also call Class.__init__ on it)
-3. __init__
-
-
-Creating a class
-1. Metaclass.__prepare__ just returns the namespace object (a dictionary-like object
-2. Metaclass.__new__ returns the Class object.
 
 Data Types: 
 =====================================
@@ -789,25 +752,7 @@ Day : 21
 
 A timedelta object represents a duration, the difference between two dates or times.
 
-Clock utility to measure the time taken to executte a program
-===============================================================
-start= clock()
-file1=Excel('test1.csv')
-end=clock()
-
-time: end - start 
-From  3.3, time.clock() is deprecated, and it's suggested to use time.process_time() or time.perf_counter() instead.
-
-Previously in 2.7, according to the time module docs:
-
-time.clock()
-
-On Unix, return the current processor time as a floating point number expressed in seconds. The precision, and in fact the very definition of the meaning of “processor time”, depends on that of the C function of the same name, but in any case, this is the function to use for benchmarking Python or timing algorithms.
-
-On Windows, this function returns wall-clock seconds elapsed since the first call to this function, as a floating point number, based on the Win32 function QueryPerformanceCounter(). The resolution is typically better than one microsecond.
-
-So it provides Diffrent timings as per OS
-
+BATERRY
 
 2. collections — Container datatypes:
 *****************************************
@@ -815,6 +760,8 @@ import collections
 
 -------------------------------------------------------------------------------------------------
 collections.nametuple()
+
+A string with the pure Python source code used to create the named tuple class. The source makes the named tuple self-documenting. It can be printed, executed using exec(), or saved to a file and imported.
 
 Named tuples assign meaning to each position in a tuple and allow for more readable, self-documenting code.
  They can be used wherever regular tuples are used, and they add the ability to access fields by name 
@@ -852,7 +799,8 @@ In addition to the methods inherited from tuples, named tuples support three add
 classmethod somenamedtuple._make(iterable)
 Class method that makes a new instance from an existing sequence or iterable.
 
->>>
+Adding list to Named tuples :
+......................................
 >>> t = [11, 22]
 >>> Point._make(t)
 Point(x=11, y=22)
@@ -865,40 +813,20 @@ Return a new OrderedDict which maps field names to their corresponding values:
 OrderedDict([('x', 11), ('y', 22)])
 Changed in version 3.1: Returns an OrderedDict instead of a regular dict.
 
-somenamedtuple._replace(kwargs)
-Return a new instance of the named tuple replacing specified fields with new values:
 
->>>
->>> p = Point(x=11, y=22)
->>> p._replace(x=33)
-Point(x=33, y=22)
 
 >>> for partnum, record in inventory.items():
 ...     inventory[partnum] = record._replace(price=newprices[partnum], timestamp=time.now())
 somenamedtuple._source
-A string with the pure Python source code used to create the named tuple class. The source makes the named tuple self-documenting. It can be printed, executed using exec(), or saved to a file and imported.
 
 New in version 3.3.
 
 somenamedtuple._fields
 Tuple of strings listing the field names. Useful for introspection and for creating new named tuple types from existing named tuples.
 
->>>
->>> p._fields            # view the field names
-('x', 'y')
-
->>> Color = namedtuple('Color', 'red green blue')
->>> Pixel = namedtuple('Pixel', Point._fields + Color._fields)
->>> Pixel(11, 22, 128, 255, 0)
-Pixel(x=11, y=22, red=128, green=255, blue=0)
-To retrieve a field whose name is stored in a string, use the getattr() function:
-
->>>
->>> getattr(p, 'x')
-11
-To convert a dictionary to a named tuple, use the double-star-operator (as described in Unpacking Argument Lists):
-
->>>
+Convert a dictionary to a named tuple: 
+............................................
+use the double-star-operator (as described in Unpacking Argument Lists):
 >>> d = {'x': 11, 'y': 22}
 >>> Point(**d)
 Point(x=11, y=22)
@@ -921,7 +849,8 @@ The subclass shown above sets __slots__ to an empty tuple. This helps keep memor
 
 Subclassing is not useful for adding new, stored fields. Instead, simply create a new named tuple type from the _fields attribute:
 -------------------------------------------------------------------------------------------------
-OrderedDict objects
+OrderedDict objects: BATERRY
+.....................
 Ordered dictionaries are just like regular dictionaries but they remember the order that items were inserted. When iterating over an ordered dictionary, the items are returned in the order their keys were first added.
 
 class collections.OrderedDict([items])
@@ -935,7 +864,6 @@ The popitem() method for ordered dictionaries returns and removes a (key, value)
 move_to_end(key, last=True)
 Move an existing key to either end of an ordered dictionary. The item is moved to the right end if last is true (the default) or to the beginning if last is false. Raises KeyError if the key does not exist:
 
->>>
 >>> d = OrderedDict.fromkeys('abcde')
 >>> d.move_to_end('b')
 >>> ''.join(d.keys())
@@ -947,7 +875,12 @@ New in version 3.2.
 
 In addition to the usual mapping methods, ordered dictionaries also support reverse iteration using reversed().
 
-Equality tests between OrderedDict objects are order-sensitive and are implemented as list(od1.items())==list(od2.items()). Equality tests between OrderedDict objects and other Mapping objects are order-insensitive like regular dictionaries. This allows OrderedDict objects to be substituted anywhere a regular dictionary is used.
+Equality tests: CAVEATS 
+...............
+implemented as List Euqlity 
+list(od1.items())==list(od2.items()). 
+
+Equality tests between OrderedDict objects and other Mapping objects are order-insensitive like regular dictionaries. This allows OrderedDict objects to be substituted anywhere a regular dictionary is used.
 
 The OrderedDict constructor and update() method both accept keyword arguments, but their order is lost because
  Python’s function call semantics pass in keyword arguments using a regular unordered dictionary.
@@ -1053,7 +986,9 @@ class DeepChainMap(ChainMap):
 >>> d['snake'] = 'red'           # new keys get added to the topmost dict
 >>> del d['elephant']            # remove an existing key one level down
 DeepChainMap({'zebra': 'black', 'snake': 'red'}, {}, {'lion': 'orange'})
+DEQUE BATERRY
 -------------------------------------------------------------------------------------------------
+
 Deques are a generalization of stacks and queues (the name is pronounced “deck” and is short for “double-ended queue”). Deques support thread-safe,
  memory efficient appends and pops from either side of the deque with approximately the same O(1) performance in either direction.
 
@@ -1138,8 +1073,9 @@ def delete_nth(d, n):
     d.popleft()
     d.rotate(n)
 -------------------------------------------------------------------------------------
-defaultdict(list):
+defaultdict(list):  BATERRY
 ---------------------
+from collections import defaultdict
 >>> s = [('yellow', 1), ('blue', 2), ('yellow', 3), ('blue', 4), ('red', 1)]
 >>> d = defaultdict(list)
 >>> for k, v in s:
@@ -1157,9 +1093,9 @@ value to the list.
 -------------------------------------------------------------------------------------------------
 
 
-
+TOPIC
 -------------------------------------------------------------------------------------------------
-3. collections.abc — Abstract Base Classes for Containers
+3. collections.abc — Abstract Base Classes for Containers TOPIC 
 *****************************************
 This provides a bunch of containers which has already implemented methods and Abstarct methods nthat needs to 
 be veriddesn this are basically usewd as mixins() 
@@ -1230,93 +1166,11 @@ array('i', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
 	
 
 
-
-7. weakref — Weak references
-*****************************************
-A weak reference to an object is not enough to keep the object alive: when the only remaining references to a referent are 
-weak references, garbage collection is free to destroy the referent and reuse its memory for something else. A primary use
-for weak references is to implement caches or mappings holding large objects. 
-The weakref module allows the Python programmer to create weak references to objects.
-Creating a weak reference
-import weakref
-class test(object):
-	pass
-o = test()
-#wekref object creation 
-r = weakref.ref(o)
-wekref_obj = r()
-if weak_ref is None:
-    # referent has been garbage collected
-    print "Object has been deallocated; can't frobnicate."
-else:
-    print "Object is still live!"
-    wekref_obj.do_something_useful()
-	
-
-WeakKeyDictionary and WeakValueDictionary use weak references in their implementation, setting up callback functions on the
-weak references that notify the weak dictionaries when a key or value has been reclaimed by garbage collection. Most programs
-should find that using one of these weak dictionary types is all they need – it’s not usually necessary to create your own weak
-references dire
-obj_dict = weakref.WeakValueDictionary()
-obj_dict[key] = value
-This example shows how a subclass of ref can be used to store additional information about an object and affect the value that’s
-returned when the referent is accessed:
-
-import weakref
-
-class ExtendedRef(weakref.ref):
-    def __init__(self, ob, callback=None, **annotations):
-        super(ExtendedRef, self).__init__(ob, callback)
-        self.__counter = 0
-        for k, v in annotations.iteritems():
-            setattr(self, k, v)
-
-    def __call__(self):
-        """Return a pair containing the referent and the number of
-        times the reference has been called.
-        """
-        ob = super(ExtendedRef, self).__call__()
-        if ob is not None:
-            self.__counter += 1
-            ob = (ob, self.__counter)
-        return ob
-		
-
-Need of weak references:
-------------------------
-So now the reference which is a direct refernce 
-	child.parent = self
-The loop executing this will run and the refernce counting 
-mechanism is Python and after that gc module will check i the 
-refernce can be removed or not .
-Now the weak reference implemntation is such that it happens in two steps 
-1> weakref = self
-2> child.parent = weakref
-Now the gc will remove the count and make it call del on the same 
-
-replace this in above code in parent 
-
-	child.parent= weakref.ref(self)
-and in child 
-class Child:
-# This is an extra caution that parent ref  exists or not 
-	p = self.parent()
-	if p is not None:
-		# process p, the Parent instance
-	else:
-		# the parent instance was garbage collected.
-
-So now we can see that 
->>> p = Parent2( Child(), Child() )
->>> del p
-Removing Parent2 4303253584
-Removing Child 4303256464
-Removing Child 4303043344
-
 		
 
 8. types — Dynamic type creation and names for built-in types
 *****************************************
+TOPIC
 9. copy — Shallow and deep copy operations
 ******************************************
 Assignment statements in Python do not copy objects, they create bindings between a target and an object. 
@@ -1374,6 +1228,8 @@ lst1
 *****************************************
 11. enum — Support for enumerations
 *****************************************
+
+TOPIC
 Subclasing the built in types :
 ======================================
 And allowed programmers to subclass the built-in types such as list, tuple, or dict. So every time a class
@@ -1465,8 +1321,8 @@ provided. This should produce a default format.
 • someobject.__format__(specification): This happens when the
 application does format(someobject, specification) or something
 equivalent to "{0:specification}".format(someobject).
-
-__hash__()
+TOPIC
+__hash__()   
 **************************************************************************************************
  The built-in hash() function invokes the __hash__() method of a given object.
 This hash is a calculation which reduces a (potentially complex) value to a small
@@ -1530,6 +1386,89 @@ the __del__() method describes the circumstances as precarious and provides this
 additional note on exception processing: exceptions that occur during their execution
 are ignored, and a warning is printed to sys.stderr instead.
 For these reasons, a context manager is often preferable to implementing __del__()
+TOPIC
+
+7. weakref — Weak references
+*****************************************
+A weak reference to an object is not enough to keep the object alive: when the only remaining references to a referent are 
+weak references, garbage collection is free to destroy the referent and reuse its memory for something else. A primary use
+for weak references is to implement caches or mappings holding large objects. 
+The weakref module allows the Python programmer to create weak references to objects.
+Creating a weak reference
+import weakref
+class test(object):
+	pass
+o = test()
+#wekref object creation 
+r = weakref.ref(o)
+wekref_obj = r()
+if weak_ref is None:
+    # referent has been garbage collected
+    print "Object has been deallocated; can't frobnicate."
+else:
+    print "Object is still live!"
+    wekref_obj.do_something_useful()
+	
+
+WeakKeyDictionary and WeakValueDictionary use weak references in their implementation, setting up callback functions on the
+weak references that notify the weak dictionaries when a key or value has been reclaimed by garbage collection. Most programs
+should find that using one of these weak dictionary types is all they need – it’s not usually necessary to create your own weak
+references dire
+obj_dict = weakref.WeakValueDictionary()
+obj_dict[key] = value
+This example shows how a subclass of ref can be used to store additional information about an object and affect the value that’s
+returned when the referent is accessed:
+
+import weakref
+
+class ExtendedRef(weakref.ref):
+    def __init__(self, ob, callback=None, **annotations):
+        super(ExtendedRef, self).__init__(ob, callback)
+        self.__counter = 0
+        for k, v in annotations.iteritems():
+            setattr(self, k, v)
+
+    def __call__(self):
+        """Return a pair containing the referent and the number of
+        times the reference has been called.
+        """
+        ob = super(ExtendedRef, self).__call__()
+        if ob is not None:
+            self.__counter += 1
+            ob = (ob, self.__counter)
+        return ob
+		
+
+Need of weak references:
+------------------------
+So now the reference which is a direct refernce 
+	child.parent = self
+The loop executing this will run and the refernce counting 
+mechanism is Python and after that gc module will check i the 
+refernce can be removed or not .
+Now the weak reference implemntation is such that it happens in two steps 
+1> weakref = self
+2> child.parent = weakref
+Now the gc will remove the count and make it call del on the same 
+
+replace this in above code in parent 
+
+	child.parent= weakref.ref(self)
+and in child 
+class Child:
+# This is an extra caution that parent ref  exists or not 
+	p = self.parent()
+	if p is not None:
+		# process p, the Parent instance
+	else:
+		# the parent instance was garbage collected.
+
+So now we can see that 
+>>> p = Parent2( Child(), Child() )
+>>> del p
+Removing Parent2 4303253584
+Removing Child 4303256464
+Removing Child 4303043344
 
 Reference count and Stories :
 -----------------------------
@@ -1661,12 +1600,6 @@ memory. For example, consider running garbage collection after a once-per-day ta
 data points, creates an XML 'report', and then sends that report to a central office via FTP or SMTP/email. One 
 application doing such daily reports was creating over 800K worth of temporary sorted lists of historical data. 
 Piggy-backing gc.collect() on such daily chores has the nice side-effect of running it once per day for 'free'.
-Consider manually running garbage collection either before or after timing-critical sections of code to prevent
- garbage collection from disturbing the timing. As example, an irrigation application might sit idle for 10 minutes
- , then evaluate the status of all field devices and make adjustments. Since delays during system adjustment might
- affect field device battery life, it makes sense to manually run garbage collection as the gateway is entering
- the idle period AFTER the adjustment process - or run it every sixth or tenth idle period. This insures that 
- garbage collection won't be triggered automatically during the next timing-sensitive period.
 
 
 Breaking of circular references:
@@ -1676,7 +1609,7 @@ circular reference gets broken
 
 So we can break the circularity or use a weakref reference,
 which permits garbage collection.
-
+TOPIC
 __new__()  auto-magically a static method
 **********************************************************
 The __new__() method is where our code can build an uninitialized
@@ -1745,58 +1678,8 @@ the string into bytes.
 • x==y calls x.__eq__(y)
 • x!=y calls x.__ne__(y)
 • x>y calls x.__gt__(y)
-• x>=y calls x.__ge__(y)
+• x>=y calls x.__ge_
 
-for example a Implementation of comparison for objects of
-the same class
-We'll look at a simple same-class comparison by looking at a more complete
-
-class BlackJackCard:
-
-def __init__( self, rank, suit, hard, soft ):
-	self.rank= rank
-	self.suit= suit
-	self.hard= hard
-	self.soft= soft
-	
-def __lt__( self, other ):
-	if not isinstance( other, BlackJackCard ): 
-		return NotImplemented
-	return self.rank < other.rank
-	
-def __lt__( self, other ):
-	try:
-		return self.rank <= other.rank
-	except AttributeError:
-		return NotImplemented
-
-	
-First, the operand on the left is checked for an operator implementation:
-A<B means A.__lt__(B).
-Second, the operand on the right is checked for a reversed operator
-implementation: A<B means B.__gt__(A).
-The rare exception to this occurs when the right operand is a subclass
-of the left operand; then, the right operand is checked first to allow a
-subclass to override a superclass
->>> two = BlackJackCard_p( 2, '♠' )
->>> three = BlackJackCard_p( 3, '♠' )
->>> two < three
-Compare 2♠ < 3♠
-True
->>> two > three
-Compare 3♠ < 2♠
-False
->>> two == three
-False
-
-for two > three, there's no __gt__() method defined; Python uses
-three.__lt__(two) as a fallback plan.
-By default, the __eq__() method is inherited from object; it compares the object
-IDs; the objects participate in == and != tests as follows:
->>> two_c = BlackJackCard_p( 2, '♣' )
->>> two == two_c
-False
-We can see that the results aren't quite what we expect. We'll often need to override
 the default implementation of __eq__().
 __setitem__:
 ******************************************************************
@@ -1848,6 +1731,7 @@ class DistinctDict(dict):
  my['key'] = 'value'
  my['other_key'] = 'value'
 
+TOPIC
 Super :
 =====================
 The super is called by the sub classes to update the  base class calls 
@@ -1971,6 +1855,7 @@ getattr function :
 >>> getattr(person, 'say')('Hello')
 Victor Hello
 
+TOPIC
 difference between __getattr__ and __getattribute__ 
 ----------------------------------------------------------
 A key difference between __getattr__ and __getattribute__ is that __getattr__ is only invoked if the attribute 
@@ -2051,23 +1936,7 @@ If yes, use it. If it's NULL then the operation is not supported.
 OOPS in python :
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Here is an example:
 
-
-class Bug(object):
-    legs = 0
-    distance = 0
-
-    def __init__(self, name, legs):
-        self.name = name
-        self.legs = legs
-
-    def Walk(self):
-        self.distance += 1
-
-    def ToString(self):
-        return self.name + " has " + str(self.legs) + " legs" + \
-            " and taken " + str(self.distance) + " steps."
 
 -----------------------------------------------------------------
 Polymorphism:
@@ -2084,7 +1953,7 @@ be transformed with the use of optional parameters like so:
 
 --------------------------------------------------------------------------------------
 Data Hiding (Encapsulation):
-
+TOPIC
 Private Variables:
 class P:
    def __init__(self, name, alias):
@@ -2198,7 +2067,7 @@ In addition, Python supports multiple inheritance; that is, more than one parent
  inherited from
 in a child class. For example:
 
-
+TOPIC
 class Car(Body,Engine,Suspension,Interior):
 
 As long as the variables and methods in each parent class do not conflict with each other, the new child class can 
@@ -2307,7 +2176,7 @@ Atribute managment:
 The class when created supports following four behaviors with respect
 to attributes:
 • To create a new attribute by setting its value
-• To set the value of an existing attribute
+• To set thHere is an example:e value of an existing attribute
 • To get the value of an attribute
 • To delete an attribute
 class Generic:
@@ -2338,16 +2207,13 @@ renamed with the class name as a prefix. It is not a real lock, since the attrib
 be accessed through its composed name. This feature could be used to protect
 the access of some attributes, but in practice, "__" should never be used.
 
-_ in private 
-----------------------------
-When an attribute is not public, the convention to use is a "_" prefix. This does not call any
-mangling algorithm, but just documents the attribute as being a private element of
-the class and is the prevailing style.
+
 Properties:
 =======================
 A property is
 actually a method function and can process, rather than simply preserve, a reference
 to another object.
+TOPIC
 
 2 ways to create properties :
 -----------------------------
@@ -2487,7 +2353,7 @@ in the internal __dict__ (or __slots__). If the attribute is not found, it calls
 __getattr__() as a fallback. If the value located is a descriptor (see in the following
 Creating descriptors section), then it processes the descriptor. Otherwise, the value is
 simply returned.
-
+TOPIC
 Descriptors:
 =======================
 A descriptor is a class that mediates attribute access.
@@ -5196,6 +5062,47 @@ def double(self): # Because privacy not inherited
 	X.display(); X.double(); X.display() # Intercepted: validated, delegated
 	print(Y.label)
 
+The __prepare__ method (Prepare_method_100)
+======================================
+Prepare method is used to create custom namespace to place the newly created class.
+
+def prepare_class(name, *bases, metaclass=None, **kwargs):
+  if metaclass is None:
+     metaclass = compute_default_metaclass(bases)
+  prepare = getattr(metaclass, '__prepare__', None)
+  if prepare is not None:
+     return prepare(name, bases, **kwargs)
+  else:
+     return dict()
+prepare method in python 3
+--------------------------------
+This prepare method is called before the class body is executed and it must return a dictionary-like object 
+that's used as the local namespace for all the code from the class body. It was added in Python 3.0, 
+
+If your __prepare__ returns an object x then this:
+
+class Class(metaclass=Meta):
+    a = 1
+    b = 2
+    c = 3
+Will make the following changes to x:
+
+x['a'] = 1
+x['b'] = 2
+x['c'] = 3
+This x object needs to look like a dictionary. Note that this x object will end up as an argument to Metaclass.__new__ and 
+if it's not an instance of dict you need to convert it before calling super().__new__. [21]
+
+So basically when an object is created 
+
+1. Metaclass {__Call__} is called off (__call__ will call Class.__new__.)
+2. __new__ (and if it returned an instance of Class it will also call Class.__init__ on it)
+3. __init__
+
+
+Creating a class
+1. Metaclass.__prepare__ just returns the namespace object (a dictionary-like object
+2. Metaclass.__new__ returns the Class object.
 
 
 
